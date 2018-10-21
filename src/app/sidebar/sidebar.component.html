@@ -4,23 +4,23 @@
   </div>
   <ul>
     <li>
-      <a routerLink="">
-        Help Wanted!
+      <a routerLink="" [class.activated]="currentUrl == '/'">
+        <i class="material-icons" title="Help Wanted">list priority_high</i>Help Wanted!
       </a>
     </li>
     <li>
-      <a routerLink="mychannels">
-        My Channels
+      <a routerLink="mychannels" [class.activated]="currentUrl == '/mychannels'">
+        <i class="material-icons" title="My Subscribed Groups">group</i> My Subscribed Groups
       </a>
     </li>
     <li>
-      <a routerLink="myactivities">
-        My Activities
+      <a routerLink="myactivities" [class.activated]="currentUrl == '/myactivities'">
+        <i class="material-icons" title="My Activities">local_activity</i> My Activities
       </a>
     </li>
     <li>
-      <a routerLink="settings">
-        Preferences
+      <a routerLink="settings" [class.activated]="currentUrl == '/settings'">
+        <i class="material-icons" title="Settings">settings</i> Settings
       </a>
     </li>
   </ul>
