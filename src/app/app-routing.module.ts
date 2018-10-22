@@ -4,6 +4,10 @@ import { MyactivitiesComponent } from './myactivities/myactivities.component';
 
 const routes: Routes = [
   {
+    path: '',
+    component: MyactivitiesComponent
+  },
+  {
     path: 'myactivities',
     component: MyactivitiesComponent
   }
