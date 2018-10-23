@@ -6,7 +6,7 @@
         "type": "shell",
         "command": "ng serve",
         "problemMatcher": [
-            "$tsc"
+          "$tsc"
         ],
         "group": {
           "kind": "build",
@@ -18,12 +18,19 @@
         "type": "npm",
         "script": "test",
         "presentation": {
-            "reveal": "always"
+          "reveal": "always"
         },
         "group": {
           "kind": "test",
           "isDefault": true
         }
+      },
+      {
+        "type": "npm",
+        "script": "e2e",
+        "problemMatcher": [
+          "$eslint-compact"
+        ]
       }
     ]
   }

@@ -7,8 +7,9 @@ describe('workspace-project App', () => {
     page = new AppPage();
   });
 
-  it('should display welcome message', () => {
+  it('should show title', () => {
     page.navigateTo();
-    expect(page.getParagraphText()).toEqual('Welcome to commhelper!');
+
+    expect(page.getHeaderText()).toBeTruthy();
   });
 });
