@@ -3,8 +3,8 @@ import { HttpClient } from '@angular/common/http';
 
 import { Observable, of } from 'rxjs';
 
-import { Activity } from '../shared/models/activity.model';
-import { MYACTIVITIES } from '../shared/mocks/mock-myactivities';
+import { Activity } from '../models/activity.model';
+import { MYACTIVITIES } from '../mocks/mock-myactivities';
 
 @Injectable({
   providedIn: 'root'

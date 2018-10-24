@@ -1,0 +1,9 @@
+<h2>My Activities</h2>
+<ul class="activities">
+  <li *ngFor="let activity of myactivities"
+    [class.selected]="activity === selectedActivity"
+    (click)="onSelect(activity)">
+    <span class="activity-icon">{{activity.id}}</span> {{activity.name}}
+  </li>
+</ul>
+<app-activity-detail [activity]="selectedActivity"></app-activity-detail>

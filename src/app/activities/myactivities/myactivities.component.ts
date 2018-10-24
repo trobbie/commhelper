@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { Activity } from '../shared/models/activity.model';
+import { Activity } from '../models/activity.model';
 import { MyactivitiesService } from './myactivities.service';
 
 @Component({
@@ -12,6 +12,7 @@ import { MyactivitiesService } from './myactivities.service';
 export class MyactivitiesComponent implements OnInit {
 
   myactivities: Activity[];
+  selectedActivity: Activity;
 
   constructor(private myactivitiesService: MyactivitiesService) { }
 
@@ -22,6 +23,10 @@ export class MyactivitiesComponent implements OnInit {
   getMyactivities(): void {
     this.myactivitiesService.getMyactivities()
       .subscribe(myactivities => this.myactivities = myactivities);
+  }
+
+  onSelect(activity: Activity): void {
+    this.selectedActivity = activity;
   }
 
 }

@@ -1,20 +1,21 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { MyactivitiesComponent } from './activities/myactivities/myactivities.component';
+
+import { MyactivitiesComponent } from './myactivities/myactivities.component';
 
 const routes: Routes = [
   {
-    path: '',
+    path: 'myactivities',
     component: MyactivitiesComponent
   }
 ];
 
 @NgModule({
   imports: [
-    RouterModule.forRoot(routes)
+    RouterModule.forChild(routes)
   ],
   exports: [
     RouterModule
   ]
 })
-export class AppRoutingModule { }
+export class ActivitiesRoutingModule { }

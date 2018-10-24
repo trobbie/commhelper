@@ -4,17 +4,17 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
-import { MyactivitiesComponent } from './myactivities/myactivities.component';
+import { ActivitiesModule } from './activities/activities.module';
 
 @NgModule({
   declarations: [
     AppComponent,
-    SidebarComponent,
-    MyactivitiesComponent
+    SidebarComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    ActivitiesModule,
+    AppRoutingModule /* keep this last in list of routing modules */
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,10 +1,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router, NavigationEnd } from '@angular/router';
 import { APP_BASE_HREF } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 import { SidebarComponent } from './sidebar.component';
 import { AppRoutingModule } from '../app-routing.module';
-import { MyactivitiesComponent } from '../myactivities/myactivities.component';
+import { MyactivitiesComponent } from '../activities/myactivities/myactivities.component';
+import { ActivityDetailComponent } from '../activities/activity-detail/activity-detail.component';
 
 describe('SidebarComponent', () => {
   let component: SidebarComponent;
@@ -14,9 +16,10 @@ describe('SidebarComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         SidebarComponent,
-        MyactivitiesComponent
+        MyactivitiesComponent,
+        ActivityDetailComponent
       ],
-      imports: [ AppRoutingModule ],
+      imports: [ AppRoutingModule, FormsModule ],
       providers: [
         {provide: APP_BASE_HREF, useValue : '/' }
       ]
