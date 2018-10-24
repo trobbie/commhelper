@@ -1,24 +1,45 @@
-nav {
-    background: #2D2E2E;
-    height: 100%;
+h2 {
+    padding: 0px 10px;
+}
 
-    ul {
-        list-style-type: none;
-        padding: 0;
-        margin: 0;
+ul.activities {
+    margin: 0 0 0 0;
+    list-style-type: none;
+    padding: 10px 10px;
+    width: 15em;
 
-        li {
-
-            a {
-                color: #fff;
-                padding: 20px;
-                display: block;
-            }
-
-            .activated {
-                background-color: #00a8ff;
-            }
-        }
+    a {
+        color: #888;
+        text-decoration: none;
+        position: relative;
+        display: block;
     }
     
+    li {
+        position: relative;
+        cursor: pointer;
+        background-color: #FFF;
+        margin: .5em;
+        padding: .3em 0;
+        height: 1.6em;
+        border-radius: 4px;   
+
+        :hover {
+            color: #607D8B;
+            background-color: #DDD;
+            left: .1em;
+        }       
+        .selected {
+            background-color: #CFD8DC;
+            color: white;
+        }
+        .selected:hover {
+            background-color: #BBD8DC;
+          }
+
+    }
+}
+.activities li.selected {
+    background-color: #CFD8DC;
+    color: white;
 }

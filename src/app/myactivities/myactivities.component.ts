@@ -12,6 +12,7 @@ import { MyactivitiesService } from './myactivities.service';
 export class MyactivitiesComponent implements OnInit {
 
   myactivities: Activity[];
+  selectedActivity: Activity;
 
   constructor(private myactivitiesService: MyactivitiesService) { }
 
@@ -22,6 +23,10 @@ export class MyactivitiesComponent implements OnInit {
   getMyactivities(): void {
     this.myactivitiesService.getMyactivities()
       .subscribe(myactivities => this.myactivities = myactivities);
+  }
+
+  onSelect(activity: Activity): void {
+    this.selectedActivity = activity;
   }
 
 }
