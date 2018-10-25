@@ -1,11 +1,32 @@
 #title {
-    font-size: 20;
+    font-size: 2em;
     font-style: italic;
     font-weight: bold;
     text-align: center;
 }
+
 nav {
     background: rgb(12, 51, 180);
     height: 100%;
     color: white;
+
+    ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+
+        li {
+
+            a {
+                color: #fff;
+                padding: 20px;
+                display: block;
+            }
+
+            .activated {
+                background-color: #00a8ff;
+            }
+        }
+    }
+    
 }
