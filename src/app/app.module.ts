@@ -3,21 +3,23 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
+import { AdminModule } from './admin/admin.module';
+import { ActivitiesModule } from './activities/activities.module';
 import { AppComponent } from './app.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
-import { ActivitiesModule } from './activities/activities.module';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 @NgModule({
+  imports: [
+    BrowserModule,
+    ActivitiesModule,
+    AdminModule,
+    AppRoutingModule /* keep this last in list of routing modules */
+  ],
   declarations: [
     AppComponent,
     SidebarComponent,
     PageNotFoundComponent
-  ],
-  imports: [
-    BrowserModule,
-    ActivitiesModule,
-    AppRoutingModule /* keep this last in list of routing modules */
   ],
   providers: [],
   bootstrap: [AppComponent]
