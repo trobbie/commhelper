@@ -2,7 +2,7 @@
 <div class="activities">
   <div class="activity-list column">
     <ul>
-      <li *ngFor="let activity of myactivities"
+      <li *ngFor="let activity of myActivities"
         [class.selected]="activity === selectedActivity"
         (click)="onSelect(activity)">
         <span class="activity-icon">{{activity.id}}</span> {{activity.name}}

@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 
 import { ActivitiesRoutingModule } from './activities-routing.module';
 import { ActivityDetailComponent } from './activity-detail/activity-detail.component';
-import { MyactivitiesComponent } from './myactivities/myactivities.component';
+import { MyActivitiesComponent } from './my-activities/my-activities.component';
 
 
 @NgModule({
@@ -14,7 +14,7 @@ import { MyactivitiesComponent } from './myactivities/myactivities.component';
     ActivitiesRoutingModule
   ],
   declarations: [
-    MyactivitiesComponent,
+    MyActivitiesComponent,
     ActivityDetailComponent
   ]
 })

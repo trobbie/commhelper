@@ -1,23 +1,23 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 
-import { MyactivitiesComponent } from './myactivities.component';
+import { MyActivitiesComponent } from './my-activities.component';
 import { ActivityDetailComponent } from '../activity-detail/activity-detail.component';
 
 describe('MyactivitiesComponent', () => {
-  let component: MyactivitiesComponent;
-  let fixture: ComponentFixture<MyactivitiesComponent>;
+  let component: MyActivitiesComponent;
+  let fixture: ComponentFixture<MyActivitiesComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [ FormsModule ],
-      declarations: [ MyactivitiesComponent, ActivityDetailComponent ]
+      declarations: [ MyActivitiesComponent, ActivityDetailComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(MyactivitiesComponent);
+    fixture = TestBed.createComponent(MyActivitiesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

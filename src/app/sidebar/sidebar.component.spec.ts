@@ -5,8 +5,11 @@ import { FormsModule } from '@angular/forms';
 
 import { SidebarComponent } from './sidebar.component';
 import { AppRoutingModule } from '../app-routing.module';
-import { MyactivitiesComponent } from '../activities/myactivities/myactivities.component';
+import { AdminModule } from '../admin/admin.module';
+import { MyActivitiesComponent } from '../activities/my-activities/my-activities.component';
 import { ActivityDetailComponent } from '../activities/activity-detail/activity-detail.component';
+import { AdminDashboardComponent } from '../admin/admin-dashboard/admin-dashboard.component';
+import { ManageActivitiesComponent } from '../admin/manage-activities/manage-activities.component';
 
 describe('SidebarComponent', () => {
   let component: SidebarComponent;
@@ -16,10 +19,12 @@ describe('SidebarComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         SidebarComponent,
-        MyactivitiesComponent,
-        ActivityDetailComponent
+        MyActivitiesComponent,
+        ActivityDetailComponent,
+        AdminDashboardComponent,
+        ManageActivitiesComponent
       ],
-      imports: [ AppRoutingModule, FormsModule ],
+      imports: [ AppRoutingModule, FormsModule, AdminModule ],
       providers: [
         {provide: APP_BASE_HREF, useValue : '/' }
       ]
