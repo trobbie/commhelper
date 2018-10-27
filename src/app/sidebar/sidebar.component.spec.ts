@@ -8,8 +8,7 @@ import { AppRoutingModule } from '../app-routing.module';
 import { AdminModule } from '../admin/admin.module';
 import { MyActivitiesComponent } from '../activities/my-activities/my-activities.component';
 import { ActivityDetailComponent } from '../activities/activity-detail/activity-detail.component';
-import { AdminDashboardComponent } from '../admin/admin-dashboard/admin-dashboard.component';
-import { ManageActivitiesComponent } from '../admin/manage-activities/manage-activities.component';
+import { PageNotFoundComponent } from '../page-not-found/page-not-found.component';
 
 describe('SidebarComponent', () => {
   let component: SidebarComponent;
@@ -21,12 +20,15 @@ describe('SidebarComponent', () => {
         SidebarComponent,
         MyActivitiesComponent,
         ActivityDetailComponent,
-        AdminDashboardComponent,
-        ManageActivitiesComponent
+        PageNotFoundComponent
       ],
-      imports: [ AppRoutingModule, FormsModule, AdminModule ],
+      imports: [
+        AppRoutingModule,
+        FormsModule,
+        AdminModule
+      ],
       providers: [
-        {provide: APP_BASE_HREF, useValue : '/' }
+        { provide: APP_BASE_HREF, useValue : '/' }
       ]
     })
     .compileComponents();

@@ -5,15 +5,17 @@ import { AdminRoutingModule } from './admin-routing.module';
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 import { AdminComponent } from './admin/admin.component';
 import { ManageActivitiesComponent } from './manage-activities/manage-activities.component';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   imports: [
     CommonModule,
-    AdminRoutingModule
+    AdminRoutingModule,
   ],
   declarations: [
     AdminDashboardComponent,
     AdminComponent,
-    ManageActivitiesComponent]
+    ManageActivitiesComponent
+  ]
 })
 export class AdminModule { }
