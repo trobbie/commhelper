@@ -1,6 +1,6 @@
 <h2>My Activities</h2>
 <div class="activities">
-  <div class="activity-list column">
+  <div class="activity-list column1">
     <ul>
       <li *ngFor="let activity of myActivities"
         [class.selected]="activity === selectedActivity"
@@ -9,7 +9,7 @@
       </li>
     </ul>
   </div>
-  <div class="column">
+  <div class="column2">
     <app-activity-detail [activity]="selectedActivity"></app-activity-detail>
   </div>
 </div>
