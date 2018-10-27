@@ -28,10 +28,13 @@
   <h3>Admin:</h3>
   <ul>
     <li>
-      <a routerLink="/admin" routerLinkActive="active">Dashboard</a>
+      <a routerLink="/admin" routerLinkActive="active" 
+      [class.activated]="currentUrl == '/admin'">Dashboard
+      </a>
     </li>
     <li>
-      <a routerLink="/admin/activities" routerLinkActive="active">Manage Activities</a>
+      <a routerLink="/admin/activities" routerLinkActive="active"
+      [class.activated]="currentUrl == '/admin/activities'">Manage Activities</a>
     </li>
   </ul>
 </nav>
