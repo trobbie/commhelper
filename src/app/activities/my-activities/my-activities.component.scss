@@ -1,24 +1,54 @@
-h2 {
-    padding: 0px 10px;
+
+.activities {
+    font-size: 16px;
+    padding: 0 10px;
 }
 
-.column1 {
-    float: left;
-    width: 300px;
+.activity-list-header {
+    vertical-align:middle;
+    font-size: 16px;
 
+    i {
+        vertical-align:middle;
+    }
+
+    span {
+        vertical-align: middle;
+    }
+
+    .addBtn {
+        padding: 10px;
+        //width: 25%;
+        background: #d9d9d9;
+        color: #555;
+        float: left;
+        text-align: center;
+        cursor: pointer;
+        transition: 0.3s;
+        border-radius: 0;
+    }
+      
+    .addBtn:hover {
+        background-color: #bbb;
+    }
 }
-.column2 {
-    float: left;
-
+/* Clear floats after the header */
+.activity-list-header::after {
+    content: "";
+    display: table;
+    clear: both;
 }
 
 .activity-list {
+    float: left;
+    width: 500px;
+
     ul {
         margin: 0 0 0 0;
         list-style-type: none;
-        padding: 10px 10px;
-        width: 15em;
-
+        padding: 0 0;
+        width: 350px;
+    
         a {
             color: #888;
             text-decoration: none;
@@ -30,11 +60,19 @@ h2 {
         position: relative;
         cursor: pointer;
         background-color: #FFF;
-        margin: .5em;
-        padding: .3em 0;
-        height: 1.6em;
-        border-radius: 4px;   
-
+        margin: .5em 0;
+        padding: 0.3em 0;
+        //height: 1.6em;
+        border-radius: 4px;
+    
+        span {
+            vertical-align: middle;
+        }
+    
+        i {
+            vertical-align:middle;
+        } 
+    
         &:hover {
             color: #607D8B;
             background-color: #DDD;
@@ -47,11 +85,19 @@ h2 {
         &.selected:hover {
             background-color: #BBD8DC;
         }
-
     }
 }
+.activities-list::after {
+    content: "";
+    display: table;
+    clear: both;
+}
 
-.activities:after {
+.activity-details {
+    float: left;
+}
+
+.activities::after {
     content: "";
     display: table;
     clear: both;

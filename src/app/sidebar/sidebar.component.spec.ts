@@ -9,6 +9,7 @@ import { AdminModule } from '../admin/admin.module';
 import { MyActivitiesComponent } from '../activities/my-activities/my-activities.component';
 import { ActivityDetailComponent } from '../activities/activity-detail/activity-detail.component';
 import { PageNotFoundComponent } from '../page-not-found/page-not-found.component';
+import { SharedModule } from '../shared/shared.module';
 
 describe('SidebarComponent', () => {
   let component: SidebarComponent;
@@ -23,6 +24,7 @@ describe('SidebarComponent', () => {
         PageNotFoundComponent
       ],
       imports: [
+        SharedModule,
         AppRoutingModule,
         FormsModule,
         AdminModule

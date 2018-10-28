@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 
 import { MyActivitiesComponent } from './my-activities.component';
 import { ActivityDetailComponent } from '../activity-detail/activity-detail.component';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 describe('MyactivitiesComponent', () => {
   let component: MyActivitiesComponent;
@@ -10,7 +11,7 @@ describe('MyactivitiesComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule ],
+      imports: [ SharedModule, FormsModule ],
       declarations: [ MyActivitiesComponent, ActivityDetailComponent ]
     })
     .compileComponents();

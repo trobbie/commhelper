@@ -1,15 +1,23 @@
-<h2>My Activities</h2>
 <div class="activities">
-  <div class="activity-list column1">
+  <div class="activity-list">
+    <h2 style="margin:5px">My Activities</h2>
+    <div class="activity-list-header">
+      <span (click)="onCreateNewActivity()" class="addBtn">
+          <i class="material-icons" title="Add Activity">add_circle_outline</i>
+          Add Activity
+      </span>
+    </div>
     <ul>
       <li *ngFor="let activity of myActivities"
         [class.selected]="activity === selectedActivity"
         (click)="onSelect(activity)">
-        <span class="activity-icon">{{activity.id}}</span> {{activity.name}}
-      </li>
+        <span class="activity-icon">
+          {{activity.id}} {{activity.name}}
+        </span>
+    </li>
     </ul>
   </div>
-  <div class="column2">
+  <div class="activity-details">
     <app-activity-detail [activity]="selectedActivity"></app-activity-detail>
   </div>
 </div>

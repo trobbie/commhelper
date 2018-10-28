@@ -11,9 +11,21 @@ import { MYACTIVITIES } from '../mocks/mock-my-activities';
 })
 export class MyActivitiesService {
 
-  constructor() { }
+  activities: Activity[];
+
+  constructor() {
+    this.activities = MYACTIVITIES;
+  }
 
   getMyActivities(): Observable<Activity[]> {
-    return of(MYACTIVITIES);
+    return of(this.activities);
   }
+
+  addActivity(newActivity: Activity) {
+    // note: ignoring the id of this newActivity (assigned by source instead)
+    newActivity.id = null;
+    this.activities.concat(newActivity);
+  }
+
+
 }

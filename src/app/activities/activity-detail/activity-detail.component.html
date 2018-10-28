@@ -1,5 +1,6 @@
 <div *ngIf="activity" class="activity">
-  <h2>{{activity.name | uppercase}} Details</h2>
+  
+  <h2>{{activity.name | default:'New' | uppercase}} Details</h2>
   <div><span>id: </span>{{activity.id}}</div>
   <div>
     <label>name:

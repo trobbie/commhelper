@@ -9,6 +9,7 @@ import { AppComponent } from './app.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { EventsModule } from './events/events.module';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   imports: [
@@ -16,6 +17,7 @@ import { EventsModule } from './events/events.module';
     EventsModule,
     ActivitiesModule,
     AdminModule,
+    SharedModule,
     AppRoutingModule,
     EventsModule /* keep this last in list of routing modules */
   ],

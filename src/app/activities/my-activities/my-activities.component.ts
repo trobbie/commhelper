@@ -29,4 +29,10 @@ export class MyActivitiesComponent implements OnInit {
     this.selectedActivity = activity;
   }
 
+  onCreateNewActivity(): void {
+    const activity: Activity = new Activity;
+    activity.id = null;
+    this.selectedActivity = activity;
+  }
+
 }
