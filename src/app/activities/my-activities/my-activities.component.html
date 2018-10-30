@@ -8,16 +8,17 @@
       </span>
     </div>
     <ul>
-      <li *ngFor="let activity of myActivities"
-        [class.selected]="activity === selectedActivity"
-        (click)="onSelect(activity)">
-        <span class="activity-icon">
-          {{activity.id}} {{activity.name}}
-        </span>
+      <li *ngFor="let activity of myActivities$ | async"
+        [class.selected]="activity.id === selectedId">
+        <a [routerLink]="activity.id" (click)='onSelect(activity)'>
+          <span class="activity-icon">
+            {{activity.id}} {{activity.name}}
+          </span>
+        </a>
     </li>
     </ul>
   </div>
   <div class="activity-details">
-    <app-activity-detail [activity]="selectedActivity"></app-activity-detail>
+    <router-outlet></router-outlet>
   </div>
 </div>

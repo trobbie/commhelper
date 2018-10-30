@@ -14,7 +14,7 @@
       </a>
     </li>
     <li>
-      <a routerLink="myactivities" [class.activated]="currentUrl == '/myactivities'">
+      <a routerLink="myactivities" [class.activated]="currentUrl ? currentUrl.startsWith('/myactivities') : false">
         <i class="material-icons" title="My Activities">local_activity</i> My Activities
       </a>
     </li>

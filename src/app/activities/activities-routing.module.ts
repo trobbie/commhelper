@@ -2,17 +2,39 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { MyActivitiesComponent } from './my-activities/my-activities.component';
+import { ActivitiesComponent } from './activities/activities.component';
+import { ActivityDetailComponent } from './activity-detail/activity-detail.component';
+import { ActivityDetailResolverService } from './activity-detail-resolver.service';
 
-const routes: Routes = [
+const activitiesRoutes: Routes = [
   {
     path: 'myactivities',
-    component: MyActivitiesComponent
+    component: ActivitiesComponent,
+    children: [
+      {
+        path: '',
+        component: MyActivitiesComponent,
+        children: [
+          {
+            path: ':id',
+            component: ActivityDetailComponent,
+            resolve: {
+              activity: ActivityDetailResolverService
+            }
+          },
+          {
+            path: '',
+            component: ActivityDetailComponent
+          }
+        ]
+      }
+    ]
   }
 ];
 
 @NgModule({
   imports: [
-    RouterModule.forChild(routes)
+    RouterModule.forChild(activitiesRoutes)
   ],
   exports: [
     RouterModule
