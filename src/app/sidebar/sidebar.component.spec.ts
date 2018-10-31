@@ -1,11 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Router, NavigationEnd } from '@angular/router';
 import { APP_BASE_HREF } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { SidebarComponent } from './sidebar.component';
 import { AppRoutingModule } from '../app-routing.module';
-import { AdminModule } from '../admin/admin.module';
 import { MyActivitiesComponent } from '../activities/my-activities/my-activities.component';
 import { ActivityDetailComponent } from '../activities/activity-detail/activity-detail.component';
 import { SharedModule } from '../shared/shared.module';
@@ -24,8 +22,7 @@ describe('SidebarComponent', () => {
       imports: [
         SharedModule,
         AppRoutingModule,
-        FormsModule,
-        AdminModule
+        FormsModule
       ],
       providers: [
         { provide: APP_BASE_HREF, useValue : '/' }
