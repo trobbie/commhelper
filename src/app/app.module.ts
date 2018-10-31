@@ -7,7 +7,6 @@ import { AdminModule } from './admin/admin.module';
 import { ActivitiesModule } from './activities/activities.module';
 import { AppComponent } from './app.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
-import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { EventsModule } from './events/events.module';
 import { SharedModule } from './shared/shared.module';
 
@@ -19,12 +18,11 @@ import { SharedModule } from './shared/shared.module';
     AdminModule,
     SharedModule,
     AppRoutingModule,
-    EventsModule /* keep this last in list of routing modules */
+    EventsModule
   ],
   declarations: [
     AppComponent,
-    SidebarComponent,
-    PageNotFoundComponent
+    SidebarComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

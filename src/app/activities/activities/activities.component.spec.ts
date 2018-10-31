@@ -3,8 +3,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivitiesComponent } from './activities.component';
 import { AppRoutingModule } from '../../app-routing.module';
 import { MyActivitiesComponent } from '../my-activities/my-activities.component';
-import { PageNotFoundComponent } from '../../page-not-found/page-not-found.component';
 import { APP_BASE_HREF } from '@angular/common';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 describe('ActivitiesComponent', () => {
   let component: ActivitiesComponent;
@@ -14,10 +14,10 @@ describe('ActivitiesComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         ActivitiesComponent,
-        MyActivitiesComponent,
-        PageNotFoundComponent
+        MyActivitiesComponent
       ],
       imports: [
+        SharedModule,
         AppRoutingModule
       ],
       providers: [

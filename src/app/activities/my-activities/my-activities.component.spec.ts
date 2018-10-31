@@ -6,8 +6,6 @@ import { MyActivitiesComponent } from './my-activities.component';
 import { ActivityDetailComponent } from '../activity-detail/activity-detail.component';
 import { SharedModule } from '../../shared/shared.module';
 import { AppRoutingModule } from '../../app-routing.module';
-import { PageNotFoundComponent } from '../../page-not-found/page-not-found.component';
-
 
 describe('MyactivitiesComponent', () => {
   let component: MyActivitiesComponent;
@@ -17,8 +15,7 @@ describe('MyactivitiesComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         MyActivitiesComponent,
-        ActivityDetailComponent,
-        PageNotFoundComponent
+        ActivityDetailComponent
       ],
       imports: [
         SharedModule,

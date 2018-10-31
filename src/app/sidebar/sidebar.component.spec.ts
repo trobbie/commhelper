@@ -8,7 +8,6 @@ import { AppRoutingModule } from '../app-routing.module';
 import { AdminModule } from '../admin/admin.module';
 import { MyActivitiesComponent } from '../activities/my-activities/my-activities.component';
 import { ActivityDetailComponent } from '../activities/activity-detail/activity-detail.component';
-import { PageNotFoundComponent } from '../page-not-found/page-not-found.component';
 import { SharedModule } from '../shared/shared.module';
 
 describe('SidebarComponent', () => {
@@ -20,8 +19,7 @@ describe('SidebarComponent', () => {
       declarations: [
         SidebarComponent,
         MyActivitiesComponent,
-        ActivityDetailComponent,
-        PageNotFoundComponent
+        ActivityDetailComponent
       ],
       imports: [
         SharedModule,

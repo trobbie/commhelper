@@ -4,15 +4,15 @@ import { APP_BASE_HREF } from '@angular/common';
 import { ActivityDetailResolverService } from './activity-detail-resolver.service';
 import { AppRoutingModule } from '../app-routing.module';
 import { MyActivitiesComponent } from './my-activities/my-activities.component';
-import { PageNotFoundComponent } from '../page-not-found/page-not-found.component';
+import { SharedModule } from '../shared/shared.module';
 
 describe('ActivityDetailResolverService', () => {
   beforeEach(() => TestBed.configureTestingModule({
     declarations: [
-      MyActivitiesComponent,
-      PageNotFoundComponent
+      MyActivitiesComponent
     ],
     imports: [
+      SharedModule,
       AppRoutingModule
     ],
     providers: [
