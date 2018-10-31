@@ -1,9 +1,13 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
+import { APP_BASE_HREF } from '@angular/common';
 
 import { MyActivitiesComponent } from './my-activities.component';
 import { ActivityDetailComponent } from '../activity-detail/activity-detail.component';
-import { SharedModule } from 'src/app/shared/shared.module';
+import { SharedModule } from '../../shared/shared.module';
+import { AppRoutingModule } from '../../app-routing.module';
+import { PageNotFoundComponent } from '../../page-not-found/page-not-found.component';
+
 
 describe('MyactivitiesComponent', () => {
   let component: MyActivitiesComponent;
@@ -11,8 +15,19 @@ describe('MyactivitiesComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ SharedModule, FormsModule ],
-      declarations: [ MyActivitiesComponent, ActivityDetailComponent ]
+      declarations: [
+        MyActivitiesComponent,
+        ActivityDetailComponent,
+        PageNotFoundComponent
+      ],
+      imports: [
+        SharedModule,
+        FormsModule,
+        AppRoutingModule
+      ],
+      providers: [
+        { provide: APP_BASE_HREF, useValue : '/' }
+      ]
     })
     .compileComponents();
   }));
