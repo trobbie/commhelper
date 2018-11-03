@@ -4,6 +4,11 @@
   </div>
   <ul>
     <li>
+      <a routerLink="login" class='login'>
+       {{ authService.isLoggedIn ? authService.userName + ' (LOGOUT)' : 'LOGIN'}}
+      </a>
+    </li>
+    <li>
       <a routerLink="myevents" [class.activated]="currentUrl == '/myevents'">
         <i class="material-icons" title="Help Wanted">list priority_high</i>Help Wanted!
       </a>
@@ -25,16 +30,18 @@
     </li>
   </ul>
 
-  <h3>Admin:</h3>
-  <ul>
-    <li>
-      <a routerLink="/admin" routerLinkActive="active" 
-      [class.activated]="currentUrl == '/admin'">Dashboard
-      </a>
-    </li>
-    <li>
-      <a routerLink="/admin/activities" routerLinkActive="active"
-      [class.activated]="currentUrl == '/admin/activities'">Manage Activities</a>
-    </li>
-  </ul>
+  <div class='admin' *ngIf="authService.isAdmin">
+    <h3>Admin:</h3>
+    <ul>
+      <li>
+        <a routerLink="/admin" routerLinkActive="active" 
+        [class.activated]="currentUrl == '/admin'">Dashboard
+        </a>
+      </li>
+      <li>
+        <a routerLink="/admin/activities" routerLinkActive="active"
+        [class.activated]="currentUrl == '/admin/activities'">Manage Activities</a>
+      </li>
+    </ul>
+  </div>
 </nav>

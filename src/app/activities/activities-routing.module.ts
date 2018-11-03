@@ -5,11 +5,14 @@ import { MyActivitiesComponent } from './my-activities/my-activities.component';
 import { ActivitiesComponent } from './activities/activities.component';
 import { ActivityDetailComponent } from './activity-detail/activity-detail.component';
 import { ActivityDetailResolverService } from './activity-detail-resolver.service';
+import { AuthGuard } from '../auth/auth.guard';
 
 const activitiesRoutes: Routes = [
   {
     path: 'myactivities',
     component: ActivitiesComponent,
+    canActivate: [AuthGuard],
+    canActivateChild: [AuthGuard],
     children: [
       {
         path: '',

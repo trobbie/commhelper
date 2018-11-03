@@ -1,20 +1,33 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { PageNotFoundComponent } from './shared/components/page-not-found/page-not-found.component';
+import { AuthGuard } from './auth/auth.guard';
+import { LoginComponent } from './auth/login/login.component';
 
 const routes: Routes = [
   {
-    path: 'admin',
-    loadChildren: './admin/admin.module#AdminModule'
+    path: 'login',
+    component: LoginComponent
   },
   {
     path: '',
-    redirectTo: '/myactivities',
-    pathMatch: 'full'
-  },
-  {
-    path: '**',
-    component: PageNotFoundComponent
+    canActivate: [AuthGuard],
+    canActivateChild: [AuthGuard],
+    children: [
+      {
+        path: 'admin',
+        loadChildren: './admin/admin.module#AdminModule'
+      },
+      {
+        path: '',
+        redirectTo: '/myactivities',
+        pathMatch: 'full'
+      },
+      {
+        path: '**',
+        component: PageNotFoundComponent
+      }
+    ]
   }
 ];
 

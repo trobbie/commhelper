@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -10,7 +11,7 @@ export class SidebarComponent implements OnInit {
 
   currentUrl: string;
 
-  constructor(private router: Router) {
+  constructor(private authService: AuthService, private router: Router) {
     router.events.subscribe((_: NavigationEnd) => this.currentUrl = this.router.url);
   }
 

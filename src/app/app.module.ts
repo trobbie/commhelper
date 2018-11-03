@@ -7,15 +7,16 @@ import { AppComponent } from './app.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { EventsModule } from './events/events.module';
 import { SharedModule } from './shared/shared.module';
+import { AuthModule } from './auth/auth.module';
 
 @NgModule({
   imports: [
+    AuthModule,
     BrowserModule,
     EventsModule,
     ActivitiesModule,
     SharedModule,
-    AppRoutingModule,
-    EventsModule
+    AppRoutingModule
   ],
   declarations: [
     AppComponent,
