@@ -5,6 +5,7 @@ import { MyActivitiesComponent } from './my-activities.component';
 import { ActivityDetailComponent } from '../activity-detail/activity-detail.component';
 import { SharedModule } from '../../shared/shared.module';
 import { AppRoutingModule } from '../../app-routing.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('MyactivitiesComponent', () => {
   let component: MyActivitiesComponent;
@@ -18,6 +19,7 @@ describe('MyactivitiesComponent', () => {
       ],
       imports: [
         SharedModule,
+        BrowserAnimationsModule,
         FormsModule,
         AppRoutingModule
       ]

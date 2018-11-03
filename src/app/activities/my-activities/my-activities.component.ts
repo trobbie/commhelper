@@ -1,6 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostBinding } from '@angular/core';
 import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import {
+  trigger,
+  state,
+  style,
+  animate,
+  transition,
+  group
+} from '@angular/animations';
 
 import { Activity } from '../models/activity.model';
 import { MyActivitiesService } from './my-activities.service';
@@ -9,8 +17,39 @@ import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'app-myactivities',
   templateUrl: './my-activities.component.html',
-  styleUrls: ['./my-activities.component.scss']
-})
+  styleUrls: ['./my-activities.component.scss'],
+  animations: [
+    trigger('flyInOut', [
+      state('in', style({
+        width: 200,
+        transform: 'translateX(0)', opacity: 1
+      })),
+      transition('void => *', [
+        style({ width: 10, transform: 'translateX(50px)', opacity: 0 }),
+        group([
+          animate('0.3s 0.1s ease', style({
+            transform: 'translateX(0)',
+            width: 200
+          })),
+          animate('0.3s ease', style({
+            opacity: 1
+          }))
+        ])
+      ]),
+      transition('* => void', [
+        group([
+          animate('0.3s ease', style({
+            transform: 'translateX(50px)',
+            width: 10
+          })),
+          animate('0.3s 0.2s ease', style({
+            opacity: 0
+          }))
+        ])
+      ])
+    ])
+  ]
+  })
 export class MyActivitiesComponent implements OnInit {
 
   myActivities$: Observable<Activity[]>;

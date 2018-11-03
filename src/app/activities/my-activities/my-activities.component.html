@@ -1,4 +1,4 @@
-<div class="activities">
+<div class="activities" >
   <div class="activity-list">
     <h2 style="margin:5px">My Activities</h2>
     <div class="activity-list-header">
@@ -7,7 +7,7 @@
           Add Activity
       </span>
     </div>
-    <ul>
+    <ul [@flyInOut]="true">
       <li *ngFor="let activity of myActivities$ | async"
         [class.selected]="activity.id === selectedId">
         <a [routerLink]="activity.id" (click)='onSelect(activity)'>
