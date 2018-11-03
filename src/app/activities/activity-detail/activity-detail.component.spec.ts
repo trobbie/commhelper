@@ -1,6 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { APP_BASE_HREF } from '@angular/common';
 
 import { ActivityDetailComponent } from './activity-detail.component';
 import { SharedModule } from '../../shared/shared.module';
@@ -21,9 +20,6 @@ describe('ActivityDetailComponent', () => {
         SharedModule,
         FormsModule,
         AppRoutingModule
-      ],
-      providers: [
-        { provide: APP_BASE_HREF, useValue : '/' }
       ]
     })
     .compileComponents();

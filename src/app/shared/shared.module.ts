@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, APP_BASE_HREF } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
@@ -21,6 +21,9 @@ import { AuthModule } from '../auth/auth.module';
     AuthModule,
     PageNotFoundComponent,
     DefaultPipe
+  ],
+  providers: [
+    { provide: APP_BASE_HREF, useValue : '/' }
   ]
 })
 export class SharedModule { }

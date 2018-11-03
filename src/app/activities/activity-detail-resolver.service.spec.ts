@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-import { APP_BASE_HREF } from '@angular/common';
 
 import { ActivityDetailResolverService } from './activity-detail-resolver.service';
 import { AppRoutingModule } from '../app-routing.module';
@@ -14,9 +13,6 @@ describe('ActivityDetailResolverService', () => {
     imports: [
       SharedModule,
       AppRoutingModule
-    ],
-    providers: [
-      { provide: APP_BASE_HREF, useValue : '/' }
     ]
   }));
 

@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { APP_BASE_HREF } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { SidebarComponent } from './sidebar.component';
@@ -23,9 +22,6 @@ describe('SidebarComponent', () => {
         SharedModule,
         AppRoutingModule,
         FormsModule
-      ],
-      providers: [
-        { provide: APP_BASE_HREF, useValue : '/' }
       ]
     })
     .compileComponents();

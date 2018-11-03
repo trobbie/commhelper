@@ -6,13 +6,13 @@ import { SidebarComponent } from './sidebar/sidebar.component';
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule
-      ],
       declarations: [
         AppComponent,
         SidebarComponent
       ],
+      imports: [
+        RouterTestingModule
+      ]
     }).compileComponents();
   }));
 

@@ -3,7 +3,6 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivitiesComponent } from './activities.component';
 import { AppRoutingModule } from '../../app-routing.module';
 import { MyActivitiesComponent } from '../my-activities/my-activities.component';
-import { APP_BASE_HREF } from '@angular/common';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 describe('ActivitiesComponent', () => {
@@ -19,9 +18,6 @@ describe('ActivitiesComponent', () => {
       imports: [
         SharedModule,
         AppRoutingModule
-      ],
-      providers: [
-        { provide: APP_BASE_HREF, useValue : '/' }
       ]
     })
     .compileComponents();
