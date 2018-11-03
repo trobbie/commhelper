@@ -4,6 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { AdminComponent } from './admin/admin.component';
 import { ManageActivitiesComponent } from './manage-activities/manage-activities.component';
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
+import { ManageUsersComponent } from './manage-users/manage-users.component';
 
 const adminRoutes: Routes = [
   {
@@ -14,6 +15,7 @@ const adminRoutes: Routes = [
         path: '',
         children: [
           { path: 'activities', component: ManageActivitiesComponent },
+          { path: 'users', component: ManageUsersComponent },
           { path: '', component: AdminDashboardComponent }
         ]
       }

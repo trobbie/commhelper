@@ -5,12 +5,14 @@ import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.compo
 import { AdminComponent } from './admin/admin.component';
 import { ManageActivitiesComponent } from './manage-activities/manage-activities.component';
 import { SharedModule } from '../shared/shared.module';
+import { ManageUsersComponent } from './manage-users/manage-users.component';
 
 @NgModule({
   declarations: [
     AdminComponent,
     AdminDashboardComponent,
-    ManageActivitiesComponent
+    ManageActivitiesComponent,
+    ManageUsersComponent
   ],
   imports: [
     SharedModule,
