@@ -30,7 +30,7 @@
     </li>
   </ul>
 
-  <div class='admin' *ngIf="authService.isAdmin">
+  <div class='admin' *ngIf="isLoggedInAdmin()">
     <h3>Admin:</h3>
     <ul>
       <li>

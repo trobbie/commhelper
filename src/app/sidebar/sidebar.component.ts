@@ -25,4 +25,8 @@ export class SidebarComponent implements OnInit {
   getUserName(): string {
     return this.authService.userName;
   }
+
+  isLoggedInAdmin(): boolean {
+    return this.authService.isAdmin;
+  }
 }
