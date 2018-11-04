@@ -1,8 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Observable } from 'rxjs';
 
 import { Activity } from '../models/activity.model';
 import { MyActivitiesService } from '../my-activities/my-activities.service';
+import { DialogService } from '../../_services/dialog.service';
 
 @Component({
   selector: 'app-activity-detail',
@@ -17,7 +19,8 @@ export class ActivityDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private activityService: MyActivitiesService
+    private activityService: MyActivitiesService,
+    private dialogService: DialogService
   ) {}
 
   ngOnInit() {
@@ -32,9 +35,26 @@ export class ActivityDetailComponent implements OnInit {
       });
   }
 
-  gotoActivities(activityToSelect: Activity) {
+  canDeactivate(): Observable<boolean> | boolean {
+    console.log('called canDeactivate');
+    // Allow synchronous navigation (`true`) if no crisis or the crisis is unchanged
+    if (!this.activity || !this.isDataChanged()) {
+      return true;
+    }
+
+    // Otherwise ask the user with the dialog service and return its
+    // observable which resolves to true or false when the user decides
+    return this.dialogService.confirm('Discard changes?');
+  }
+
+  private isDataChanged(): boolean {
+    return !(this.activity.name === this.editName);
+  }
+
+  gotoActivities(activityToSelect?: Activity) {
     const activityId = activityToSelect ? activityToSelect.id : null;
-    this.router.navigate( ['/myactivities'] );
+    console.log('gotoActivities(' + activityId + ')');
+    this.router.navigate( ['/myactivities', { id: activityId }]);
   }
 
   save() {
@@ -44,10 +64,10 @@ export class ActivityDetailComponent implements OnInit {
       this.activityService.addActivity(this.activity);
     }
 
-    this.gotoActivities(this.activity);
+    this.gotoActivities();
   }
 
   cancel() {
-    this.gotoActivities(this.activity);
+    this.gotoActivities();
   }
 }

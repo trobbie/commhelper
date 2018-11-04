@@ -8,17 +8,21 @@
       </span>
     </div>
     <ul [@flyInOut]="true">
-      <li *ngFor="let activity of myActivities$ | async"
-        [class.selected]="activity.id === selectedId">
-        <a [routerLink]="activity.id" (click)='onSelect(activity)'>
-          <span class="activity-icon">
-            {{activity.id}} {{activity.name}}
-          </span>
-        </a>
+      <li *ngFor="let activity of myActivities$ | async">
+        <div class="activity-detail-summary" 
+            [class.selected]="activity.id === selectedId"
+            [class.disabled]="selectedId">
+          <a [routerLink]="activity.id" (click)='onSelect(activity)'>
+            <span class="activity-icon">
+              {{activity.id}} {{activity.name}} : {{selectedId}}
+            </span>
+          </a>
+        </div>
+        <div class="activity-details" *ngIf="activity.id === selectedId">
+          <router-outlet></router-outlet>
+        </div>
     </li>
     </ul>
   </div>
-  <div class="activity-details">
-    <router-outlet></router-outlet>
-  </div>
+  
 </div>

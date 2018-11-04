@@ -9,6 +9,8 @@ import { SidebarComponent } from './sidebar/sidebar.component';
 import { EventsModule } from './events/events.module';
 import { SharedModule } from './shared/shared.module';
 import { AuthModule } from './auth/auth.module';
+import { DialogService } from './_services/dialog.service';
+import { AuthService } from './auth/auth.service';
 
 @NgModule({
   imports: [
@@ -24,7 +26,10 @@ import { AuthModule } from './auth/auth.module';
     AppComponent,
     SidebarComponent
   ],
-  providers: [],
+  providers: [
+    DialogService,
+    AuthService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -6,6 +6,7 @@ import { ActivitiesComponent } from './activities/activities.component';
 import { ActivityDetailComponent } from './activity-detail/activity-detail.component';
 import { ActivityDetailResolverService } from './activity-detail-resolver.service';
 import { AuthGuard } from '../auth/auth.guard';
+import { CanDeactivateGuard } from '../_guards/can-deactivate.guard';
 
 const activitiesRoutes: Routes = [
   {
@@ -21,6 +22,7 @@ const activitiesRoutes: Routes = [
           {
             path: ':id',
             component: ActivityDetailComponent,
+            canDeactivate: [CanDeactivateGuard],
             resolve: {
               activity: ActivityDetailResolverService
             }
