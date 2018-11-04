@@ -18,4 +18,11 @@ export class SidebarComponent implements OnInit {
   ngOnInit() {
   }
 
+  isLoggedIn(): boolean {
+    return this.authService.isLoggedIn;
+  }
+
+  getUserName(): string {
+    return this.authService.userName;
+  }
 }

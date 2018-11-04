@@ -5,7 +5,7 @@
   <ul>
     <li>
       <a routerLink="login" class='login'>
-       {{ authService.isLoggedIn ? authService.userName + ' (LOGOUT)' : 'LOGIN'}}
+       {{ isLoggedIn() ? getUserName() + ' (LOGOUT)' : 'LOGIN'}}
       </a>
     </li>
     <li>

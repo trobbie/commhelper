@@ -26,7 +26,6 @@ export class ActivityDetailResolverService implements Resolve<Activity> {
         if (activity) {
           return of(activity);
         } else { // id not found
-          console.log('Activity ID: ' + activity.id + ' not found.');
           this.router.navigate(['/myactivities']);
           return EMPTY;
         }

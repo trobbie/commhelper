@@ -69,7 +69,6 @@ export class MyActivitiesComponent implements OnInit {
     this.myActivities$ = this.route.paramMap.pipe(
       switchMap(params => {
         // (+) before `params.get()` turns the string into a number
-        console.log('id:' + params.get('id'));
         this.selectId(+params.get('id'));
         return this.myActivitiesService.getActivities();
       })

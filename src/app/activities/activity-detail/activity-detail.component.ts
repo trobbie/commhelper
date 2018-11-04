@@ -36,7 +36,6 @@ export class ActivityDetailComponent implements OnInit {
   }
 
   canDeactivate(): Observable<boolean> | boolean {
-    console.log('called canDeactivate');
     // Allow synchronous navigation (`true`) if no crisis or the crisis is unchanged
     if (!this.activity || !this.isDataChanged()) {
       return true;
@@ -53,7 +52,6 @@ export class ActivityDetailComponent implements OnInit {
 
   gotoActivities(activityToSelect?: Activity) {
     const activityId = activityToSelect ? activityToSelect.id : null;
-    console.log('gotoActivities(' + activityId + ')');
     this.router.navigate( ['/myactivities', { id: activityId }]);
   }
 
