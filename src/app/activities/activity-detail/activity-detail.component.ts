@@ -2,8 +2,8 @@ import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 
-import { Activity } from '../models/activity.model';
-import { MyActivitiesService } from '../my-activities/my-activities.service';
+import { Activity } from '../../_models/activity.model';
+import { ActivitiesService } from '../../_services/activities.service';
 import { DialogService } from '../../_services/dialog.service';
 
 @Component({
@@ -19,7 +19,7 @@ export class ActivityDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private activityService: MyActivitiesService,
+    private activityService: ActivitiesService,
     private dialogService: DialogService
   ) {}
 

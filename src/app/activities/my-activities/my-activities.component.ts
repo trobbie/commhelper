@@ -9,10 +9,10 @@ import {
   transition,
   group
 } from '@angular/animations';
-
-import { Activity } from '../models/activity.model';
-import { MyActivitiesService } from './my-activities.service';
 import { ActivatedRoute, Router } from '@angular/router';
+
+import { Activity } from '../../_models/activity.model';
+import { ActivitiesService } from '../../_services/activities.service';
 
 @Component({
   selector: 'app-myactivities',
@@ -58,7 +58,7 @@ export class MyActivitiesComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private myActivitiesService: MyActivitiesService
+    private myActivitiesService: ActivitiesService
   ) { }
 
   ngOnInit() {

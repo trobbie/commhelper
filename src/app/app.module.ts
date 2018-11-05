@@ -11,6 +11,7 @@ import { SharedModule } from './shared/shared.module';
 import { AuthModule } from './auth/auth.module';
 import { DialogService } from './_services/dialog.service';
 import { AuthService } from './auth/auth.service';
+import { ActivitiesService } from './_services/activities.service';
 
 @NgModule({
   imports: [
@@ -28,7 +29,8 @@ import { AuthService } from './auth/auth.service';
   ],
   providers: [
     DialogService,
-    AuthService
+    AuthService,
+    ActivitiesService
   ],
   bootstrap: [AppComponent]
 })

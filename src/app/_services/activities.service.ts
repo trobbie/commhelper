@@ -1,22 +1,20 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { Activity } from '../models/activity.model';
-import { MYACTIVITIES } from '../mocks/mock-my-activities';
+import { Activity } from '../_models/activity.model';
+import { ACTIVITIES } from '../_mocks/mock-activities';
 
 @Injectable({
   providedIn: 'root'
 })
-export class MyActivitiesService {
+export class ActivitiesService {
 
   activities: Activity[];
 
   constructor() {
     // initialize activities
-    this.activities = MYACTIVITIES;
+    this.activities = ACTIVITIES;
   }
 
   getActivities(): Observable<Activity[]> {

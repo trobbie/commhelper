@@ -3,15 +3,15 @@ import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@a
 import { Observable, of, EMPTY } from 'rxjs';
 import { take, mergeMap } from 'rxjs/operators';
 
-import { Activity } from './models/activity.model';
-import { MyActivitiesService } from './my-activities/my-activities.service';
+import { Activity } from '../_models/activity.model';
+import { ActivitiesService } from '../_services/activities.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ActivityDetailResolverService implements Resolve<Activity> {
   constructor(
-    private dataService: MyActivitiesService,
+    private dataService: ActivitiesService,
     private router: Router
   ) {}
 
