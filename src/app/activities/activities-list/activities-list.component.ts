@@ -3,18 +3,10 @@ import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { NgbPanelChangeEvent } from '@ng-bootstrap/ng-bootstrap';
-import {
-  trigger,
-  state,
-  style,
-  animate,
-  transition,
-  group
-} from '@angular/animations';
 
 import { ActivitiesService } from '../../_services/activities.service';
 import { DetailSummary } from '../../_models/detail-summary';
-import { DialogService } from 'src/app/_services/dialog.service';
+import { DialogService } from '../../_services/dialog.service';
 
 @Component({
   selector: 'app-activities-list',
@@ -26,7 +18,7 @@ export class ActivitiesListComponent implements OnInit {
   listData$: Observable<DetailSummary[]>;
   private selectedId: number = null;
 
-  @ViewChild('acc') accordianComponent;
+  @ViewChild('acc') accordionComponent;
   @ViewChild('details') detailsComponent;
 
   constructor(
@@ -79,7 +71,7 @@ export class ActivitiesListComponent implements OnInit {
 
   // onDetailsClose() is initiated by details component
   onDetailsClose($event, activity): void {
-    this.accordianComponent.collapse(this.panelTitlePrefix + this.selectedId);
+    this.accordionComponent.collapse(this.panelTitlePrefix + this.selectedId);
     this.selectedId = null;
     this.getSummaryList(); // TODO: only update the id just changed, and only when changed
   }

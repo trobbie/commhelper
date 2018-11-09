@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ActivityDetailsComponent } from './activity-details.component';
-import { SharedModule } from 'src/app/shared/shared.module';
+import { SharedModule } from '../../shared/shared.module';
 
 describe('ActivityDetailsComponent', () => {
   let component: ActivityDetailsComponent;
