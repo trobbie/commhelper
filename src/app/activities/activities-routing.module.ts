@@ -3,8 +3,6 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { MyActivitiesComponent } from './my-activities/my-activities.component';
 import { ActivitiesComponent } from './activities/activities.component';
-import { ActivityDetailComponent } from './activity-detail/activity-detail.component';
-import { ActivityDetailResolverService } from './activity-detail-resolver.service';
 import { AuthGuard } from '../auth/auth.guard';
 import { CanDeactivateGuard } from '../_guards/can-deactivate.guard';
 
@@ -18,20 +16,7 @@ const activitiesRoutes: Routes = [
       {
         path: '',
         component: MyActivitiesComponent,
-        children: [
-          {
-            path: ':id',
-            component: ActivityDetailComponent,
-            canDeactivate: [CanDeactivateGuard],
-            resolve: {
-              activity: ActivityDetailResolverService
-            }
-          },
-          {
-            path: '',
-            component: ActivityDetailComponent
-          }
-        ]
+        canDeactivate: [CanDeactivateGuard]
       }
     ]
   }

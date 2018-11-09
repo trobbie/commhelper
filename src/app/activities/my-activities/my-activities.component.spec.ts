@@ -2,10 +2,11 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 
 import { MyActivitiesComponent } from './my-activities.component';
-import { ActivityDetailComponent } from '../activity-detail/activity-detail.component';
 import { SharedModule } from '../../shared/shared.module';
 import { AppRoutingModule } from '../../app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ActivitiesListComponent } from '../activities-list/activities-list.component';
+import { ActivityDetailsComponent } from '../activity-details/activity-details.component';
 
 describe('MyactivitiesComponent', () => {
   let component: MyActivitiesComponent;
@@ -15,12 +16,11 @@ describe('MyactivitiesComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         MyActivitiesComponent,
-        ActivityDetailComponent
+        ActivitiesListComponent,
+        ActivityDetailsComponent
       ],
       imports: [
         SharedModule,
-        BrowserAnimationsModule,
-        FormsModule,
         AppRoutingModule
       ]
     })

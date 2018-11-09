@@ -2,10 +2,11 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { ActivitiesRoutingModule } from './activities-routing.module';
-import { ActivityDetailComponent } from './activity-detail/activity-detail.component';
 import { MyActivitiesComponent } from './my-activities/my-activities.component';
 import { SharedModule } from '../shared/shared.module';
 import { ActivitiesComponent } from './activities/activities.component';
+import { ActivityDetailsComponent } from './activity-details/activity-details.component';
+import { ActivitiesListComponent } from './activities-list/activities-list.component';
 
 @NgModule({
   imports: [
@@ -15,8 +16,12 @@ import { ActivitiesComponent } from './activities/activities.component';
   ],
   declarations: [
     MyActivitiesComponent,
-    ActivityDetailComponent,
-    ActivitiesComponent
+    ActivitiesComponent,
+    ActivityDetailsComponent,
+    ActivitiesListComponent
+  ],
+  exports: [
+    ActivitiesListComponent
   ]
 })
 export class ActivitiesModule { }

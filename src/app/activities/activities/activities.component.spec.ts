@@ -3,7 +3,9 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivitiesComponent } from './activities.component';
 import { AppRoutingModule } from '../../app-routing.module';
 import { MyActivitiesComponent } from '../my-activities/my-activities.component';
-import { SharedModule } from 'src/app/shared/shared.module';
+import { SharedModule } from '../../shared/shared.module';
+import { ActivitiesListComponent } from '../activities-list/activities-list.component';
+import { ActivityDetailsComponent } from '../activity-details/activity-details.component';
 
 describe('ActivitiesComponent', () => {
   let component: ActivitiesComponent;
@@ -13,6 +15,8 @@ describe('ActivitiesComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         ActivitiesComponent,
+        ActivitiesListComponent,
+        ActivityDetailsComponent,
         MyActivitiesComponent
       ],
       imports: [

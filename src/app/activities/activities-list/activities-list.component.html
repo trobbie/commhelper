@@ -1,0 +1,27 @@
+<p>
+    <button type="button" class="btn btn-primary btn-sm" (click)="onCreateNewEntry()">
+    Add Group Item
+    </button>
+</p>
+
+<ngb-accordion #acc="ngbAccordion"
+        [closeOthers]="true" [destroyOnHide]="true"
+        (panelChange)="beforeSelectionChange($event)">
+    <ngb-panel *ngFor="let summary of listData$ | async" 
+            id="{{ getPanelTitlePrefix() }}{{ summary.id }}"
+            [disabled]="isPanelSelected(summary)">
+        <ng-template ngbPanelTitle>{{ summary.description }}</ng-template>
+        <ng-template ngbPanelContent>
+            <!-- using ngIf directive to only load component if selected,
+                else a details component is loaded for *each* element 
+                in the list -->
+            <div *ngIf="isPanelSelected(summary.id)">
+                <app-activity-details #details
+                    [activityId]="summary.id"
+                    (closePanelFromDetails)="onDetailsClose($event)">
+                </app-activity-details>
+            </div>
+        </ng-template>
+    </ngb-panel>
+</ngb-accordion>
+

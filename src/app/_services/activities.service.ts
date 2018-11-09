@@ -4,6 +4,7 @@ import { map } from 'rxjs/operators';
 
 import { Activity } from '../_models/activity.model';
 import { ACTIVITIES } from '../_mocks/mock-activities';
+import { DetailSummary } from '../_models/detail-summary';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,13 @@ export class ActivitiesService {
   constructor() {
     // initialize activities
     this.activities = ACTIVITIES;
+  }
+
+  getSummaryList(): Observable<DetailSummary[]> {
+    return of(this.activities.map(
+      (activity: Activity) =>
+        <DetailSummary>{id: activity.id, description: activity.name}
+      ));
   }
 
   getActivities(): Observable<Activity[]> {

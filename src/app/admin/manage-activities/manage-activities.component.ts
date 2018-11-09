@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-manage-activities',
@@ -6,10 +7,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./manage-activities.component.scss']
 })
 export class ManageActivitiesComponent implements OnInit {
+  @ViewChild('listComponent') listComponent;
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit() {
+  ngOnInit() {}
+
+  canDeactivate(): Observable<boolean> | boolean {
+    return this.listComponent.canDeactivate();
   }
 
 }

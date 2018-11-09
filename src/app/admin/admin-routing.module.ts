@@ -5,6 +5,7 @@ import { AdminComponent } from './admin/admin.component';
 import { ManageActivitiesComponent } from './manage-activities/manage-activities.component';
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 import { ManageUsersComponent } from './manage-users/manage-users.component';
+import { CanDeactivateGuard } from '../_guards/can-deactivate.guard';
 
 const adminRoutes: Routes = [
   {
@@ -14,7 +15,11 @@ const adminRoutes: Routes = [
       {
         path: '',
         children: [
-          { path: 'activities', component: ManageActivitiesComponent },
+          {
+            path: 'activities',
+            component: ManageActivitiesComponent,
+            canDeactivate: [CanDeactivateGuard]
+          },
           { path: 'users', component: ManageUsersComponent },
           { path: '', component: AdminDashboardComponent }
         ]

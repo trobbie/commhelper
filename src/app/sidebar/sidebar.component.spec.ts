@@ -4,8 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { SidebarComponent } from './sidebar.component';
 import { AppRoutingModule } from '../app-routing.module';
 import { MyActivitiesComponent } from '../activities/my-activities/my-activities.component';
-import { ActivityDetailComponent } from '../activities/activity-detail/activity-detail.component';
 import { SharedModule } from '../shared/shared.module';
+import { ActivitiesModule } from '../activities/activities.module';
 
 describe('SidebarComponent', () => {
   let component: SidebarComponent;
@@ -14,12 +14,11 @@ describe('SidebarComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
-        SidebarComponent,
-        MyActivitiesComponent,
-        ActivityDetailComponent
+        SidebarComponent
       ],
       imports: [
         SharedModule,
+        ActivitiesModule,
         AppRoutingModule,
         FormsModule
       ]

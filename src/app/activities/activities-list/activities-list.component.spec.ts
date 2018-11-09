@@ -1,24 +1,22 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ManageActivitiesComponent } from './manage-activities.component';
-import { by } from 'protractor';
+import { ActivitiesListComponent } from './activities-list.component';
 import { SharedModule } from 'src/app/shared/shared.module';
-import { ActivitiesModule } from 'src/app/activities/activities.module';
+import { ActivityDetailsComponent } from '../activity-details/activity-details.component';
 import { AppRoutingModule } from 'src/app/app-routing.module';
 
-describe('ManageActivitiesComponent', () => {
-  let component: ManageActivitiesComponent;
-  let fixture: ComponentFixture<ManageActivitiesComponent>;
-  let element: HTMLElement;
+describe('ActivitiesListComponent', () => {
+  let component: ActivitiesListComponent;
+  let fixture: ComponentFixture<ActivitiesListComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
-        ManageActivitiesComponent
+        ActivitiesListComponent,
+        ActivityDetailsComponent
       ],
       imports: [
         SharedModule,
-        ActivitiesModule,
         AppRoutingModule
       ]
     })
@@ -26,14 +24,12 @@ describe('ManageActivitiesComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ManageActivitiesComponent);
+    fixture = TestBed.createComponent(ActivitiesListComponent);
     component = fixture.componentInstance;
-    element = fixture.debugElement.nativeElement;
     fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-
 });
