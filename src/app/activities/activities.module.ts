@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { ActivitiesRoutingModule } from './activities-routing.module';
 import { MyActivitiesComponent } from './my-activities/my-activities.component';
@@ -12,7 +12,8 @@ import { ActivitiesListComponent } from './activities-list/activities-list.compo
   imports: [
     SharedModule,
     FormsModule,
-    ActivitiesRoutingModule
+    ActivitiesRoutingModule,
+    ReactiveFormsModule
   ],
   declarations: [
     MyActivitiesComponent,

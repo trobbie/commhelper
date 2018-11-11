@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { Activity } from '../_models/activity.model';
@@ -29,10 +29,19 @@ export class ActivitiesService {
     return of(this.activities);
   }
 
-  getActivity(id: number | string) {
+  getActivity(id: number | string): Observable<Activity> {
     return this.getActivities().pipe(
       map((activities: Activity[]) => activities.find(activity => activity.id === +id))
     );
+  }
+
+  updateActivity(activity: Activity): boolean {
+    if (!activity.id || activity.id === 0) {
+      throw new Error('Use addActivity() for new activities, not updateActivity()');
+    }
+    const index = this.activities.findIndex((a) => a.id === activity.id);
+    this.activities[index] = activity;
+    return true;
   }
 
   // addActivity inserts the newActivity into the database.

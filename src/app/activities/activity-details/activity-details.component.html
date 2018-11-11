@@ -1,14 +1,18 @@
-<div *ngIf="activity" class="activity">
+<div *ngIf="activityId" class="activity">
+  <form [formGroup]="activityForm" (ngSubmit)="onSubmit()">
     <div>
-      <span>ID: </span>{{ activity.id }}</div>
+      <span>ID: </span>{{ activityForm.get('id').value }}</div>
     <div>
       <label>Name:
-        <input [(ngModel)]="editName" placeholder="name"/>
+        <input type="text" formControlName="name" required>
       </label>
     </div>
-  
-    <p>
-      <button class="buttonSave" (click)="save()" disabled="isDataChanged()">Save</button>
-      <button class="buttonCancel" (click)="cancel()" disabled="isDataChanged()">Cancel</button>
-    </p>
+  </form>
+  <p>
+    <button type="submit" class="buttonSave" [disabled]="isSaveButtonDisabled()" (click)="save()">Save</button>
+    <button type="reset" class="buttonCancel" [disabled]="isCancelButtonDisabled()" (click)="cancel()">Cancel</button>
+    
+    <!-- <button class="buttonSave" (click)="save()" disabled="isDataChanged()">Save</button> -->
+    <!-- <button class="buttonCancel" (click)="cancel()" disabled="!activityForm.valid">Cancel</button> -->
+  </p>
   </div>
