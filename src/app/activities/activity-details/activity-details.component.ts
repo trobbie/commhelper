@@ -31,8 +31,12 @@ export class ActivityDetailsComponent implements OnInit {
     );
   }
 
-  private isDataChanged(): boolean {
-    return !(this.activity.name === this.editName);
+  isDataChanged(): boolean {
+    if (this.activity) {
+      return false;
+    } else {
+      return !(this.activity.name === this.editName);
+    }
   }
 
   save() {

@@ -43,6 +43,14 @@ export class ActivitiesListComponent implements OnInit {
     return summary && this.selectedId && this.selectedId !== summary.id;
   }
 
+  isDataChanged(): boolean {
+    if (this.detailsComponent == null) {
+      return false;
+    } else {
+      return this.detailsComponent.isDataChanged();
+    }
+  }
+
   canDeactivate(): Observable<boolean> | boolean {
     // Allow synchronous navigation (`true`) if no activity or the activity is unchanged
     if (this.selectedId == null || !this.detailsComponent.isDataChanged()) {

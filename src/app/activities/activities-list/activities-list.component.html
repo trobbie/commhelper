@@ -9,7 +9,7 @@
         (panelChange)="beforeSelectionChange($event)">
     <ngb-panel *ngFor="let summary of listData$ | async" 
             id="{{ getPanelTitlePrefix() }}{{ summary.id }}"
-            [disabled]="isPanelSelected(summary)">
+            [disabled]="isPanelSelected()">
         <ng-template ngbPanelTitle>{{ summary.description }}</ng-template>
         <ng-template ngbPanelContent>
             <!-- using ngIf directive to only load component if selected,
