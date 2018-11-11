@@ -1,32 +1,62 @@
-#title {
-    font-size: 2em;
-    font-style: italic;
-    font-weight: bold;
-    text-align: center;
-}
 
 nav {
-    background: rgb(12, 51, 180);
+    background: #F2F2F2;
     height: 100%;
-    color: white;
+    color: 007bff;
+    text-align: left;
+    font-size: 1rem;
 
+    #title {
+        font-size: 1.5em;
+        // font-style: italic;
+        font-weight: bold;
+        text-align: center;
+        margin: 10px 0;
+    }
+
+    #admin-header {
+        font-size: 1.2em;
+        margin: 20px 0 10px 0;
+        text-align: center;
+    }
+
+    #user-login {
+        margin: 20px 0 10px 0;
+    }
+    
     ul {
         list-style-type: none;
         padding: 0;
         margin: 0;
 
         li {
-
-            a {
-                color: #fff;
-                padding: 20px;
-                display: block;
-            }
-
             .activated {
-                background-color: #00a8ff;
+                background-color: rgb(121, 205, 247);
             }
         }
     }
+
+    .button {
+        background-color: #F2F2F2;
+        padding: 5px;
+        display: inline-block;
+        cursor: pointer;
+        text-decoration: none;
+        width: 100%;
+
+        border: 1px solid rgba(0, 0, 0, 0.125);
+        border-radius: 4px;
+    }
+
+    i, img {
+        vertical-align: middle;
+        float: left;
+        margin: 0px 5px;
+    }
+    .button-text {
+        vertical-align: middle;
+        overflow: hidden; /* this is what keep the <p> from wrapping */
+    }
     
 }
+

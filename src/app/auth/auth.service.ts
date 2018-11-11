@@ -21,7 +21,7 @@ export class AuthService {
       tap(val => {
         this.isLoggedIn = true;
         if (this.isAdmin) {
-          this.userName = 'ADMIN';
+          this.userName = 'Admin';
         } else {
           this.userName = 'TestUser';
         }

@@ -1,51 +1,66 @@
 <nav>
   <div id="title">
-      <a routerLink="">CH</a>
+      Community Helper
   </div>
   <ul>
     <li>
-      <a routerLink="login" class='login'>
-       {{ isLoggedIn() ? getUserName() + ' (LOGOUT)' : 'LOGIN'}}
+      <a class="button" routerLink="myevents" [class.activated]="currentUrl == '/myevents'">
+        <i class="material-icons" title="Help Wanted">list</i>
+        <div class='button-text'>Help Wanted!</div>
       </a>
     </li>
     <li>
-      <a routerLink="myevents" [class.activated]="currentUrl == '/myevents'">
-        <i class="material-icons" title="Help Wanted">list priority_high</i>Help Wanted!
+      <a class="button" routerLink="mychannels" [class.activated]="currentUrl == '/mychannels'">
+        <i class="material-icons" title="My Subscribed Groups">group</i>
+        <div class='button-text'>My Groups</div>
       </a>
     </li>
     <li>
-      <a routerLink="mychannels" [class.activated]="currentUrl == '/mychannels'">
-        <i class="material-icons" title="My Subscribed Groups">group</i> My Subscribed Groups
+      <a class="button" routerLink="myactivities" [class.activated]="currentUrl ? currentUrl.startsWith('/myactivities') : false">
+        <i class="material-icons" title="My Activities">local_activity</i>
+        <div class='button-text'>My Activities</div>
       </a>
     </li>
     <li>
-      <a routerLink="myactivities" [class.activated]="currentUrl ? currentUrl.startsWith('/myactivities') : false">
-        <i class="material-icons" title="My Activities">local_activity</i> My Activities
-      </a>
-    </li>
-    <li>
-      <a routerLink="settings" [class.activated]="currentUrl == '/settings'">
-        <i class="material-icons" title="Settings">settings</i> Settings
+      <a class="button" routerLink="settings" [class.activated]="currentUrl == '/settings'">
+        <i class="material-icons" title="Settings">settings</i>
+        <div class='button-text'>Settings</div>
       </a>
     </li>
   </ul>
 
-  <div class='admin' *ngIf="isLoggedInAdmin()">
-    <h3>Admin:</h3>
+  <div *ngIf="isLoggedInAdmin()">
+    <h4 id="admin-header">ADMIN</h4>
     <ul>
       <li>
-        <a routerLink="/admin" routerLinkActive="active" 
-        [class.activated]="currentUrl == '/admin'">Dashboard
+        <a class="button" routerLink="/admin" routerLinkActive="active" 
+        [class.activated]="currentUrl == '/admin'">
+        <div class='button-text'>Dashboard</div>
         </a>
       </li>
       <li>
-        <a routerLink="/admin/activities" routerLinkActive="active"
-        [class.activated]="currentUrl == '/admin/activities'">Manage Activities</a>
+        <a class="button" routerLink="/admin/activities" routerLinkActive="active"
+        [class.activated]="currentUrl == '/admin/activities'">
+        <div class='button-text'>Manage Activities</div>
+      </a>
       </li>
       <li>
-        <a routerLink="/admin/users" routerLinkActive="active"
-        [class.activated]="currentUrl == '/admin/users'">Manage Users</a>
+        <a class="button" routerLink="/admin/users" routerLinkActive="active"
+        [class.activated]="currentUrl == '/admin/users'">
+        <div class='button-text'>Manage Users</div>
+        </a>
       </li>
     </ul>
+  </div>
+  <div id="user-login">
+    <img src="/src/assets/images/usericon.png">
+    <div class="button-text">
+      <div *ngIf="isLoggedIn()">
+        {{ getUserName() }}
+      </div>
+      <a class="login" routerLink="login">
+        {{ isLoggedIn() ? '(Log Out)' : 'Log In'}}
+      </a>
+    </div>
   </div>
 </nav>
