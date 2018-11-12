@@ -12,6 +12,7 @@ import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 export class ActivityDetailsComponent implements OnInit {
   @Input() activityId: number;
   @Output() closePanelFromDetails = new EventEmitter<boolean>();
+  @Output() valueChangedFromDetails = new EventEmitter<boolean>();
 
   activityForm: FormGroup = this.fb.group({
     id: [''],
@@ -30,6 +31,13 @@ export class ActivityDetailsComponent implements OnInit {
         this.activityForm.setValue(activity);
       }
     );
+    this.onChanges();
+  }
+
+  onChanges(): void {
+    this.activityForm.valueChanges.subscribe(val => {
+      this.valueChangedFromDetails.emit(true);
+    });
   }
 
   isDataChanged(): boolean {
@@ -55,8 +63,9 @@ export class ActivityDetailsComponent implements OnInit {
     // console.log('save:' + JSON.stringify(this.activityForm.value));
     this.dataService.updateActivity(this.activityForm.value);
 
-    if (this.activityForm['id'] == null
+    if (this.activityForm['id'] === null
         || this.activityForm['id'] === 0) {
+      console.log('adding new activity:' + this.activityForm['id']);
       this.dataService.addActivity(this.activityForm.value);
     }
 

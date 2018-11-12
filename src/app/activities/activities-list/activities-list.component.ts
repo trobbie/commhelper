@@ -17,6 +17,7 @@ export class ActivitiesListComponent implements OnInit {
   private panelTitlePrefix = 'ngb-panel-';
   listData$: Observable<DetailSummary[]>;
   private selectedId: number = null;
+  otherPanelsDisabled = false;
 
   @ViewChild('acc') accordionComponent;
   @ViewChild('details') detailsComponent;
@@ -35,19 +36,15 @@ export class ActivitiesListComponent implements OnInit {
     return this.panelTitlePrefix;
   }
 
-  getSelectedId(): number {
-    return this.selectedId;
+  isPanelSelected(id: number): boolean {
+    return id && this.selectedId && this.selectedId === id;
   }
 
-  isPanelSelected(summary: DetailSummary): boolean {
-    return summary && this.selectedId && this.selectedId !== summary.id;
-  }
-
-  isDataChanged(): boolean {
-    if (this.detailsComponent == null) {
-      return false;
+  isPanelDisabled(id: number): boolean {
+    if (this.otherPanelsDisabled) {
+      return !this.isPanelSelected(id);
     } else {
-      return this.detailsComponent.isDataChanged();
+      return false;
     }
   }
 
@@ -67,21 +64,31 @@ export class ActivitiesListComponent implements OnInit {
     if (!$event.panelId) { // then ignore
       return;
     }
-
+    
     if ($event.nextState === true) { // panel being opened
       // to get the id, drop the panel id prefix
       this.selectedId = +$event.panelId.substring(this.panelTitlePrefix.length);
     } else if ($event.nextState === false) { // being closed
-      this.selectedId = null;
+      if (this.otherPanelsDisabled) {
+        $event.preventDefault(); // do nothing if other panels disabled (means data was changed)
+      } else {
+        this.selectedId = null;
+      }
     }  // else invalid nextState
 
   }
 
-  // onDetailsClose() is initiated by details component
-  onDetailsClose($event, activity): void {
+  // onClosePanel() is initiated by details component
+  onClosePanel($event, activity): void {
     this.accordionComponent.collapse(this.panelTitlePrefix + this.selectedId);
     this.selectedId = null;
+    this.otherPanelsDisabled = false;
     this.getSummaryList(); // TODO: only update the id just changed, and only when changed
+  }
+
+  // onValuesChanged() is initiated by details component
+  onValuesChanged($event): void {
+    this.otherPanelsDisabled = $event;
   }
 
   getSummaryList() {
@@ -98,8 +105,7 @@ export class ActivitiesListComponent implements OnInit {
   }
 
   onCreateNewEntry(): void {
-    // this.router.navigate(['/myactivities/new']);
-    // this.activitiesService.newActivity();
+    this.dataService.newActivity();
   }
 
 }
