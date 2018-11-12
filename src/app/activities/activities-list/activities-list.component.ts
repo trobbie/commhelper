@@ -32,6 +32,10 @@ export class ActivitiesListComponent implements OnInit {
     this.getSummaryList();
   }
 
+  getSelectedId(): number {
+    return this.selectedId;
+  }
+
   getPanelTitlePrefix(): string {
     return this.panelTitlePrefix;
   }
@@ -64,7 +68,7 @@ export class ActivitiesListComponent implements OnInit {
     if (!$event.panelId) { // then ignore
       return;
     }
-    
+
     if ($event.nextState === true) { // panel being opened
       // to get the id, drop the panel id prefix
       this.selectedId = +$event.panelId.substring(this.panelTitlePrefix.length);

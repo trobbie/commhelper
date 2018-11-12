@@ -10,6 +10,7 @@ import { ActivitiesService } from '../../_services/activities.service';
 import { TestActivitiesService } from '../../_services/testing/test-activities.service';
 import { getTestActivities } from '../../_services/testing/test-activities';
 import { click, advance } from '../../../testing';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 const ACTIVITIES = getTestActivities();
@@ -26,6 +27,7 @@ describe('ActivitiesListComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         SharedModule,
+        ReactiveFormsModule,
         AppRoutingModule
       ],
       declarations: [

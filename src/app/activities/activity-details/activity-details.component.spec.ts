@@ -7,6 +7,7 @@ import { SharedModule } from '../../shared/shared.module';
 import { Activity } from 'src/app/_models/activity.model';
 import { asyncData } from 'src/testing';
 import { ActivitiesService } from 'src/app/_services/activities.service';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 let component: ActivityDetailsComponent;
 let fixture: ComponentFixture<ActivityDetailsComponent>;
@@ -35,7 +36,9 @@ describe('ActivityDetailsComponent', () => {
         ActivityDetailsComponent
       ],
       imports: [
-        SharedModule
+        SharedModule,
+        FormsModule,
+        ReactiveFormsModule
       ],
       providers: [
         // ActivitiesService at this level is IRRELEVANT!

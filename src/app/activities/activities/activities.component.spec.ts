@@ -6,6 +6,7 @@ import { MyActivitiesComponent } from '../my-activities/my-activities.component'
 import { SharedModule } from '../../shared/shared.module';
 import { ActivitiesListComponent } from '../activities-list/activities-list.component';
 import { ActivityDetailsComponent } from '../activity-details/activity-details.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 describe('ActivitiesComponent', () => {
   let component: ActivitiesComponent;
@@ -21,6 +22,7 @@ describe('ActivitiesComponent', () => {
       ],
       imports: [
         SharedModule,
+        ReactiveFormsModule,
         AppRoutingModule
       ]
     })
