@@ -59,7 +59,7 @@ describe('ActivitiesListComponent', () => {
   }));
 
   it('should select activity when a closed panel is clicked', fakeAsync(() => {
-    const expectedActivity = ACTIVITIES[1];
+    const expectedActivity = ACTIVITIES[ACTIVITIES.length - 2];
     const header = page.accPanelHeaders[1];
     const clickablePortion: DebugElement = header.query(By.css('.btn-link'));
 

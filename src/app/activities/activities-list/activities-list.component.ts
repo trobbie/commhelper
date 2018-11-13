@@ -1,12 +1,13 @@
-import { Component, OnInit, Input, Output, ViewChild } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { Observable, of } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, tap } from 'rxjs/operators';
 import { NgbPanelChangeEvent } from '@ng-bootstrap/ng-bootstrap';
 
 import { ActivitiesService } from '../../_services/activities.service';
 import { DetailSummary } from '../../_models/detail-summary';
 import { DialogService } from '../../_services/dialog.service';
+import { NgbDateStructAdapter } from '@ng-bootstrap/ng-bootstrap/datepicker/adapters/ngb-date-adapter';
 
 @Component({
   selector: 'app-activities-list',
@@ -95,7 +96,7 @@ export class ActivitiesListComponent implements OnInit {
     this.otherPanelsDisabled = $event;
   }
 
-  getSummaryList() {
+  getSummaryList(): void {
     if (this.dataService === null) {
       throw Error('dataService not assigned');
     }
@@ -104,7 +105,9 @@ export class ActivitiesListComponent implements OnInit {
         // (+) before `params.get()` turns the string into a number
         // this.selectId(+params.get('id'));
         return this.dataService.getSummaryList();
-      })
+      }),
+      // sort by dateCreated descending
+      tap(results => results.sort((a, b) => (a < b) ? 1 : (a === b) ? 0 : -1))
     );
   }
 

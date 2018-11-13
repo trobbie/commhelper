@@ -16,7 +16,8 @@ export class ActivityDetailsComponent implements OnInit {
 
   activityForm: FormGroup = this.fb.group({
     id: [''],
-    name: ['', Validators.required]
+    name: ['', Validators.required],
+    dateCreated: ['']
   });
 
   constructor(

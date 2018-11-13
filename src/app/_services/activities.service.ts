@@ -21,7 +21,11 @@ export class ActivitiesService {
   getSummaryList(): Observable<DetailSummary[]> {
     return of(this.activities.map(
       (activity: Activity) =>
-        <DetailSummary>{id: activity.id, description: activity.name}
+        <DetailSummary>{
+          id: activity.id,
+          description: activity.name,
+          dateCreated: activity.dateCreated
+        }
       ));
   }
 
@@ -52,7 +56,7 @@ export class ActivitiesService {
       this.activities.reduce((max, p) => p.id > max ? p.id : max,
         this.activities[0].id)
       + 1; // increase max value by one
-
+      newActivity.dateCreated = new Date();
     this.activities.push(newActivity);
   }
 

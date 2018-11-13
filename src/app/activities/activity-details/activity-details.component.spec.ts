@@ -15,7 +15,11 @@ let page: Page;
 let asSpy: ActivitiesServiceSpy;
 
 class ActivitiesServiceSpy {
-  testActivity: Activity = {id: 42, name: 'TestActivity42' };
+  testActivity: Activity = {
+    id: 42,
+    name: 'TestActivity42',
+    dateCreated: new Date('2018-10-01T01:00:00')
+   };
 
   /* emit cloned test activity */
   getActivity = jasmine.createSpy('getActivity').and.callFake(
