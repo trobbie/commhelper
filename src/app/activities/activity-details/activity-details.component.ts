@@ -22,8 +22,7 @@ export class ActivityDetailsComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private dataService: ActivitiesService,
-    @Optional() public listComponent: ActivitiesListComponent
+    private dataService: ActivitiesService
   ) {}
 
   ngOnInit() {

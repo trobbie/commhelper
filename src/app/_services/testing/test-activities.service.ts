@@ -32,7 +32,7 @@ export class TestActivitiesService extends ActivitiesService {
     return this.lastResult = asyncData(this.activities);
   }
 
-  public getActivity(id: number | string) {
+  getActivity(id: number | string) {
     if (typeof id === 'string') {
       id = parseInt(id as string, 10);
     }

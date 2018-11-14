@@ -1,17 +1,16 @@
 import { async, ComponentFixture, TestBed, fakeAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
+import { DebugElement, Component, Input, EventEmitter, Output, getDebugNode } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { ActivitiesListComponent } from './activities-list.component';
 import { SharedModule } from '../../shared/shared.module';
-import { ActivityDetailsComponent } from '../activity-details/activity-details.component';
 import { AppRoutingModule } from '../../app-routing.module';
 import { ActivitiesService } from '../../_services/activities.service';
 import { TestActivitiesService } from '../../_services/testing/test-activities.service';
 import { getTestActivities } from '../../_services/testing/test-activities';
 import { click, advance } from '../../../testing';
-import { ReactiveFormsModule } from '@angular/forms';
-
+import { ActivityDetailsComponent } from '../activity-details/activity-details.component';
 
 const ACTIVITIES = getTestActivities();
 
@@ -19,11 +18,17 @@ let component: ActivitiesListComponent;
 let fixture: ComponentFixture<ActivitiesListComponent>;
 let page: Page;
 
+@Component({selector: 'app-activity-details', template: ''})
+class ActivityDetailsStubComponent {
+  // mimic the public API
+  @Input() activityId: number;
+  @Output() closePanelFromDetails = new EventEmitter<boolean>();
+  @Output() valueChangedFromDetails = new EventEmitter<boolean>();
+}
+
 describe('ActivitiesListComponent', () => {
 
   beforeEach(async(() => {
-    // addMatchers();
-
     TestBed.configureTestingModule({
       imports: [
         SharedModule,
@@ -32,7 +37,7 @@ describe('ActivitiesListComponent', () => {
       ],
       declarations: [
         ActivitiesListComponent,
-        ActivityDetailsComponent
+        ActivityDetailsStubComponent
       ],
       providers: [
         { provide: ActivitiesService, useClass: TestActivitiesService }
@@ -73,43 +78,59 @@ describe('ActivitiesListComponent', () => {
   }));
 
   // enable when can get isDataChanged() to work when adding FormGroup
-  xit('should open up panel if a panel row is clicked; all others closed', fakeAsync(() => {
-    const button1: DebugElement = page.accPanelHeaders[1].query(By.css('.btn-link'));
-    const button2: DebugElement = page.accPanelHeaders[2].query(By.css('.btn-link'));
+  it('should open up panel if a panel row is clicked; all others closed', fakeAsync(() => {
 
-    expect(button1.nativeElement.classList.contains('collapsed')).toBeTruthy('row should be initially collapsed');
+    expect(page.panel1DE.nativeElement.classList.contains('collapsed')).toBeTruthy('row should be initially collapsed');
 
-    click(button1);
+    click(page.panel1DE);
     advance(fixture);
 
     // Note: when panel is row is expanded, can also check 'aria-expanded'
-    // 'aria-expanded': I assume "aria" refers to "area"
-    // expect(button1.getAttribute('aria-expanded')).toBe('false', 'row is not initially collapsed');
-    expect(button1.nativeElement.classList.contains('collapsed')).toBeFalsy('first clicked row should be expanded');
+    expect(page.panel1DE.nativeElement.getAttribute('aria-expanded')).toBe('true', 'row is not initially collapsed');
+    expect(page.panel1DE.nativeElement.classList.contains('collapsed')).toBeFalsy('first clicked row should be expanded');
 
     // NOW click _another_ row and see the effects
-    click(button2);
+    click(page.panel2DE);
     advance(fixture);
 
-    // expect(button2.getAttribute('aria-expanded')).toBe('true', 'clicked row not expanded');
-    expect(button2.classes['collapsed']).toBeFalsy('clicked row should be expanded');
-    // expect(button2.nativeElement.classList.contains('collapsed')).toBeFalsy('clicked row should be expanded');
+    expect(page.panel2DE.nativeElement.getAttribute('aria-expanded')).toBe('true', 'clicked row should be expanded');
+    expect(page.panel2DE.classes['collapsed']).toBeFalsy('clicked row should be expanded');
 
-    // expect(button1.getAttribute('aria-expanded')).toBe('false', 'prior expanded row not collapsed');
-    expect(button1.classes['collapsed']).toBeTruthy('prior expanded row should be collapsed');
-    // expect(button1.nativeElement.classList.contains('collapsed')).toBeTruthy('prior expanded row should be collapsed');
+    expect(page.panel1DE.nativeElement.getAttribute('aria-expanded')).toBe('false', 'prior expanded row should be collapsed');
+    expect(page.panel1DE.classes['collapsed']).toBeTruthy('prior expanded row should be collapsed');
+
   }));
 
-  xit('should disable all other panel rows when data has been changed for a selection', () => {
+  it('should disable all other panel rows when data has been changed for a selection', fakeAsync(() => {
+    expect(page.panel2DE.nativeElement.hasAttribute('disabled')).toBe(false, 'initially not disabled');
 
-  });
+    click(page.panel1DE);
+    advance(fixture);
 
-  xit('should enable save/cancel buttons upon changing data in a selection', () => {
+    // simulate data change by calling the event that the details component emits
+    component.onValuesChanged(true);
+    advance(fixture);
 
-  });
+    expect(page.panel2DE.nativeElement.hasAttribute('disabled')).toBe(true, 'onValuesChanged() did not disable panel');
+  }));
 
-  it('should close panel when details cancel button is clicked', () => {
-  });
+  it('should close panel when onClosePanel() is called', fakeAsync(() => {
+    click(page.panel1DE);
+    advance(fixture);
+
+    expect(page.panel1DE.nativeElement.getAttribute('aria-expanded')).toBe('true', 'panel expected to be open at first click');
+
+    // simulate cancel/save click by calling the event that the details component emits
+    component.onClosePanel(true);
+
+    // expect(component.getSummaryList).toHaveBeenCalledWith();
+    advance(fixture);
+
+    expect(component.getSelectedId()).toBeNull('selectedId not set to null upon onClosePanel()');
+    expect(page.panel1DE.nativeElement.getAttribute('aria-expanded')).toBe('false', 'onClosePanel() did not collapse panel');
+    expect(page.panel1DE.classes['collapsed']).toBeTruthy('onClosePanel() did not collapse panel');
+
+  }));
 
 
 });
@@ -133,22 +154,16 @@ function createComponent() {
 }
 
 class Page {
+  de: DebugElement;
   /** accordion panel elements */
   accPanelHeaders: DebugElement[];
-  accPanelRows: HTMLElement[];
 
-  /** Highlighted DebugElement */
-  // highlightDe: DebugElement;
+  get panel1DE(): DebugElement { return this.accPanelHeaders[1].query(By.css('.btn-link')); }
+  get panel2DE(): DebugElement { return this.accPanelHeaders[2].query(By.css('.btn-link')); }
 
   constructor() {
-    // const panelHeaderNodes = fixture.nativeElement.querySelectorAll('.card-header');
+    this.de = fixture.debugElement;
     const panelHeaderNodes = fixture.debugElement.queryAll(By.css('.card-header'));
     this.accPanelHeaders = Array.from(panelHeaderNodes);
-    const panelNodes = fixture.nativeElement.querySelectorAll('.card');
-    this.accPanelRows = Array.from(panelNodes);
-
-    // Find the first element with an attached HighlightDirective
-    // this.highlightDe = fixture.debugElement.query(By.directive(HighlightDirective));
-
   }
 }

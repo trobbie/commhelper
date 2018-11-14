@@ -84,11 +84,12 @@ export class ActivitiesListComponent implements OnInit {
   }
 
   // onClosePanel() is initiated by details component
-  onClosePanel($event, activity): void {
+  onClosePanel($eventRefreshSummaryList): void {
+    this.otherPanelsDisabled = false; // set this before collapsing
     this.accordionComponent.collapse(this.panelTitlePrefix + this.selectedId);
-    this.selectedId = null;
-    this.otherPanelsDisabled = false;
-    this.getSummaryList(); // TODO: only update the id just changed, and only when changed
+    if ($eventRefreshSummaryList === false) {
+      this.getSummaryList(); // TODO: only update the id just changed, and only when changed
+    }
   }
 
   // onValuesChanged() is initiated by details component

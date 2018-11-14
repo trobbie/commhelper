@@ -1,15 +1,16 @@
 <div *ngIf="activityId" class="activity">
   <form [formGroup]="activityForm" (ngSubmit)="onSubmit()">
     <div>
-      <span>ID: </span>{{ activityForm.get('id').value }}
+      <span>ID: </span>
+        <span class="idField">{{ activityForm.get('id').value }}</span>
     </div>
     <div>
       <label>Name:
-        <input type="text" formControlName="name" required>
+        <input type="text" formControlName="name" id="nameField" required>
       </label>
     </div>
-    <div>
-      <span>Date Created: </span>{{ activityForm.get('dateCreated').value }}
+    <div class="dateCreated">
+      <span class="dateCreatedField">Date Created: </span>{{ activityForm.get('dateCreated').value }}
     </div>
   </form>
   <p>

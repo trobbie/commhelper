@@ -1,35 +1,33 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { DebugElement } from '@angular/core';
+import { DebugElement, Component } from '@angular/core';
 import { By } from '@angular/platform-browser';
 
 import { ActivityDetailsComponent } from './activity-details.component';
 import { SharedModule } from '../../shared/shared.module';
 import { Activity } from 'src/app/_models/activity.model';
-import { asyncData } from 'src/testing';
+import { asyncData, newEvent, click } from 'src/testing';
 import { ActivitiesService } from 'src/app/_services/activities.service';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { of } from 'rxjs';
 
 let component: ActivityDetailsComponent;
 let fixture: ComponentFixture<ActivityDetailsComponent>;
 let page: Page;
-let asSpy: ActivitiesServiceSpy;
+let dataService: ActivitiesServiceStub;
 
-class ActivitiesServiceSpy {
-  testActivity: Activity = {
-    id: 42,
-    name: 'TestActivity42',
-    dateCreated: new Date('2018-10-01T01:00:00')
-   };
+const testActivity: Activity = {
+  id: 42,
+  name: 'TestActivity42',
+  dateCreated: new Date('2018-10-01T01:00:00')
+};
 
-  /* emit cloned test activity */
-  getActivity = jasmine.createSpy('getActivity').and.callFake(
-    () => asyncData(Object.assign({}, this.testActivity))
-  );
-
-  /* emit clone of test activity, with changes merged in */
-  saveActivity = jasmine.createSpy('saveActivity').and.callFake(
-    (activity: Activity) => asyncData(Object.assign(this.testActivity, activity))
-  );
+class ActivitiesServiceStub {
+  getActivity() {
+    return of(testActivity);
+  }
+  updateActivity() {
+    return; // do nothing
+  }
 }
 
 describe('ActivityDetailsComponent', () => {
@@ -45,42 +43,108 @@ describe('ActivityDetailsComponent', () => {
         ReactiveFormsModule
       ],
       providers: [
-        // ActivitiesService at this level is IRRELEVANT!
-        { provide: ActivitiesService, useValue: {} }
+        { provide: ActivitiesService, useClass: ActivitiesServiceStub }
       ]
     })
-    // Override component's own provider
-    .overrideComponent(ActivityDetailsComponent, {
-      set: {
-        providers: [
-          { provide: ActivitiesService, useClass: ActivitiesServiceSpy }
-        ]
-      }
-    })
-    .compileComponents()
-    .then(createComponent);
-
+    .compileComponents();
   }));
+
+  // the "sync" beforeEach is guaranteed to run after the "async" one
+  beforeEach(() => {
+    createComponent();
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have called `getActivity`', () => {
-    expect(asSpy.getActivity.calls.count()).toBe(1, 'getActivity called once');
-  });
+  // xit('should have called `getActivity`', () => {
+  //   expect(dataService.getActivity.calls.count()).toBe(1, 'getActivity called once');
+  // });
 
   it('should disable save/cancel buttons upon initially opening panel', () => {
-    expect(page.buttonSave.nativeElement.disabled).toBe(true);
+    expect(page.buttonSave.hasAttribute('disabled')).toBe(true, 'save button not disabled');
+    expect(page.buttonCancel.hasAttribute('disabled')).toBe(true, 'cancel button not disabled');
   });
+
+  it('should fill in the fields correctly from dataService', () => {
+    expect(page.idField.textContent).toBe(testActivity.id.toString(), 'id incorrect');
+    expect(page.nameField.value).toBe(testActivity.name, 'name incorrect');
+  });
+
+  it('should emit an event on closePanelFromDetails when cancel button is clicked', () => {
+    let emitted = false;
+    component.closePanelFromDetails.subscribe(() => emitted = true);
+
+    // change a value so that the cancel button is enabled for clicking
+    page.nameField.value = page.nameField.value + 's';
+    page.nameField.dispatchEvent(newEvent('input'));
+    fixture.detectChanges();
+
+    expect(emitted).toBe(false, 'event should not have emitted yet');
+    expect(page.buttonCancel.hasAttribute('disabled')).toBe(false, 'cancel button still not enabled for clicking');
+
+    click(page.buttonCancel);
+    expect(emitted).toBe(true, 'event did not emit upon clicking cancel');
+
+  });
+
+  it('should emit an event on closePanelFromDetails when save button is clicked', () => {
+    let emitted = false;
+    component.closePanelFromDetails.subscribe(() => emitted = true);
+
+    // change a value so that the cancel button is enabled for clicking
+    page.nameField.value = page.nameField.value + 's';
+    page.nameField.dispatchEvent(newEvent('input'));
+    fixture.detectChanges();
+
+    expect(emitted).toBe(false, 'event should not have emitted yet');
+    expect(page.buttonSave.hasAttribute('disabled')).toBe(false, 'save button still not enabled for clicking');
+
+    click(page.buttonSave);
+    expect(emitted).toBe(true, 'event did not emit upon clicking save');
+
+  });
+
+  it('should enable save/cancel button and emit on valueChangedFromDetails when data changes and is valid', () => {
+    expect(page.buttonCancel.hasAttribute('disabled')).toBe(true, 'cancel button not initially disabled');
+    expect(page.buttonSave.hasAttribute('disabled')).toBe(true, 'save button not initially disabled');
+
+    let emitted = false;
+    component.valueChangedFromDetails.subscribe(() => emitted = true);
+    expect(emitted).toBe(false, 'event should not have emitted yet');
+
+    page.nameField.value = page.nameField.value + 's';
+    page.nameField.dispatchEvent(newEvent('input'));
+    fixture.detectChanges(); // update the display binding
+
+    expect(component.activityForm.valid).toBe(true, 'invalid form change; CHANGE TEST');
+
+    expect(page.buttonSave.hasAttribute('disabled')).toBe(false, 'save button not enabled');
+    expect(page.buttonCancel.hasAttribute('disabled')).toBe(false, 'cancel button not enabled');
+    expect(emitted).toBe(true, 'event never emitted');
+  });
+
+  it('should disable save button if name (required) not specified', () => {
+
+    page.nameField.value = ''; // thus should make FormGroup invalid
+    page.nameField.dispatchEvent(newEvent('input'));
+    fixture.detectChanges(); // update the display binding
+
+    expect(page.buttonSave.hasAttribute('disabled')).toBe(true, 'save button not disabled');
+  });
+
 });
 
 /////////// Helpers /////
 
-/** Create the component and set the `page` test variables */
 function createComponent() {
   fixture = TestBed.createComponent(ActivityDetailsComponent);
   component = fixture.componentInstance;
+  dataService = fixture.debugElement.injector.get(ActivitiesService) as any;
+
+  // set those properties that would have been set by parent
+  component.activityId = testActivity.id;
 
   // change detection triggers ngOnInit
   fixture.detectChanges();
@@ -90,17 +154,19 @@ function createComponent() {
     // change detection updates the view
     fixture.detectChanges();
     page = new Page();
-    // get the component's injected ActivitiesServiceSpy
-    asSpy = fixture.debugElement.injector.get(ActivitiesService) as any;
   });
 }
 
 class Page {
-  buttonSave: DebugElement;
-  buttonCancel: DebugElement;
+  get idField() { return this.query<HTMLElement>('span.idField'); }
+  get nameField() { return this.query<HTMLInputElement>('input#nameField'); }
+  get buttonSave() { return this.query<HTMLButtonElement>('.buttonSave'); }
+  get buttonCancel() { return this.query<HTMLButtonElement>('.buttonCancel'); }
 
   constructor() {
-    this.buttonSave = fixture.debugElement.query(By.css('.buttonSave'));
-    this.buttonCancel = fixture.debugElement.query(By.css('.buttonCancel'));
+  }
+  //// query helpers ////
+  private query<T>(selector: string): T {
+    return fixture.nativeElement.querySelector(selector);
   }
 }
