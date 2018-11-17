@@ -124,8 +124,6 @@ export class ActivitiesListComponent implements OnInit {
   }
 
   onCreateNewEntry(): void {
-    // this.dataService.newActivity();
-    console.log(this.selectedId);
     this.selectedId = 0;
   }
 

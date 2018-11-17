@@ -188,6 +188,7 @@ describe('ActivitiesListComponent', () => {
       expect(detailsDE).not.toBeNull('could not find activity class');
     }
   }));
+
   it('should add "new activity" to panel 1 position after saving', fakeAsync(() => {
     click(page.panelDE(0));
     advance(fixture);
