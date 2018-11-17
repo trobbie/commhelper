@@ -1,8 +1,8 @@
-import { Component, OnInit, Optional, Input, Output, EventEmitter } from '@angular/core';
-
-import { ActivitiesListComponent } from '../activities-list/activities-list.component';
-import { ActivitiesService } from '../../_services/activities.service';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+
+import { ActivitiesService } from '../../_services/activities.service';
+import { Activity } from '../../_models/activity.model';
 
 @Component({
   selector: 'app-activity-details',
@@ -11,7 +11,7 @@ import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 })
 export class ActivityDetailsComponent implements OnInit {
   @Input() activityId: number;
-  @Output() closePanelFromDetails = new EventEmitter<boolean>();
+  @Output() closePanelFromDetails = new EventEmitter<Activity>();
   @Output() valueChangedFromDetails = new EventEmitter<boolean>();
 
   activityForm: FormGroup = this.fb.group({
@@ -26,11 +26,17 @@ export class ActivityDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.dataService.getActivity(this.activityId).subscribe(
-      activity => {
-        this.activityForm.setValue(activity);
-      }
-    );
+    if (this.activityId === 0) { // then a "new activity"
+      const activity = this.dataService.newActivity();
+      // note: activity not added to dataService yet
+      this.activityForm.setValue(activity);
+    } else {
+      this.dataService.getActivity(this.activityId).subscribe(
+        (activity) => {
+          this.activityForm.setValue(activity);
+        }
+      );
+    }
     this.onChanges();
   }
 
@@ -60,21 +66,22 @@ export class ActivityDetailsComponent implements OnInit {
   }
 
   save() {
-    // console.log('save:' + JSON.stringify(this.activityForm.value));
-    this.dataService.updateActivity(this.activityForm.value);
-
-    if (this.activityForm['id'] === null
-        || this.activityForm['id'] === 0) {
-      console.log('adding new activity:' + this.activityForm['id']);
-      this.dataService.addActivity(this.activityForm.value);
+    if (this.activityForm['id']) {
+      this.dataService.updateActivity(this.activityForm.value);
+      this.closePanelFromDetails.emit(this.activityForm.value);
+    } else {
+      // else was a new activity, now add to the dataService
+      this.dataService.addActivity(this.activityForm.value).forEach(
+        (newActivity) => {
+          this.closePanelFromDetails.emit(newActivity);
+        }
+      );
     }
-
-    this.closePanelFromDetails.emit(true);
   }
 
   cancel() {
     this.activityForm.reset();
-    this.closePanelFromDetails.emit(true);
+    this.closePanelFromDetails.emit(null);
   }
 
 }

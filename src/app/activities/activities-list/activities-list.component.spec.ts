@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed, fakeAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { DebugElement, Component, Input, EventEmitter, Output, getDebugNode } from '@angular/core';
+import { DebugElement, Component, Input, EventEmitter, Output } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { ActivitiesListComponent } from './activities-list.component';
@@ -10,15 +10,22 @@ import { ActivitiesService } from '../../_services/activities.service';
 import { TestActivitiesService } from '../../_services/testing/test-activities.service';
 import { getTestActivities } from '../../_services/testing/test-activities';
 import { click, advance } from '../../../testing';
-import { ActivityDetailsComponent } from '../activity-details/activity-details.component';
-
-const ACTIVITIES = getTestActivities();
+import { Activity } from '../../_models/activity.model';
+import { DetailSummary } from '../../_models/detail-summary';
 
 let component: ActivitiesListComponent;
 let fixture: ComponentFixture<ActivitiesListComponent>;
 let page: Page;
+let dataService: ActivitiesService;
 
-@Component({selector: 'app-activity-details', template: ''})
+let activities: Activity[];
+// panel 1 is "first activity" (not panel 0)
+// const panelIndexOfFirstSummary = 1; // index of summary array (order displayed)
+
+@Component({
+  selector: 'app-activity-details',
+  template: '<div *ngIf="activityId != null" class="activity">Stubbed Activity Details</div>'
+})
 class ActivityDetailsStubComponent {
   // mimic the public API
   @Input() activityId: number;
@@ -56,7 +63,7 @@ describe('ActivitiesListComponent', () => {
   });
 
   it('should initialize to no selected id in the componeent, and no expanded rows', fakeAsync(() => {
-    expect(component.getSelectedId()).toBeNull();
+    expect(component.selectedId).toBeNull();
 
     page.accPanelHeaders.forEach((element) =>
       expect(element.nativeElement.querySelector('.btn-link').getAttribute('aria-expanded')).toBe('false')
@@ -64,74 +71,140 @@ describe('ActivitiesListComponent', () => {
   }));
 
   it('should select activity when a closed panel is clicked', fakeAsync(() => {
-    const expectedActivity = ACTIVITIES[ACTIVITIES.length - 2];
-    const header = page.accPanelHeaders[1];
-    const clickablePortion: DebugElement = header.query(By.css('.btn-link'));
+    const panelIndex = 1;
 
-    expect(clickablePortion.nativeElement.getAttribute('class').includes('collapsed')).toBeTruthy('row should be initially collapsed');
-    expect(component.getSelectedId()).toBeNull('component selected id should initially be null');
+    expectPanelToBeOpen(panelIndex, false, 'row should be initially collapsed');
+    expect(component.selectedId).toBeNull('component selected id should initially be null');
 
-    click(clickablePortion);
+    click(page.panelDE(panelIndex));
     advance(fixture);
 
-    expect(component.getSelectedId()).toEqual(expectedActivity.id, 'component selected id should be property assigned');
+    expect(component.selectedId)
+      .toEqual(page.panelSummary(panelIndex).id,
+      'component selected id should be property assigned');
   }));
 
   // enable when can get isDataChanged() to work when adding FormGroup
   it('should open up panel if a panel row is clicked; all others closed', fakeAsync(() => {
+    expectPanelToBeOpen(1, false, 'row should be initially collapsed');
 
-    expect(page.panel1DE.nativeElement.classList.contains('collapsed')).toBeTruthy('row should be initially collapsed');
-
-    click(page.panel1DE);
+    click(page.panelDE(1));
     advance(fixture);
 
     // Note: when panel is row is expanded, can also check 'aria-expanded'
-    expect(page.panel1DE.nativeElement.getAttribute('aria-expanded')).toBe('true', 'row is not initially collapsed');
-    expect(page.panel1DE.nativeElement.classList.contains('collapsed')).toBeFalsy('first clicked row should be expanded');
+    expectPanelToBeOpen(1, true, 'row is not initially collapsed');
 
     // NOW click _another_ row and see the effects
-    click(page.panel2DE);
+    click(page.panelDE(2));
     advance(fixture);
 
-    expect(page.panel2DE.nativeElement.getAttribute('aria-expanded')).toBe('true', 'clicked row should be expanded');
-    expect(page.panel2DE.classes['collapsed']).toBeFalsy('clicked row should be expanded');
-
-    expect(page.panel1DE.nativeElement.getAttribute('aria-expanded')).toBe('false', 'prior expanded row should be collapsed');
-    expect(page.panel1DE.classes['collapsed']).toBeTruthy('prior expanded row should be collapsed');
-
+    expectPanelToBeOpen(2, true, 'clicked row should be expanded');
+    expectPanelToBeOpen(1, false, 'prior expanded row should be collapsed');
   }));
 
   it('should disable all other panel rows when data has been changed for a selection', fakeAsync(() => {
-    expect(page.panel2DE.nativeElement.hasAttribute('disabled')).toBe(false, 'initially not disabled');
+    expect(page.panelDE(2).nativeElement.hasAttribute('disabled')).toBe(false, 'initially not disabled');
 
-    click(page.panel1DE);
+    click(page.panelDE(1));
     advance(fixture);
 
     // simulate data change by calling the event that the details component emits
     component.onValuesChanged(true);
     advance(fixture);
 
-    expect(page.panel2DE.nativeElement.hasAttribute('disabled')).toBe(true, 'onValuesChanged() did not disable panel');
+    expect(page.panelDE(2).nativeElement.hasAttribute('disabled')).toBe(true, 'onValuesChanged() did not disable panel');
   }));
 
-  it('should close panel when onClosePanel() is called', fakeAsync(() => {
-    click(page.panel1DE);
+  it('should close panel when onClosePanel(null) [cancel button] is called', fakeAsync(() => {
+    const panelIndex = 1;
+    // open first (alraedy tested this works)
+    click(page.panelDE(panelIndex));
     advance(fixture);
 
-    expect(page.panel1DE.nativeElement.getAttribute('aria-expanded')).toBe('true', 'panel expected to be open at first click');
-
-    // simulate cancel/save click by calling the event that the details component emits
-    component.onClosePanel(true);
+    // simulate cancel click by calling the event that the details component emits
+    component.onClosePanel(null);
 
     // expect(component.getSummaryList).toHaveBeenCalledWith();
     advance(fixture);
 
-    expect(component.getSelectedId()).toBeNull('selectedId not set to null upon onClosePanel()');
-    expect(page.panel1DE.nativeElement.getAttribute('aria-expanded')).toBe('false', 'onClosePanel() did not collapse panel');
-    expect(page.panel1DE.classes['collapsed']).toBeTruthy('onClosePanel() did not collapse panel');
-
+    expect(component.selectedId).toBeNull('selectedId not set to null upon onClosePanel()');
+    expectPanelToBeOpen(panelIndex, false, 'onClosePanel() did not collapse panel');
   }));
 
+  it('should close panel when onClosePanel(activity) [save button] is called', fakeAsync(() => {
+    const panelIndex = 1;
+    // open first (alraedy tested this works)
+    click(page.panelDE(panelIndex));
+    advance(fixture);
+
+    expectPanelToBeOpen(panelIndex, true, 'did not expand panel at first click');
+
+    // simulate save click by calling the event that the details component emits
+    component.onClosePanel(getActivityBackingObject(panelIndex));
+    advance(fixture);
+
+    expect(component.selectedId).toBeNull('selectedId not set to null upon onClosePanel()');
+    expectPanelToBeOpen(panelIndex, false, 'onClosePanel() did not collapse panel');
+  }));
+
+  it('should update summary when onClosePanel(activity) called', fakeAsync(() => {
+    const panelIndex = 1;
+    click(page.panelDE(panelIndex));
+    advance(fixture);
+
+    expectPanelToBeOpen(panelIndex, true, 'did not expand panel at first click');
+
+    expect(page.panelDE(panelIndex).nativeElement.innerHTML)
+      .toContain(page.panelSummary(panelIndex).description,
+      'summary should initially be correct');
+
+    // Update the name (which is included in the summary)
+    // Do this with the service, just like the details component would have
+    // before it calls onClosePanel(true)
+    const currentActivity: Activity = getActivityBackingObject(panelIndex);
+
+    const newName = '**NAMECHANGE**';
+    currentActivity.name = newName;
+    dataService.updateActivity(currentActivity);
+
+    // simulate save click by calling the event that the details component emits
+    component.onClosePanel(currentActivity);
+    advance(fixture);
+
+    expect(page.panelDE(panelIndex).nativeElement.innerHTML).toContain(newName, 'summary description should now contain the new name');
+  }));
+
+  it('should always have a "new activity" panel as its first panel', fakeAsync(() => {
+    expect(page.panelDE(0).nativeElement.innerHTML).toContain(component.nameOfCreateActivityButton);
+  }));
+
+  it('should show details component when "new activity" panel is selected', fakeAsync(() => {
+    click(page.panelDE(0));
+    advance(fixture);
+
+    expect(page.openDetailsDE).not.toBeNull('could not find opened panel body');
+    if (page.openDetailsDE) {
+      const detailsDE = page.openDetailsDE.query(By.css('.activity'));
+      expect(detailsDE).not.toBeNull('could not find activity class');
+    }
+  }));
+  it('should add "new activity" to panel 1 position after saving', fakeAsync(() => {
+    click(page.panelDE(0));
+    advance(fixture);
+
+    const newActivity: Activity = new Activity();
+    newActivity.id = 99999;
+    newActivity.name = 'testing';
+    newActivity.dateCreated = new Date();
+    dataService.addActivity(newActivity);
+
+    // simulate save click by calling the event that the details component emits
+    component.onClosePanel(newActivity);
+    advance(fixture);
+
+    expect(page.panelSummary(1).id).toBe(newActivity.id, 'panel 1 does not contain new activity');
+
+  }));
 
 });
 
@@ -141,6 +214,8 @@ describe('ActivitiesListComponent', () => {
 function createComponent() {
   fixture = TestBed.createComponent(ActivitiesListComponent);
   component = fixture.componentInstance;
+  dataService = TestBed.get(ActivitiesService);
+  activities = getTestActivities();
 
   // change detection triggers ngOnInit
   fixture.detectChanges();
@@ -153,17 +228,41 @@ function createComponent() {
   });
 }
 
+function expectPanelToBeOpen(panelIndex: number, expectOpen: boolean, expectionFailOutput?: any) {
+  expect(page.panelDE(panelIndex).nativeElement.getAttribute('aria-expanded')).toBe(expectOpen ? 'true' : 'false', expectionFailOutput);
+
+  // Note: a more thorough check would check the below too
+  // if (expectOpen) {
+  //   expect(page.panelDE(panelIndex).classes['collapsed']).toBeFalsy(expectionFailOutput);
+  // } else {
+  //    expect(page.panelDE(panelIndex).classes['collapsed']).toBeTruthy(expectionFailOutput);
+  // }
+}
+
+function getModelIndexFromPanelIndex(panelIndex: number): number {
+  // find the index of model representing activity in panel 1
+  const id = component._summaries[panelIndex].id;
+  return activities.findIndex((activity) => activity.id === id);
+}
+
+function getActivityBackingObject(panelIndex: number): Activity {
+  return activities[getModelIndexFromPanelIndex(panelIndex)];
+}
+
 class Page {
   de: DebugElement;
-  /** accordion panel elements */
-  accPanelHeaders: DebugElement[];
 
-  get panel1DE(): DebugElement { return this.accPanelHeaders[1].query(By.css('.btn-link')); }
-  get panel2DE(): DebugElement { return this.accPanelHeaders[2].query(By.css('.btn-link')); }
+  get openDetailsDE(): DebugElement { return this.de.query(By.css('.card-body')); }
+  /** accordion panel elements */
+  // access these elements without caching since elements often refresh
+  get accPanelHeaders(): DebugElement[] {
+    const panelHeaderNodes = this.de.queryAll(By.css('.card-header'));
+    return Array.from(panelHeaderNodes);
+  }
 
   constructor() {
     this.de = fixture.debugElement;
-    const panelHeaderNodes = fixture.debugElement.queryAll(By.css('.card-header'));
-    this.accPanelHeaders = Array.from(panelHeaderNodes);
   }
+  panelDE(panelIndex: number): DebugElement { return this.accPanelHeaders[panelIndex].query(By.css('.btn-link')); }
+  panelSummary(panelIndex: number): DetailSummary { return component._summaries[panelIndex]; }
 }

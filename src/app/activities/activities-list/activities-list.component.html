@@ -1,28 +1,29 @@
-<p>
-    <button type="button" class="btn btn-primary btn-sm" (click)="onCreateNewEntry()">
-    Add Group Item
-    </button>
-</p>
 
 <ngb-accordion #acc="ngbAccordion"
         [closeOthers]="true" [destroyOnHide]="true"
         (panelChange)="beforeSelectionChange($event)">
-    <ngb-panel *ngFor="let summary of listData$ | async" 
+    <ngb-panel *ngFor="let summary of (summaries$ | async)" 
             id="{{ getPanelTitlePrefix() }}{{ summary.id }}"
-            [disabled]="isPanelDisabled(summary.id)"
-            >
-        <ng-template ngbPanelTitle>{{ summary.description }}</ng-template>
-        <ng-template ngbPanelContent>
-            <!-- using ngIf directive to only load component if selected,
+            [disabled]="isPanelDisabled(summary.id)">
+
+        <ng-template ngbPanelTitle *ngIf="summary.id !== 0">
+            {{ summary.description }}
+        </ng-template>
+        <ng-template ngbPanelTitle *ngIf="summary.id === 0">
+            <button type="button" class="btn btn-primary" (click)="onCreateNewEntry()">
+                <i class="material-icons" title="Add Activity">add</i>
+                <div class='button-text'>{{ nameOfCreateActivityButton }}</div>
+            </button>
+        </ng-template>
+        <!-- using ngIf directive to only load component if selected,
                 else a details component is loaded for *each* element 
                 in the list -->
-            <div *ngIf="isPanelSelected(summary.id)">
-                <app-activity-details #details
-                    [activityId]="summary.id"
-                    (closePanelFromDetails)="onClosePanel($event)"
-                    (valueChangedFromDetails)="onValuesChanged($event)">
-                </app-activity-details>
-            </div>
+        <ng-template ngbPanelContent *ngIf="isPanelSelected(summary.id)">
+            <app-activity-details #details
+                [activityId]="summary.id"
+                (closePanelFromDetails)="onClosePanel($event)"
+                (valueChangedFromDetails)="onValuesChanged($event)">
+            </app-activity-details>
         </ng-template>
     </ngb-panel>
 </ngb-accordion>

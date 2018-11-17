@@ -1,4 +1,4 @@
-<div *ngIf="activityId" class="activity">
+<div *ngIf="activityId != null" class="activity">
   <form [formGroup]="activityForm" (ngSubmit)="onSubmit()">
     <div>
       <span>ID: </span>

@@ -29,6 +29,18 @@ export class ActivitiesService {
       ));
   }
 
+  getSummary(id: number): Observable<DetailSummary> {
+    return of(this.activities
+      .filter((activity) => activity.id === id)
+      .map((activity: Activity) =>
+        <DetailSummary>{
+          id: activity.id,
+          description: activity.name,
+          dateCreated: activity.dateCreated
+        }
+      )[0]);
+  }
+
   getActivities(): Observable<Activity[]> {
     return of(this.activities);
   }
@@ -50,21 +62,25 @@ export class ActivitiesService {
 
   // addActivity inserts the newActivity into the database.
   // newActivity.id (ignored as input paramter) is assigned by the database
-  addActivity(newActivity: Activity) {
+  addActivity(newActivity: Activity): Observable<Activity> {
     // for now, add to our Activities array
+
     newActivity.id =
       this.activities.reduce((max, p) => p.id > max ? p.id : max,
         this.activities[0].id)
-      + 1; // increase max value by one
+      + 1; // id is max id + 1
       newActivity.dateCreated = new Date();
     this.activities.push(newActivity);
+    return of(newActivity);
   }
 
   // newActivity creates a skeleton object
   // newActivity does NOT alter the database
   newActivity(): Activity {
-    const activity: Activity = new Activity;
-    activity.id = null;
+    const activity: Activity = new Activity();
+    activity.id = 0;
+    activity.name = '';
+    activity.dateCreated = null;
     return activity;
   }
 

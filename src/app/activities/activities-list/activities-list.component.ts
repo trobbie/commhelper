@@ -1,13 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
 import { switchMap, tap } from 'rxjs/operators';
 import { NgbPanelChangeEvent } from '@ng-bootstrap/ng-bootstrap';
 
 import { ActivitiesService } from '../../_services/activities.service';
 import { DetailSummary } from '../../_models/detail-summary';
 import { DialogService } from '../../_services/dialog.service';
-import { NgbDateStructAdapter } from '@ng-bootstrap/ng-bootstrap/datepicker/adapters/ngb-date-adapter';
 
 @Component({
   selector: 'app-activities-list',
@@ -16,16 +14,19 @@ import { NgbDateStructAdapter } from '@ng-bootstrap/ng-bootstrap/datepicker/adap
 })
 export class ActivitiesListComponent implements OnInit {
   private panelTitlePrefix = 'ngb-panel-';
-  listData$: Observable<DetailSummary[]>;
-  private selectedId: number = null;
+  nameOfCreateActivityButton = 'Create Activity';
+  summaries$: Observable<DetailSummary[]>;
+
+  selectedId: number = null;
   otherPanelsDisabled = false;
+
+   _summaries: DetailSummary[];
 
   @ViewChild('acc') accordionComponent;
   @ViewChild('details') detailsComponent;
 
   constructor(
     private dataService: ActivitiesService,
-    private route: ActivatedRoute,
     private dialogService: DialogService
   ) {}
 
@@ -33,16 +34,12 @@ export class ActivitiesListComponent implements OnInit {
     this.getSummaryList();
   }
 
-  getSelectedId(): number {
-    return this.selectedId;
-  }
-
   getPanelTitlePrefix(): string {
     return this.panelTitlePrefix;
   }
 
   isPanelSelected(id: number): boolean {
-    return id && this.selectedId && this.selectedId === id;
+     return this.selectedId === id;
   }
 
   isPanelDisabled(id: number): boolean {
@@ -84,12 +81,24 @@ export class ActivitiesListComponent implements OnInit {
   }
 
   // onClosePanel() is initiated by details component
-  onClosePanel($eventRefreshSummaryList): void {
+  onClosePanel($activity): void {
+    if ($activity !== null) {
+      if (!this.selectedId) {
+        // add placeholder to array; will get updated below
+        // new entries should always be put in panel 1 (after "new activity" panel)
+        this._summaries.splice(1, 0, {id: $activity.id, description: '', dateCreated: null});
+      }
+      // update only this summary (summaries$ should auto-update)
+      this.dataService.getSummary($activity.id).forEach(
+          (updatedSummary) => {
+          const index = this._summaries.findIndex((summary) => summary.id === updatedSummary.id);
+          this._summaries[index] = updatedSummary;
+        },
+      );
+    }
     this.otherPanelsDisabled = false; // set this before collapsing
     this.accordionComponent.collapse(this.panelTitlePrefix + this.selectedId);
-    if ($eventRefreshSummaryList === false) {
-      this.getSummaryList(); // TODO: only update the id just changed, and only when changed
-    }
+
   }
 
   // onValuesChanged() is initiated by details component
@@ -101,19 +110,23 @@ export class ActivitiesListComponent implements OnInit {
     if (this.dataService === null) {
       throw Error('dataService not assigned');
     }
-    this.listData$ = this.route.paramMap.pipe(
-      switchMap(params => {
-        // (+) before `params.get()` turns the string into a number
-        // this.selectId(+params.get('id'));
-        return this.dataService.getSummaryList();
+    this.summaries$ = this.dataService.getSummaryList().pipe(
+      switchMap((summaries) => {
+        this._summaries = summaries;
+        return of(this._summaries);
       }),
       // sort by dateCreated descending
-      tap(results => results.sort((a, b) => (a < b) ? 1 : (a === b) ? 0 : -1))
+      tap(results => results.sort((a, b) => (a < b) ? 1 : (a === b) ? 0 : -1)
+        // add Create New Activity panel to front of list
+        .unshift({id: 0, description: '<IGNORED SUMMARY>', dateCreated: null})
+      )
     );
   }
 
   onCreateNewEntry(): void {
-    this.dataService.newActivity();
+    // this.dataService.newActivity();
+    console.log(this.selectedId);
+    this.selectedId = 0;
   }
 
 }

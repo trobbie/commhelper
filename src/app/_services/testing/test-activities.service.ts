@@ -23,7 +23,7 @@ export class TestActivitiesService extends ActivitiesService {
     return asyncData<DetailSummary[]>(
       this.activities.map(
         (activity: Activity) =>
-          <DetailSummary>{id: activity.id, description: activity.name}
+          <DetailSummary>{id: activity.id, description: activity.name, dateCreated: activity.dateCreated}
       )
     );
   }
@@ -38,6 +38,15 @@ export class TestActivitiesService extends ActivitiesService {
     }
     const activity = this.activities.find(h => h.id === id);
     return this.lastResult = asyncData(activity);
+  }
+
+  updateActivity(activity: Activity): boolean {
+    if (!activity.id || activity.id === 0) {
+      throw new Error('Use addActivity() for new activities, not updateActivity()');
+    }
+    const index = this.activities.findIndex((a) => a.id === activity.id);
+    this.activities[index] = activity;
+    return true;
   }
 
 }
