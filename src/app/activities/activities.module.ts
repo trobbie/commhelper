@@ -6,7 +6,6 @@ import { MyActivitiesComponent } from './my-activities/my-activities.component';
 import { SharedModule } from '../shared/shared.module';
 import { ActivitiesComponent } from './activities/activities.component';
 import { ActivityDetailsComponent } from './activity-details/activity-details.component';
-import { ActivitiesListComponent } from './activities-list/activities-list.component';
 
 @NgModule({
   imports: [
@@ -18,11 +17,9 @@ import { ActivitiesListComponent } from './activities-list/activities-list.compo
   declarations: [
     MyActivitiesComponent,
     ActivitiesComponent,
-    ActivityDetailsComponent,
-    ActivitiesListComponent
+    ActivityDetailsComponent
   ],
   exports: [
-    ActivitiesListComponent,
     ActivityDetailsComponent
   ]
 })

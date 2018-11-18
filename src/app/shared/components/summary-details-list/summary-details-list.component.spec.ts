@@ -1,26 +1,53 @@
+/*
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { SummaryDetailsListComponent } from './summary-details-list.component';
+
+describe('SummaryDetailsListComponent', () => {
+  let component: SummaryDetailsListComponent;
+  let fixture: ComponentFixture<SummaryDetailsListComponent>;
+
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      declarations: [ SummaryDetailsListComponent ]
+    })
+    .compileComponents();
+  }));
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(SummaryDetailsListComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});
+*/
+
 import { async, ComponentFixture, TestBed, fakeAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement, Component, Input, EventEmitter, Output } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { ActivitiesListComponent } from './activities-list.component';
-import { SharedModule } from '../../shared/shared.module';
-import { AppRoutingModule } from '../../app-routing.module';
-import { ActivitiesService } from '../../_services/activities.service';
-import { TestActivitiesService } from '../../_services/testing/test-activities.service';
-import { getTestActivities } from '../../_services/testing/test-activities';
-import { click, advance } from '../../../testing';
-import { Activity } from '../../_models/activity.model';
-import { DetailSummary } from '../../_models/detail-summary';
+import { SharedModule } from '../../../shared/shared.module';
+import { AppRoutingModule } from '../../../app-routing.module';
+import { ActivitiesService } from '../../../_services/activities.service';
+import { TestActivitiesService } from '../../../_services/testing/test-activities.service';
+import { getTestActivities } from '../../../_services/testing/test-activities';
+import { click, advance } from '../../../../testing';
+import { Activity } from '../../../_models/activity.model';
+import { DetailSummary } from '../../../_models/detail-summary';
+import { SummaryDetailsListComponent } from './summary-details-list.component';
 
-let component: ActivitiesListComponent;
-let fixture: ComponentFixture<ActivitiesListComponent>;
+let component: SummaryDetailsListComponent;
+let fixture: ComponentFixture<SummaryDetailsListComponent>;
 let page: Page;
-let dataService: ActivitiesService;
 
+// use Activities to test this component
+let dataService: ActivitiesService;
 let activities: Activity[];
-// panel 1 is "first activity" (not panel 0)
-// const panelIndexOfFirstSummary = 1; // index of summary array (order displayed)
 
 @Component({
   selector: 'app-activity-details',
@@ -33,7 +60,7 @@ class ActivityDetailsStubComponent {
   @Output() valueChangedFromDetails = new EventEmitter<boolean>();
 }
 
-describe('ActivitiesListComponent', () => {
+describe('SummaryDetailsListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -43,7 +70,6 @@ describe('ActivitiesListComponent', () => {
         AppRoutingModule
       ],
       declarations: [
-        ActivitiesListComponent,
         ActivityDetailsStubComponent
       ],
       providers: [
@@ -59,7 +85,7 @@ describe('ActivitiesListComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should display a list of activities', () => {
+  it('should display a list of summaries', () => {
     expect(page.accPanelHeaders.length).toBeGreaterThan(0);
   });
 
@@ -141,7 +167,7 @@ describe('ActivitiesListComponent', () => {
     expectPanelToBeOpen(panelIndex, true, 'did not expand panel at first click');
 
     // simulate save click by calling the event that the details component emits
-    component.onClosePanel(getActivityBackingObject(panelIndex).id);
+    component.onClosePanel(getDetailsBackingObject(panelIndex).id);
     advance(fixture);
 
     expect(component.selectedId).toBeNull('selectedId not set to null upon onClosePanel()');
@@ -162,7 +188,7 @@ describe('ActivitiesListComponent', () => {
     // Update the name (which is included in the summary)
     // Do this with the service, just like the details component would have
     // before it calls onClosePanel(true)
-    const currentActivity: Activity = getActivityBackingObject(panelIndex);
+    const currentActivity: Activity = getDetailsBackingObject(panelIndex);
 
     const newName = '**NAMECHANGE**';
     currentActivity.name = newName;
@@ -231,13 +257,13 @@ function getModelIndexFromPanelIndex(panelIndex: number): number {
   return activities.findIndex((activity) => activity.id === id);
 }
 
-function getActivityBackingObject(panelIndex: number): Activity {
+function getDetailsBackingObject(panelIndex: number): Activity {
   return activities[getModelIndexFromPanelIndex(panelIndex)];
 }
 
 /** Create the component and set the `page` test variables */
 function createComponent() {
-  fixture = TestBed.createComponent(ActivitiesListComponent);
+  fixture = TestBed.createComponent(SummaryDetailsListComponent);
   component = fixture.componentInstance;
   dataService = TestBed.get(ActivitiesService); // for seeing expected values
   component.dataService = dataService; // for assigning summary data service

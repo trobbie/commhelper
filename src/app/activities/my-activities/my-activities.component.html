@@ -1,13 +1,13 @@
 <div class="my-activities">
     <h3>MY ACTIVITIES</h3>
-    <app-activities-list #listComponent [dataService]="dataService">
-        <!-- assign this selector with "details" class to inform 
-            app-activities-list of its intent of where it goes
+    <app-summary-details-list #listComponent [dataService]="dataService">
+        <!-- assign this selector with "details" css class to inform 
+            app-summary-details-list of its intent of where it goes
         -->
         <app-activity-details
             class="details"
             (closePanelFromDetails)="onClosePanel($event)"
             (valueChangedFromDetails)="onValuesChanged($event)">
         </app-activity-details>
-    </app-activities-list>
+    </app-summary-details-list>
 </div>

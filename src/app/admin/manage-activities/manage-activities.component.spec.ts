@@ -4,8 +4,6 @@ import { ManageActivitiesComponent } from './manage-activities.component';
 import { SharedModule } from '../../shared/shared.module';
 import { ActivitiesModule } from '../../activities/activities.module';
 import { AppRoutingModule } from '../../app-routing.module';
-import { ActivitiesListComponent } from 'src/app/activities/activities-list/activities-list.component';
-import { ActivityDetailsComponent } from 'src/app/activities/activity-details/activity-details.component';
 
 describe('ManageActivitiesComponent', () => {
   let component: ManageActivitiesComponent;

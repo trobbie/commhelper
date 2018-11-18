@@ -6,6 +6,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { DefaultPipe } from './pipes/default.pipe';
 import { AuthModule } from '../auth/auth.module';
+import { SummaryDetailsListComponent } from './components/summary-details-list/summary-details-list.component';
 
 @NgModule({
   imports: [
@@ -15,13 +16,15 @@ import { AuthModule } from '../auth/auth.module';
   ],
   declarations: [
     PageNotFoundComponent,
-    DefaultPipe
+    DefaultPipe,
+    SummaryDetailsListComponent
   ],
   exports: [
     CommonModule,
     FormsModule,
     AuthModule,
     PageNotFoundComponent,
+    SummaryDetailsListComponent,
     DefaultPipe,
     NgbModule
   ]

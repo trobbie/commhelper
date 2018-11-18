@@ -3,17 +3,17 @@ import { Observable, of } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { NgbPanelChangeEvent } from '@ng-bootstrap/ng-bootstrap';
 
-import { DetailSummary } from '../../_models/detail-summary';
-import { DialogService } from '../../_services/dialog.service';
-import { ActivityDetailsComponent } from '../activity-details/activity-details.component';
-import { SummaryDetailsService } from 'src/app/_services/summary-details-service';
+import { DetailSummary } from '../../../_models/detail-summary';
+import { DialogService } from '../../../_services/dialog.service';
+import { SummaryDetailsService } from '../../../_services/summary-details-service';
+import { ActivityDetailsComponent } from '../../../activities/activity-details/activity-details.component';
 
 @Component({
-  selector: 'app-activities-list',
-  templateUrl: './activities-list.component.html',
-  styleUrls: ['./activities-list.component.scss']
+  selector: 'app-summary-details-list',
+  templateUrl: './summary-details-list.component.html',
+  styleUrls: ['./summary-details-list.component.scss']
 })
-export class ActivitiesListComponent implements OnInit {
+export class SummaryDetailsListComponent implements OnInit {
   private panelTitlePrefix = 'ngb-panel-';
   nameOfCreateButton = 'Create Activity';
   _summaries: DetailSummary[];
@@ -27,7 +27,6 @@ export class ActivitiesListComponent implements OnInit {
   @ContentChild(ActivityDetailsComponent) details: ActivityDetailsComponent;
 
   constructor(
-    // private dataService: ActivitiesService,
     private dialogService: DialogService
   ) {}
 

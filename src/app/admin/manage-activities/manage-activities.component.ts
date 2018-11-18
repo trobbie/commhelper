@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ActivitiesService } from 'src/app/_services/activities.service';
+
+import { ActivitiesService } from '../../_services/activities.service';
 
 @Component({
   selector: 'app-manage-activities',
