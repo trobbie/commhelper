@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { Activity } from '../_models/activity.model';
 import { ACTIVITIES } from '../_mocks/mock-activities';
 import { DetailSummary } from '../_models/detail-summary';
+import { SummaryDetailsService } from './summary-details-service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ActivitiesService {
+export class ActivitiesService implements SummaryDetailsService {
 
   activities: Activity[];
 

@@ -24,7 +24,7 @@ let activities: Activity[];
 
 @Component({
   selector: 'app-activity-details',
-  template: '<div *ngIf="activityId != null" class="activity">Stubbed Activity Details</div>'
+  template: '<div class="activity details">Stubbed Activity Details</div>'
 })
 class ActivityDetailsStubComponent {
   // mimic the public API
@@ -47,6 +47,7 @@ describe('ActivitiesListComponent', () => {
         ActivityDetailsStubComponent
       ],
       providers: [
+        // inject this as if we were the host component and later assign it manually
         { provide: ActivitiesService, useClass: TestActivitiesService }
       ]
     })
@@ -165,6 +166,7 @@ describe('ActivitiesListComponent', () => {
 
     const newName = '**NAMECHANGE**';
     currentActivity.name = newName;
+    // use test activity service, not the component's summary data service
     dataService.updateActivity(currentActivity);
 
     // simulate save click by calling the event that the details component emits
@@ -178,7 +180,8 @@ describe('ActivitiesListComponent', () => {
     expect(page.panelDE(0).nativeElement.innerHTML).toContain(component.nameOfCreateButton);
   }));
 
-  it('should show details component when "new activity" panel is selected', fakeAsync(() => {
+  // TODO: to test this, may need to test a host component
+  xit('should show details component when "new activity" panel is selected', fakeAsync(() => {
     click(page.panelDE(0));
     advance(fixture);
 
@@ -211,24 +214,6 @@ describe('ActivitiesListComponent', () => {
 
 /////////// Helpers /////
 
-/** Create the component and set the `page` test variables */
-function createComponent() {
-  fixture = TestBed.createComponent(ActivitiesListComponent);
-  component = fixture.componentInstance;
-  dataService = TestBed.get(ActivitiesService);
-  activities = getTestActivities();
-
-  // change detection triggers ngOnInit
-  fixture.detectChanges();
-
-  return fixture.whenStable().then(() => {
-    // got the activities and updated component
-    // change detection updates the view
-    fixture.detectChanges();
-    page = new Page();
-  });
-}
-
 function expectPanelToBeOpen(panelIndex: number, expectOpen: boolean, expectionFailOutput?: any) {
   expect(page.panelDE(panelIndex).nativeElement.getAttribute('aria-expanded')).toBe(expectOpen ? 'true' : 'false', expectionFailOutput);
 
@@ -248,6 +233,25 @@ function getModelIndexFromPanelIndex(panelIndex: number): number {
 
 function getActivityBackingObject(panelIndex: number): Activity {
   return activities[getModelIndexFromPanelIndex(panelIndex)];
+}
+
+/** Create the component and set the `page` test variables */
+function createComponent() {
+  fixture = TestBed.createComponent(ActivitiesListComponent);
+  component = fixture.componentInstance;
+  dataService = TestBed.get(ActivitiesService); // for seeing expected values
+  component.dataService = dataService; // for assigning summary data service
+  activities = getTestActivities();
+
+  // change detection triggers ngOnInit
+  fixture.detectChanges();
+
+  return fixture.whenStable().then(() => {
+    // got the activities and updated component
+    // change detection updates the view
+    fixture.detectChanges();
+    page = new Page();
+  });
 }
 
 class Page {

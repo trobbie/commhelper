@@ -6,11 +6,12 @@ import { Activity } from '../../_models/activity.model';
 import { asyncData } from '../../../testing/async-observable-helpers';
 import { getTestActivities } from './test-activities';
 import { DetailSummary } from 'src/app/_models/detail-summary';
+import { SummaryDetailsService } from '../summary-details-service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class TestActivitiesService extends ActivitiesService {
+export class TestActivitiesService extends ActivitiesService implements SummaryDetailsService {
 
   activities = getTestActivities();
   lastResult: Observable<any>; // result from last method call

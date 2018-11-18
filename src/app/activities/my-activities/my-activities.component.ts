@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
+import { ActivitiesService } from 'src/app/_services/activities.service';
 
 @Component({
   selector: 'app-myactivities',
@@ -9,7 +10,9 @@ import { Observable } from 'rxjs';
 export class MyActivitiesComponent implements OnInit {
   @ViewChild('listComponent') listComponent;
 
-  constructor() {}
+  constructor(
+    private dataService: ActivitiesService
+  ) {}
 
   ngOnInit() {}
 
@@ -17,4 +20,11 @@ export class MyActivitiesComponent implements OnInit {
     return this.listComponent.canDeactivate();
   }
 
+  onClosePanel($idChanged: number | null): void {
+    this.listComponent.onClosePanel($idChanged);
+  }
+
+  onValuesChanged($event): void {
+    this.listComponent.onValuesChanged($event);
+  }
 }

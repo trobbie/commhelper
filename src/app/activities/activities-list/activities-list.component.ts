@@ -1,11 +1,12 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ContentChild, Input } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { NgbPanelChangeEvent } from '@ng-bootstrap/ng-bootstrap';
 
-import { ActivitiesService } from '../../_services/activities.service';
 import { DetailSummary } from '../../_models/detail-summary';
 import { DialogService } from '../../_services/dialog.service';
+import { ActivityDetailsComponent } from '../activity-details/activity-details.component';
+import { SummaryDetailsService } from 'src/app/_services/summary-details-service';
 
 @Component({
   selector: 'app-activities-list',
@@ -15,18 +16,18 @@ import { DialogService } from '../../_services/dialog.service';
 export class ActivitiesListComponent implements OnInit {
   private panelTitlePrefix = 'ngb-panel-';
   nameOfCreateButton = 'Create Activity';
+  _summaries: DetailSummary[];
   summaries$: Observable<DetailSummary[]>;
-
   selectedId: number = null;
   otherPanelsDisabled = false;
 
-   _summaries: DetailSummary[];
+   @Input() dataService: SummaryDetailsService;
 
   @ViewChild('acc') accordionComponent;
-  @ViewChild('details') detailsComponent;
+  @ContentChild(ActivityDetailsComponent) details: ActivityDetailsComponent;
 
   constructor(
-    private dataService: ActivitiesService,
+    // private dataService: ActivitiesService,
     private dialogService: DialogService
   ) {}
 
@@ -39,7 +40,7 @@ export class ActivitiesListComponent implements OnInit {
   }
 
   isPanelSelected(id: number): boolean {
-     return this.selectedId === id;
+     return (this.selectedId != null) && (this.selectedId === id);
   }
 
   isPanelDisabled(id: number): boolean {
@@ -52,7 +53,7 @@ export class ActivitiesListComponent implements OnInit {
 
   canDeactivate(): Observable<boolean> | boolean {
     // Allow synchronous navigation away (`true`) if no details or the details were unchanged
-    if (this.selectedId == null || !this.detailsComponent.isDataChanged()) {
+    if (this.selectedId == null || !this.otherPanelsDisabled) {
       return true;
     }
 
@@ -63,18 +64,24 @@ export class ActivitiesListComponent implements OnInit {
 
   // right before a panel is opened or closed, update the selection id
   beforeSelectionChange($event: NgbPanelChangeEvent) {
-    if (!$event.panelId) { // then ignore
+    if ($event.panelId === null) { // then ignore
       return;
     }
 
     if ($event.nextState === true) { // panel being opened
       // to get the id, drop the panel id prefix
       this.selectedId = +$event.panelId.substring(this.panelTitlePrefix.length);
+      if (this.details) {
+        this.details.setActivity(this.selectedId);
+      }
     } else if ($event.nextState === false) { // being closed
       if (this.otherPanelsDisabled) {
         $event.preventDefault(); // do nothing if other panels disabled (means data was changed)
       } else {
         this.selectedId = null;
+        if (this.details) {
+          this.details.setActivity(null);
+        }
       }
     }  // else invalid nextState
 

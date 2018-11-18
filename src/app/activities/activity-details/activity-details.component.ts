@@ -9,14 +9,14 @@ import { ActivitiesService } from '../../_services/activities.service';
   styleUrls: ['./activity-details.component.scss']
 })
 export class ActivityDetailsComponent implements OnInit {
-  @Input() activityId: number;
+  activityId: number = null;
   @Output() closePanelFromDetails = new EventEmitter<number|null>();
   @Output() valueChangedFromDetails = new EventEmitter<boolean>();
-
+  initializing = false;
   activityForm: FormGroup = this.fb.group({
-    id: [''],
+    id: [null],
     name: ['', Validators.required],
-    dateCreated: ['']
+    dateCreated: [null]
   });
 
   constructor(
@@ -24,25 +24,43 @@ export class ActivityDetailsComponent implements OnInit {
     private dataService: ActivitiesService
   ) {}
 
+  // the details component is only initialized once
   ngOnInit() {
-    if (this.activityId === 0) { // then a "new activity"
+    this.setActivity(this.activityId);
+    this.activityForm.valueChanges.subscribe(val => {
+      // do not emit changes while initializing form
+      if (!this.initializing) {
+      // if (this.activityId !== null) {
+        this.valueChangedFromDetails.emit(true);
+      }
+    });
+  }
+
+  setActivity(id: number | null): void {
+    if (id === null) {
+      this.activityId = null;
+      return;
+    }
+
+    // while setting the activity, keep the activityId = null until
+    //   form changes are made, else will emit a "change" event
+    // this.activityId = null;
+    this.initializing = true;
+    if (id === 0) { // then a "new activity"
       const activity = this.dataService.newActivity();
       // note: activity not added to dataService yet
+      this.activityId = 0;
       this.activityForm.setValue(activity);
+      this.initializing = false;
     } else {
-      this.dataService.getActivity(this.activityId).subscribe(
+      this.dataService.getActivity(id).subscribe(
         (activity) => {
+          this.activityId = id;
           this.activityForm.setValue(activity);
+          this.initializing = false;
         }
       );
     }
-    this.onChanges();
-  }
-
-  onChanges(): void {
-    this.activityForm.valueChanges.subscribe(val => {
-      this.valueChangedFromDetails.emit(true);
-    });
   }
 
   isDataChanged(): boolean {
@@ -65,7 +83,7 @@ export class ActivityDetailsComponent implements OnInit {
   }
 
   save() {
-    if (this.activityForm['id']) {
+    if (this.activityForm.value.id) {
       this.dataService.updateActivity(this.activityForm.value);
       this.closePanelFromDetails.emit(this.activityForm.value.id);
     } else {

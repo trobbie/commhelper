@@ -19,11 +19,9 @@
                 else a details component is loaded for *each* element 
                 in the list -->
         <ng-template ngbPanelContent *ngIf="isPanelSelected(summary.id)">
-            <app-activity-details #details
-                [activityId]="summary.id"
-                (closePanelFromDetails)="onClosePanel($event)"
-                (valueChangedFromDetails)="onValuesChanged($event)">
-            </app-activity-details>
+            <!-- use content projection -->
+            <ng-content select=".details">
+            </ng-content>
         </ng-template>
     </ngb-panel>
 </ngb-accordion>
