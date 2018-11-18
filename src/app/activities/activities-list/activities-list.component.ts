@@ -14,7 +14,7 @@ import { DialogService } from '../../_services/dialog.service';
 })
 export class ActivitiesListComponent implements OnInit {
   private panelTitlePrefix = 'ngb-panel-';
-  nameOfCreateActivityButton = 'Create Activity';
+  nameOfCreateButton = 'Create Activity';
   summaries$: Observable<DetailSummary[]>;
 
   selectedId: number = null;
@@ -51,7 +51,7 @@ export class ActivitiesListComponent implements OnInit {
   }
 
   canDeactivate(): Observable<boolean> | boolean {
-    // Allow synchronous navigation (`true`) if no activity or the activity is unchanged
+    // Allow synchronous navigation away (`true`) if no details or the details were unchanged
     if (this.selectedId == null || !this.detailsComponent.isDataChanged()) {
       return true;
     }
@@ -81,15 +81,15 @@ export class ActivitiesListComponent implements OnInit {
   }
 
   // onClosePanel() is initiated by details component
-  onClosePanel($activity): void {
-    if ($activity !== null) {
+  onClosePanel($idChanged: number | null): void {
+    if ($idChanged !== null) {
       if (!this.selectedId) {
         // add placeholder to array; will get updated below
-        // new entries should always be put in panel 1 (after "new activity" panel)
-        this._summaries.splice(1, 0, {id: $activity.id, description: '', dateCreated: null});
+        // new entries should always be put in panel 1 (after "new element" panel)
+        this._summaries.splice(1, 0, {id: $idChanged, description: '', dateCreated: null});
       }
       // update only this summary (summaries$ should auto-update)
-      this.dataService.getSummary($activity.id).forEach(
+      this.dataService.getSummary($idChanged).forEach(
           (updatedSummary) => {
           const index = this._summaries.findIndex((summary) => summary.id === updatedSummary.id);
           this._summaries[index] = updatedSummary;
@@ -117,7 +117,7 @@ export class ActivitiesListComponent implements OnInit {
       }),
       // sort by dateCreated descending
       tap(results => results.sort((a, b) => (a < b) ? 1 : (a === b) ? 0 : -1)
-        // add Create New Activity panel to front of list
+        // add "create new element" panel to front of list
         .unshift({id: 0, description: '<IGNORED SUMMARY>', dateCreated: null})
       )
     );

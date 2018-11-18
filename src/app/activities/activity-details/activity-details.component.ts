@@ -2,7 +2,6 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 
 import { ActivitiesService } from '../../_services/activities.service';
-import { Activity } from '../../_models/activity.model';
 
 @Component({
   selector: 'app-activity-details',
@@ -11,7 +10,7 @@ import { Activity } from '../../_models/activity.model';
 })
 export class ActivityDetailsComponent implements OnInit {
   @Input() activityId: number;
-  @Output() closePanelFromDetails = new EventEmitter<Activity>();
+  @Output() closePanelFromDetails = new EventEmitter<number|null>();
   @Output() valueChangedFromDetails = new EventEmitter<boolean>();
 
   activityForm: FormGroup = this.fb.group({
@@ -68,12 +67,12 @@ export class ActivityDetailsComponent implements OnInit {
   save() {
     if (this.activityForm['id']) {
       this.dataService.updateActivity(this.activityForm.value);
-      this.closePanelFromDetails.emit(this.activityForm.value);
+      this.closePanelFromDetails.emit(this.activityForm.value.id);
     } else {
       // else was a new activity, now add to the dataService
       this.dataService.addActivity(this.activityForm.value).forEach(
         (newActivity) => {
-          this.closePanelFromDetails.emit(newActivity);
+          this.closePanelFromDetails.emit(newActivity.id);
         }
       );
     }

@@ -29,7 +29,7 @@ let activities: Activity[];
 class ActivityDetailsStubComponent {
   // mimic the public API
   @Input() activityId: number;
-  @Output() closePanelFromDetails = new EventEmitter<boolean>();
+  @Output() closePanelFromDetails = new EventEmitter<number>();
   @Output() valueChangedFromDetails = new EventEmitter<boolean>();
 }
 
@@ -131,7 +131,7 @@ describe('ActivitiesListComponent', () => {
     expectPanelToBeOpen(panelIndex, false, 'onClosePanel() did not collapse panel');
   }));
 
-  it('should close panel when onClosePanel(activity) [save button] is called', fakeAsync(() => {
+  it('should close panel when onClosePanel(id) [save button] is called', fakeAsync(() => {
     const panelIndex = 1;
     // open first (alraedy tested this works)
     click(page.panelDE(panelIndex));
@@ -140,14 +140,14 @@ describe('ActivitiesListComponent', () => {
     expectPanelToBeOpen(panelIndex, true, 'did not expand panel at first click');
 
     // simulate save click by calling the event that the details component emits
-    component.onClosePanel(getActivityBackingObject(panelIndex));
+    component.onClosePanel(getActivityBackingObject(panelIndex).id);
     advance(fixture);
 
     expect(component.selectedId).toBeNull('selectedId not set to null upon onClosePanel()');
     expectPanelToBeOpen(panelIndex, false, 'onClosePanel() did not collapse panel');
   }));
 
-  it('should update summary when onClosePanel(activity) called', fakeAsync(() => {
+  it('should update summary when onClosePanel(id) called', fakeAsync(() => {
     const panelIndex = 1;
     click(page.panelDE(panelIndex));
     advance(fixture);
@@ -168,14 +168,14 @@ describe('ActivitiesListComponent', () => {
     dataService.updateActivity(currentActivity);
 
     // simulate save click by calling the event that the details component emits
-    component.onClosePanel(currentActivity);
+    component.onClosePanel(currentActivity.id);
     advance(fixture);
 
     expect(page.panelDE(panelIndex).nativeElement.innerHTML).toContain(newName, 'summary description should now contain the new name');
   }));
 
   it('should always have a "new activity" panel as its first panel', fakeAsync(() => {
-    expect(page.panelDE(0).nativeElement.innerHTML).toContain(component.nameOfCreateActivityButton);
+    expect(page.panelDE(0).nativeElement.innerHTML).toContain(component.nameOfCreateButton);
   }));
 
   it('should show details component when "new activity" panel is selected', fakeAsync(() => {
@@ -200,7 +200,7 @@ describe('ActivitiesListComponent', () => {
     dataService.addActivity(newActivity);
 
     // simulate save click by calling the event that the details component emits
-    component.onClosePanel(newActivity);
+    component.onClosePanel(newActivity.id);
     advance(fixture);
 
     expect(page.panelSummary(1).id).toBe(newActivity.id, 'panel 1 does not contain new activity');

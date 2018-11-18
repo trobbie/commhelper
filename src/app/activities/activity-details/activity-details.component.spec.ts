@@ -76,7 +76,7 @@ describe('ActivityDetailsComponent', () => {
 
   it('should emit an event on closePanelFromDetails when cancel button is clicked', fakeAsync(() => {
     let emitted = false;
-    component.closePanelFromDetails.subscribe(() => emitted = true);
+    component.closePanelFromDetails.subscribe((id) => emitted = true);
 
     // change a value so that the cancel button is enabled for clicking
     page.nameField.value = page.nameField.value + 's';
@@ -94,7 +94,7 @@ describe('ActivityDetailsComponent', () => {
 
   it('should emit an event on closePanelFromDetails when save button is clicked', fakeAsync(() => {
     let emitted = false;
-    component.closePanelFromDetails.subscribe((activity) => emitted = true);
+    component.closePanelFromDetails.subscribe((id) => emitted = true);
 
     // change a value so that the cancel button is enabled for clicking
     page.nameField.value = page.nameField.value + 's';
