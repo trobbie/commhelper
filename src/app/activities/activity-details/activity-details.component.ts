@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 
 import { ActivitiesService } from '../../_services/activities.service';
+import { SummaryDetailsListComponent } from 'src/app/shared/components/summary-details-list/summary-details-list.component';
 
 @Component({
   selector: 'app-activity-details',
@@ -10,9 +11,8 @@ import { ActivitiesService } from '../../_services/activities.service';
 })
 export class ActivityDetailsComponent implements OnInit {
   activityId: number = null;
-  @Output() closePanelFromDetails = new EventEmitter<number|null>();
-  @Output() valueChangedFromDetails = new EventEmitter<boolean>();
   initializing = false;
+
   activityForm: FormGroup = this.fb.group({
     id: [null],
     name: ['', Validators.required],
@@ -21,22 +21,30 @@ export class ActivityDetailsComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private dataService: ActivitiesService
+    private dataService: ActivitiesService,
+    public listComponent: SummaryDetailsListComponent
   ) {}
 
   // the details component is only initialized once
+  //   since using content projection
   ngOnInit() {
-    this.setActivity(this.activityId);
+    this.setEntityId(this.activityId);
+    // register this details component with the host listComponent
+    this.listComponent.detailsComponent = this;
+
     this.activityForm.valueChanges.subscribe(val => {
       // do not emit changes while initializing form
       if (!this.initializing) {
-      // if (this.activityId !== null) {
-        this.valueChangedFromDetails.emit(true);
+        this.informHostOfDataChanges();
       }
     });
   }
 
-  setActivity(id: number | null): void {
+  informHostOfDataChanges() {
+    this.listComponent.onValuesChanged(true);
+  }
+
+  setEntityId(id: number | null): void {
     if (id === null) {
       this.activityId = null;
       return;
@@ -85,12 +93,12 @@ export class ActivityDetailsComponent implements OnInit {
   save() {
     if (this.activityForm.value.id) {
       this.dataService.updateActivity(this.activityForm.value);
-      this.closePanelFromDetails.emit(this.activityForm.value.id);
+      this.listComponent.onClosePanel(this.activityForm.value.id);
     } else {
       // else was a new activity, now add to the dataService
       this.dataService.addActivity(this.activityForm.value).forEach(
         (newActivity) => {
-          this.closePanelFromDetails.emit(newActivity.id);
+          this.listComponent.onClosePanel(newActivity.id);
         }
       );
     }
@@ -98,7 +106,7 @@ export class ActivityDetailsComponent implements OnInit {
 
   cancel() {
     this.activityForm.reset();
-    this.closePanelFromDetails.emit(null);
+    this.listComponent.onClosePanel(null);
   }
 
 }

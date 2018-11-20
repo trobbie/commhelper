@@ -20,11 +20,4 @@ export class MyActivitiesComponent implements OnInit {
     return this.listComponent.canDeactivate();
   }
 
-  onClosePanel($idChanged: number | null): void {
-    this.listComponent.onClosePanel($idChanged);
-  }
-
-  onValuesChanged($event): void {
-    this.listComponent.onValuesChanged($event);
-  }
 }

@@ -6,7 +6,6 @@ import { NgbPanelChangeEvent } from '@ng-bootstrap/ng-bootstrap';
 import { DetailSummary } from '../../../_models/detail-summary';
 import { DialogService } from '../../../_services/dialog.service';
 import { SummaryDetailsService } from '../../../_services/summary-details-service';
-import { ActivityDetailsComponent } from '../../../activities/activity-details/activity-details.component';
 
 @Component({
   selector: 'app-summary-details-list',
@@ -14,17 +13,21 @@ import { ActivityDetailsComponent } from '../../../activities/activity-details/a
   styleUrls: ['./summary-details-list.component.scss']
 })
 export class SummaryDetailsListComponent implements OnInit {
+  @Input() dataService: SummaryDetailsService;
+  @Input() entityName = 'Entity';
+
   private panelTitlePrefix = 'ngb-panel-';
-  nameOfCreateButton = 'Create Activity';
+  get nameOfCreateButton() { return 'Create New ' + this.entityName; }
   _summaries: DetailSummary[];
   summaries$: Observable<DetailSummary[]>;
   selectedId: number = null;
   otherPanelsDisabled = false;
 
-   @Input() dataService: SummaryDetailsService;
-
   @ViewChild('acc') accordionComponent;
-  @ContentChild(ActivityDetailsComponent) details: ActivityDetailsComponent;
+  // @ContentChild(ActivityDetailsComponent) details: ActivityDetailsComponent;
+  // detailsComponent is assigned by child details component
+  //   only one details component exists at a time
+  detailsComponent = null;
 
   constructor(
     private dialogService: DialogService
@@ -70,16 +73,16 @@ export class SummaryDetailsListComponent implements OnInit {
     if ($event.nextState === true) { // panel being opened
       // to get the id, drop the panel id prefix
       this.selectedId = +$event.panelId.substring(this.panelTitlePrefix.length);
-      if (this.details) {
-        this.details.setActivity(this.selectedId);
+      if (this.detailsComponent) {
+        this.detailsComponent.setEntityId(this.selectedId);
       }
     } else if ($event.nextState === false) { // being closed
       if (this.otherPanelsDisabled) {
         $event.preventDefault(); // do nothing if other panels disabled (means data was changed)
       } else {
         this.selectedId = null;
-        if (this.details) {
-          this.details.setActivity(null);
+        if (this.detailsComponent) {
+          this.detailsComponent.setEntityId(null);
         }
       }
     }  // else invalid nextState

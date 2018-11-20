@@ -1,30 +1,3 @@
-/*
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { SummaryDetailsListComponent } from './summary-details-list.component';
-
-describe('SummaryDetailsListComponent', () => {
-  let component: SummaryDetailsListComponent;
-  let fixture: ComponentFixture<SummaryDetailsListComponent>;
-
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ SummaryDetailsListComponent ]
-    })
-    .compileComponents();
-  }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(SummaryDetailsListComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
-*/
 
 import { async, ComponentFixture, TestBed, fakeAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -55,9 +28,7 @@ let activities: Activity[];
 })
 class ActivityDetailsStubComponent {
   // mimic the public API
-  @Input() activityId: number;
-  @Output() closePanelFromDetails = new EventEmitter<number>();
-  @Output() valueChangedFromDetails = new EventEmitter<boolean>();
+  // @Input() activityId: number;
 }
 
 describe('SummaryDetailsListComponent', () => {

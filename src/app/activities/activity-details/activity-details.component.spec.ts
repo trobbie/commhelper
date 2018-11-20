@@ -7,6 +7,7 @@ import { SharedModule } from '../../shared/shared.module';
 import { Activity } from '../../_models/activity.model';
 import { newEvent, click, advance } from '../../../testing';
 import { ActivitiesService } from '../../_services/activities.service';
+import { SummaryDetailsListComponent } from 'src/app/shared/components/summary-details-list/summary-details-list.component';
 
 
 let component: ActivityDetailsComponent;
@@ -45,7 +46,8 @@ describe('ActivityDetailsComponent', () => {
         ReactiveFormsModule
       ],
       providers: [
-        { provide: ActivitiesService, useClass: ActivitiesServiceStub }
+        { provide: ActivitiesService, useClass: ActivitiesServiceStub },
+        SummaryDetailsListComponent
       ]
     })
     .compileComponents();
@@ -74,9 +76,9 @@ describe('ActivityDetailsComponent', () => {
     expect(page.nameField.value).toBe(testActivity.name, 'name incorrect');
   });
 
-  it('should emit an event on closePanelFromDetails when cancel button is clicked', fakeAsync(() => {
+  it('should emit an event on list component onClosePanel() when cancel button is clicked', fakeAsync(() => {
     let emitted = false;
-    component.closePanelFromDetails.subscribe((id) => emitted = true);
+    spyOn(component.listComponent, 'onClosePanel').and.callFake(() => emitted = true);
 
     // change a value so that the cancel button is enabled for clicking
     page.nameField.value = page.nameField.value + 's';
@@ -89,12 +91,11 @@ describe('ActivityDetailsComponent', () => {
     click(page.buttonCancel);
     expect(emitted).toBe(true, 'event did not emit upon clicking cancel');
 
-    component.closePanelFromDetails.unsubscribe();
   }));
 
-  it('should emit an event on closePanelFromDetails when save button is clicked', fakeAsync(() => {
+  it('should emit an event on Details when save button is clicked', fakeAsync(() => {
     let emitted = false;
-    component.closePanelFromDetails.subscribe((id) => emitted = true);
+    spyOn(component.listComponent, 'onClosePanel').and.callFake(() => emitted = true);
 
     // change a value so that the cancel button is enabled for clicking
     page.nameField.value = page.nameField.value + 's';
@@ -108,21 +109,20 @@ describe('ActivityDetailsComponent', () => {
     advance(fixture);
     expect(emitted).toBe(true, 'event did not emit upon clicking save');
 
-    component.closePanelFromDetails.unsubscribe();
   }));
 
-  it('should enable save/cancel button and emit on valueChangedFromDetails, when data changes and is valid', fakeAsync(() => {
+  it('should enable save/cancel button and call list component onValuesChanged(), when data changes and is valid', fakeAsync(() => {
     expect(page.buttonCancel.hasAttribute('disabled')).toBe(true, 'cancel button not initially disabled');
     expect(page.buttonSave.hasAttribute('disabled')).toBe(true, 'save button not initially disabled');
 
     let emitted = false;
-    component.valueChangedFromDetails.subscribe(() => emitted = true);
+    spyOn(component.listComponent, 'onValuesChanged').and.callFake(() => emitted = true);
+
     expect(emitted).toBe(false, 'event should not have emitted yet');
 
     page.nameField.value = page.nameField.value + 's';
     page.nameField.dispatchEvent(newEvent('input'));
     advance(fixture); // update the display binding
-    // fixture.detectChanges(); // update the display binding
 
     expect(component.activityForm.valid).toBe(true, 'invalid form change; CHANGE TEST');
 
@@ -130,7 +130,6 @@ describe('ActivityDetailsComponent', () => {
     expect(page.buttonCancel.hasAttribute('disabled')).toBe(false, 'cancel button not enabled');
     expect(emitted).toBe(true, 'event never emitted');
 
-    component.closePanelFromDetails.unsubscribe();
   }));
 
   it('should disable save button if name (required) not specified', () => {
