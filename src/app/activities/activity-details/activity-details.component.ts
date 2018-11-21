@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 
 import { ActivitiesService } from '../../_services/activities.service';
-import { SummaryDetailsListComponent } from 'src/app/shared/components/summary-details-list/summary-details-list.component';
+import { SummaryDetailsListComponent } from '../../shared/components/summary-details-list/summary-details-list.component';
 
 @Component({
   selector: 'app-activity-details',

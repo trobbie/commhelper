@@ -20,7 +20,7 @@ export class ManageActivitiesComponent implements OnInit {
   ngOnInit() {}
 
   canDeactivate(): Observable<boolean> | boolean {
+    // can deactivate if the listComponent says ok
     return this.listComponent.canDeactivate();
   }
-
 }

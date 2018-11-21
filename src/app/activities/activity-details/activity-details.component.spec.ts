@@ -7,7 +7,7 @@ import { SharedModule } from '../../shared/shared.module';
 import { Activity } from '../../_models/activity.model';
 import { newEvent, click, advance } from '../../../testing';
 import { ActivitiesService } from '../../_services/activities.service';
-import { SummaryDetailsListComponent } from 'src/app/shared/components/summary-details-list/summary-details-list.component';
+import { SummaryDetailsListComponent } from '../../shared/components/summary-details-list/summary-details-list.component';
 
 
 let component: ActivityDetailsComponent;

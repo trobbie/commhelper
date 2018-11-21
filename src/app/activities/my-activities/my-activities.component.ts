@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ActivitiesService } from 'src/app/_services/activities.service';
+
+import { ActivitiesService } from '../../_services/activities.service';
 
 @Component({
   selector: 'app-myactivities',
@@ -8,9 +9,9 @@ import { ActivitiesService } from 'src/app/_services/activities.service';
   styleUrls: ['./my-activities.component.scss']
 })
 export class MyActivitiesComponent implements OnInit {
-  @ViewChild('listComponent') listComponent;
-
   get dataService() { return this._dataService; }
+
+  @ViewChild('listComponent') listComponent;
 
   constructor(
     private _dataService: ActivitiesService
@@ -19,7 +20,7 @@ export class MyActivitiesComponent implements OnInit {
   ngOnInit() {}
 
   canDeactivate(): Observable<boolean> | boolean {
+    // can deactivate if the listComponent says ok
     return this.listComponent.canDeactivate();
   }
-
 }

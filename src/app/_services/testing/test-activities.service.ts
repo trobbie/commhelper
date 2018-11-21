@@ -5,7 +5,7 @@ import { ActivitiesService } from '../activities.service';
 import { Activity } from '../../_models/activity.model';
 import { asyncData } from '../../../testing/async-observable-helpers';
 import { getTestActivities } from './test-activities';
-import { DetailSummary } from 'src/app/_models/detail-summary';
+import { DetailSummary } from '../../_models/detail-summary';
 import { SummaryDetailsService } from '../summary-details-service';
 
 @Injectable({
