@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 import { ActivitiesService } from '../activities.service';
 import { Activity } from '../../_models/activity.model';
@@ -11,13 +11,12 @@ import { SummaryDetailsService } from '../summary-details-service';
 @Injectable({
   providedIn: 'root'
 })
-export class TestActivitiesService extends ActivitiesService implements SummaryDetailsService {
+export class TestActivitiesService implements SummaryDetailsService {
 
   activities = getTestActivities();
   lastResult: Observable<any>; // result from last method call
 
   constructor() {
-    super();
   }
 
   getSummaryList(): Observable<DetailSummary[]> {
@@ -27,6 +26,18 @@ export class TestActivitiesService extends ActivitiesService implements SummaryD
           <DetailSummary>{id: activity.id, description: activity.name, dateCreated: activity.dateCreated}
       )
     );
+  }
+
+  getSummary(id: number): Observable<DetailSummary> {
+      return of(this.activities
+          .filter((activity) => activity.id === id)
+          .map((activity: Activity) =>
+            <DetailSummary>{
+              id: activity.id,
+              description: activity.name,
+              dateCreated: activity.dateCreated
+            }
+          )[0]);
   }
 
   getActivities(): Observable<Activity[]> {

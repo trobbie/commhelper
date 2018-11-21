@@ -1,34 +1,31 @@
 
 import { async, ComponentFixture, TestBed, fakeAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { DebugElement, Component, Input, EventEmitter, Output } from '@angular/core';
+import { DebugElement, Component } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { SharedModule } from '../../../shared/shared.module';
 import { AppRoutingModule } from '../../../app-routing.module';
-import { ActivitiesService } from '../../../_services/activities.service';
-import { TestActivitiesService } from '../../../_services/testing/test-activities.service';
-import { getTestActivities } from '../../../_services/testing/test-activities';
 import { click, advance } from '../../../../testing';
-import { Activity } from '../../../_models/activity.model';
 import { DetailSummary } from '../../../_models/detail-summary';
 import { SummaryDetailsListComponent } from './summary-details-list.component';
+import { TestSummaryDetailsService } from '../../../_services/testing/test-summary-details.service';
+import { TestDetails } from '../../../_models/test-details.model';
+import { getTestDetails } from '../../../_services/testing/test-summary-details';
 
 let component: SummaryDetailsListComponent;
 let fixture: ComponentFixture<SummaryDetailsListComponent>;
 let page: Page;
 
-// use Activities to test this component
-let dataService: ActivitiesService;
-let activities: Activity[];
+// use TestDetails to test this component
+let dataService: TestSummaryDetailsService; // used for getting model data directly
+let testDetails: TestDetails[];
 
 @Component({
-  selector: 'app-activity-details',
-  template: '<div class="activity details">Stubbed Activity Details</div>'
+  selector: 'app-mock-details',
+  template: '<div class="mockClass details">Mock Details</div>'
 })
-class ActivityDetailsStubComponent {
-  // mimic the public API
-  // @Input() activityId: number;
+class MockDetailsComponent {
 }
 
 describe('SummaryDetailsListComponent', () => {
@@ -41,12 +38,9 @@ describe('SummaryDetailsListComponent', () => {
         AppRoutingModule
       ],
       declarations: [
-        ActivityDetailsStubComponent
+        MockDetailsComponent
       ],
-      providers: [
-        // inject this as if we were the host component and later assign it manually
-        { provide: ActivitiesService, useClass: TestActivitiesService }
-      ]
+      providers: []
     })
     .compileComponents()
     .then(createComponent);
@@ -68,7 +62,7 @@ describe('SummaryDetailsListComponent', () => {
     );
   }));
 
-  it('should select activity when a closed panel is clicked', fakeAsync(() => {
+  it('should select entity when a closed panel is clicked', fakeAsync(() => {
     const panelIndex = 1;
 
     expectPanelToBeOpen(panelIndex, false, 'row should be initially collapsed');
@@ -122,7 +116,6 @@ describe('SummaryDetailsListComponent', () => {
     // simulate cancel click by calling the event that the details component emits
     component.onClosePanel(null);
 
-    // expect(component.getSummaryList).toHaveBeenCalledWith();
     advance(fixture);
 
     expect(component.selectedId).toBeNull('selectedId not set to null upon onClosePanel()');
@@ -159,51 +152,51 @@ describe('SummaryDetailsListComponent', () => {
     // Update the name (which is included in the summary)
     // Do this with the service, just like the details component would have
     // before it calls onClosePanel(true)
-    const currentActivity: Activity = getDetailsBackingObject(panelIndex);
+    const currentTestDetails: TestDetails = getDetailsBackingObject(panelIndex);
 
     const newName = '**NAMECHANGE**';
-    currentActivity.name = newName;
-    // use test activity service, not the component's summary data service
-    dataService.updateActivity(currentActivity);
+    currentTestDetails.name = newName;
+    // use test details service, not the component's summary data service
+    dataService.updateEntity(currentTestDetails);
 
     // simulate save click by calling the event that the details component emits
-    component.onClosePanel(currentActivity.id);
+    component.onClosePanel(currentTestDetails.id);
     advance(fixture);
 
     expect(page.panelDE(panelIndex).nativeElement.innerHTML).toContain(newName, 'summary description should now contain the new name');
   }));
 
-  it('should always have a "new activity" panel as its first panel', fakeAsync(() => {
+  it('should always have a "new entity" panel as its first panel', fakeAsync(() => {
     expect(page.panelDE(0).nativeElement.innerHTML).toContain(component.nameOfCreateButton);
   }));
 
   // TODO: to test this, may need to test a host component
-  xit('should show details component when "new activity" panel is selected', fakeAsync(() => {
+  xit('should show details component when "new entity" panel is selected', fakeAsync(() => {
     click(page.panelDE(0));
     advance(fixture);
 
     expect(page.openDetailsDE).not.toBeNull('could not find opened panel body');
     if (page.openDetailsDE) {
-      const detailsDE = page.openDetailsDE.query(By.css('.activity'));
-      expect(detailsDE).not.toBeNull('could not find activity class');
+      const detailsDE = page.openDetailsDE.query(By.css('.mockClass'));
+      expect(detailsDE).not.toBeNull('could not find mockClass class');
     }
   }));
 
-  it('should add "new activity" to panel 1 position after saving', fakeAsync(() => {
+  it('should add "new entity" to panel 1 position after saving', fakeAsync(() => {
     click(page.panelDE(0));
     advance(fixture);
 
-    const newActivity: Activity = new Activity();
-    newActivity.id = 99999;
-    newActivity.name = 'testing';
-    newActivity.dateCreated = new Date();
-    dataService.addActivity(newActivity);
+    const newEntity: TestDetails = new TestDetails();
+    newEntity.id = 99999;
+    newEntity.name = 'testing';
+    newEntity.dateCreated = new Date();
+    dataService.addEntity(newEntity);
 
     // simulate save click by calling the event that the details component emits
-    component.onClosePanel(newActivity.id);
+    component.onClosePanel(newEntity.id);
     advance(fixture);
 
-    expect(page.panelSummary(1).id).toBe(newActivity.id, 'panel 1 does not contain new activity');
+    expect(page.panelSummary(1).id).toBe(newEntity.id, 'panel 1 does not contain new entity');
 
   }));
 
@@ -223,28 +216,28 @@ function expectPanelToBeOpen(panelIndex: number, expectOpen: boolean, expectionF
 }
 
 function getModelIndexFromPanelIndex(panelIndex: number): number {
-  // find the index of model representing activity in panel 1
+  // find the index of model representing entity in panel 1
   const id = component._summaries[panelIndex].id;
-  return activities.findIndex((activity) => activity.id === id);
+  return testDetails.findIndex((entity) => entity.id === id);
 }
 
-function getDetailsBackingObject(panelIndex: number): Activity {
-  return activities[getModelIndexFromPanelIndex(panelIndex)];
+function getDetailsBackingObject(panelIndex: number): TestDetails {
+  return testDetails[getModelIndexFromPanelIndex(panelIndex)];
 }
 
 /** Create the component and set the `page` test variables */
 function createComponent() {
   fixture = TestBed.createComponent(SummaryDetailsListComponent);
   component = fixture.componentInstance;
-  dataService = TestBed.get(ActivitiesService); // for seeing expected values
+  dataService = new TestSummaryDetailsService;
   component.dataService = dataService; // for assigning summary data service
-  activities = getTestActivities();
+  testDetails = getTestDetails();
 
   // change detection triggers ngOnInit
   fixture.detectChanges();
 
   return fixture.whenStable().then(() => {
-    // got the activities and updated component
+    // got the model data and updated component
     // change detection updates the view
     fixture.detectChanges();
     page = new Page();

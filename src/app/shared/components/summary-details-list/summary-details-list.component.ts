@@ -24,7 +24,6 @@ export class SummaryDetailsListComponent implements OnInit {
   otherPanelsDisabled = false;
 
   @ViewChild('acc') accordionComponent;
-  // @ContentChild(ActivityDetailsComponent) details: ActivityDetailsComponent;
   // detailsComponent is assigned by child details component
   //   only one details component exists at a time
   detailsComponent = null;
