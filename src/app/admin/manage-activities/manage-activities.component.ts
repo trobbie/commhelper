@@ -9,10 +9,12 @@ import { ActivitiesService } from '../../_services/activities.service';
   styleUrls: ['./manage-activities.component.scss']
 })
 export class ManageActivitiesComponent implements OnInit {
+  get dataService() { return this._dataService; }
+
   @ViewChild('listComponent') listComponent;
 
   constructor(
-    private dataService: ActivitiesService
+    private _dataService: ActivitiesService
   ) {}
 
   ngOnInit() {}

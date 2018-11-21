@@ -10,8 +10,10 @@ import { ActivitiesService } from 'src/app/_services/activities.service';
 export class MyActivitiesComponent implements OnInit {
   @ViewChild('listComponent') listComponent;
 
+  get dataService() { return this._dataService; }
+
   constructor(
-    private dataService: ActivitiesService
+    private _dataService: ActivitiesService
   ) {}
 
   ngOnInit() {}
