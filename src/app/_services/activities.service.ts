@@ -6,6 +6,7 @@ import { Activity } from '../_models/activity.model';
 import { ACTIVITIES } from '../_mocks/mock-activities';
 import { DetailSummary } from '../_models/detail-summary';
 import { SummaryDetailsService } from './summary-details-service';
+import { delay } from 'rxjs/internal/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,8 @@ import { SummaryDetailsService } from './summary-details-service';
 export class ActivitiesService implements SummaryDetailsService {
 
   activities: Activity[];
+
+  private debugDelay = 2000;  // adds delay to async calls, use 0 for none
 
   constructor() {
     // initialize activities
@@ -27,7 +30,10 @@ export class ActivitiesService implements SummaryDetailsService {
           description: activity.name,
           dateCreated: activity.dateCreated
         }
-      ));
+      ))
+      .pipe(
+        delay(this.debugDelay)
+      );
   }
 
   getSummary(id: number): Observable<DetailSummary> {
@@ -39,19 +45,27 @@ export class ActivitiesService implements SummaryDetailsService {
           description: activity.name,
           dateCreated: activity.dateCreated
         }
-      )[0]);
+      )[0])
+      .pipe(
+        delay(this.debugDelay)
+      );
   }
 
   getActivities(): Observable<Activity[]> {
-    return of(this.activities);
+    return of(this.activities)
+      .pipe(
+        delay(this.debugDelay)
+      );
   }
 
   getActivity(id: number | string): Observable<Activity> {
     return this.getActivities().pipe(
-      map((activities: Activity[]) => activities.find(activity => activity.id === +id))
-    );
+      map((activities: Activity[]) => activities.find(activity => activity.id === +id)),
+      delay(this.debugDelay)
+      );
   }
 
+  // TODO: make this an async operation
   updateActivity(activity: Activity): boolean {
     if (!activity.id || activity.id === 0) {
       throw new Error('Use addActivity() for new activities, not updateActivity()');
@@ -72,10 +86,13 @@ export class ActivitiesService implements SummaryDetailsService {
       + 1; // id is max id + 1
       newActivity.dateCreated = new Date();
     this.activities.push(newActivity);
-    return of(newActivity);
+    return of(newActivity)
+      .pipe(
+        delay(this.debugDelay)
+      );
   }
 
-  // newActivity creates a skeleton object
+  // newActivity creates a skeleton object, synchronous
   // newActivity does NOT alter the database
   newActivity(): Activity {
     const activity: Activity = new Activity();
