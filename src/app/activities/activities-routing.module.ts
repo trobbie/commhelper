@@ -5,6 +5,7 @@ import { MyActivitiesComponent } from './my-activities/my-activities.component';
 import { ActivitiesComponent } from './activities/activities.component';
 import { AuthGuard } from '../auth/auth.guard';
 import { CanDeactivateGuard } from '../_guards/can-deactivate.guard';
+import { MyActivitiesResolverService } from './my-activities-resolver.service';
 
 const activitiesRoutes: Routes = [
   {
@@ -16,7 +17,10 @@ const activitiesRoutes: Routes = [
       {
         path: '',
         component: MyActivitiesComponent,
-        canDeactivate: [CanDeactivateGuard]
+        canDeactivate: [CanDeactivateGuard],
+        resolve: {
+          summaries: MyActivitiesResolverService
+        }
       }
     ]
   }

@@ -6,6 +6,7 @@ import { ManageActivitiesComponent } from './manage-activities/manage-activities
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 import { ManageUsersComponent } from './manage-users/manage-users.component';
 import { CanDeactivateGuard } from '../_guards/can-deactivate.guard';
+import { ManageActivitiesResolverService } from './manage-activities-resolver.service';
 
 const adminRoutes: Routes = [
   {
@@ -18,7 +19,10 @@ const adminRoutes: Routes = [
           {
             path: 'activities',
             component: ManageActivitiesComponent,
-            canDeactivate: [CanDeactivateGuard]
+            canDeactivate: [CanDeactivateGuard],
+            resolve: {
+              summaries: ManageActivitiesResolverService
+            }
           },
           { path: 'users', component: ManageUsersComponent },
           { path: '', component: AdminDashboardComponent }

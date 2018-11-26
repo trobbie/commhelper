@@ -12,6 +12,10 @@ import { SummaryDetailsListComponent } from './summary-details-list.component';
 import { TestSummaryDetailsService } from '../../../_services/testing/test-summary-details.service';
 import { TestDetails } from '../../../_models/test-details.model';
 import { getTestDetails } from '../../../_services/testing/test-summary-details';
+import { ReplaySubject, of, Subject, AsyncSubject, Observable } from 'rxjs';
+import { ActivatedRoute, ParamMap } from '@angular/router';
+import { flatten } from '@angular/router/src/utils/collection';
+import { ConsoleReporter } from 'jasmine';
 
 let component: SummaryDetailsListComponent;
 let fixture: ComponentFixture<SummaryDetailsListComponent>;
@@ -28,6 +32,18 @@ let testDetails: TestDetails[];
 class MockDetailsComponent {
 }
 
+class ActivatedRouteStub {
+  // expect data to be of the following shape
+  data: Observable<{ summaries: DetailSummary[]}>;
+  private _data: { summaries: DetailSummary[]};
+
+  setData(summariesGiven: DetailSummary[]) {
+    this._data = { summaries: summariesGiven };
+    this.data = of(this._data);
+  }
+}
+let activatedRoute = new ActivatedRouteStub;
+
 describe('SummaryDetailsListComponent', () => {
 
   beforeEach(async(() => {
@@ -40,7 +56,9 @@ describe('SummaryDetailsListComponent', () => {
       declarations: [
         MockDetailsComponent
       ],
-      providers: []
+      providers: [
+        { provide: ActivatedRoute, useValue: activatedRoute }
+      ]
     })
     .compileComponents()
     .then(createComponent);
@@ -232,6 +250,16 @@ function createComponent() {
   dataService = new TestSummaryDetailsService;
   component.dataService = dataService; // for assigning summary data service
   testDetails = getTestDetails();
+  activatedRoute = TestBed.get(ActivatedRoute); // get injected
+  // calculate DetailSummary from test data
+  activatedRoute.setData(
+    testDetails.map(
+      (details: TestDetails) => <DetailSummary>{
+        id: details.id,
+        description: details.name,
+        dateCreated: details.dateCreated
+      }
+  ));
 
   // change detection triggers ngOnInit
   fixture.detectChanges();

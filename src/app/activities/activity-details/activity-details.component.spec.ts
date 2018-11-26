@@ -8,6 +8,7 @@ import { Activity } from '../../_models/activity.model';
 import { newEvent, click, advance } from '../../../testing';
 import { ActivitiesService } from '../../_services/activities.service';
 import { SummaryDetailsListComponent } from '../../shared/components/summary-details-list/summary-details-list.component';
+import { AppRoutingModule } from 'src/app/app-routing.module';
 
 
 let component: ActivityDetailsComponent;
@@ -43,6 +44,7 @@ describe('ActivityDetailsComponent', () => {
       imports: [
         SharedModule,
         FormsModule,
+        AppRoutingModule, // b/c using list component, which uses route injection
         ReactiveFormsModule
       ],
       providers: [

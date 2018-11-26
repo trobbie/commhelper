@@ -6,6 +6,7 @@ import { NgbPanelChangeEvent } from '@ng-bootstrap/ng-bootstrap';
 import { DetailSummary } from '../../../_models/detail-summary';
 import { DialogService } from '../../../_services/dialog.service';
 import { SummaryDetailsService } from '../../../_services/summary-details-service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-summary-details-list',
@@ -18,7 +19,7 @@ export class SummaryDetailsListComponent implements OnInit {
 
   private panelTitlePrefix = 'ngb-panel-';
   get nameOfCreateButton() { return 'Create New ' + this.entityName; }
-  _summaries: DetailSummary[];
+  _summaries: DetailSummary[];  // backing object of summaries$
   summaries$: Observable<DetailSummary[]>;
   selectedId: number = null;
   otherPanelsDisabled = false;
@@ -29,7 +30,8 @@ export class SummaryDetailsListComponent implements OnInit {
   detailsComponent = null;
 
   constructor(
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
@@ -63,7 +65,7 @@ export class SummaryDetailsListComponent implements OnInit {
     return this.dialogService.confirm('Discard changes?');
   }
 
-  // right before a panel is opened or closed, update the selection id
+  // before a panel is opened or closed, update the selection id
   beforeSelectionChange($event: NgbPanelChangeEvent) {
     if ($event.panelId === null) { // then ignore
       return;
@@ -118,17 +120,22 @@ export class SummaryDetailsListComponent implements OnInit {
     if (this.dataService === null) {
       throw Error('dataService not assigned');
     }
-    this.summaries$ = this.dataService.getSummaryList().pipe(
-      switchMap((summaries) => {
-        this._summaries = summaries;
-        return of(this._summaries);
-      }),
-      // sort by dateCreated descending
-      tap(results => results.sort((a, b) => (a < b) ? 1 : (a === b) ? 0 : -1)
-        // add "create new element" panel to front of list
-        .unshift({id: 0, description: '<IGNORED SUMMARY>', dateCreated: null})
-      )
-    );
+    // depend on route resolvers for the data
+    this.route.data
+      .subscribe((data: { summaries: DetailSummary[]}) => {
+        if (!data.summaries) {
+          throw Error('resolver not attached that retrieves the data');
+        }
+        this._summaries = data.summaries;
+        this.summaries$ = of(this._summaries).pipe(
+          // sort by dateCreated descending
+          tap(results => results.sort((a, b) => (a < b) ? 1 : (a === b) ? 0 : -1)
+            // add "create new element" panel to front of list
+            .unshift({id: 0, description: '<IGNORED SUMMARY>', dateCreated: null})
+          )
+        );
+      });
+
   }
 
   onCreateNewEntry(): void {

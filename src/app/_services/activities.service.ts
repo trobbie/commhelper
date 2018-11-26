@@ -15,7 +15,7 @@ export class ActivitiesService implements SummaryDetailsService {
 
   activities: Activity[];
 
-  private debugDelay = 2000;  // adds delay to async calls, use 0 for none
+  private debugDelay = 1000;  // adds delay to async calls, use 0 for none
 
   constructor() {
     // initialize activities
