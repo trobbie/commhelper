@@ -3,6 +3,8 @@ import { async, ComponentFixture, TestBed, fakeAsync } from '@angular/core/testi
 import { By } from '@angular/platform-browser';
 import { DebugElement, Component } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { of, Observable } from 'rxjs';
 
 import { SharedModule } from '../../../shared/shared.module';
 import { AppRoutingModule } from '../../../app-routing.module';
@@ -12,10 +14,6 @@ import { SummaryDetailsListComponent } from './summary-details-list.component';
 import { TestSummaryDetailsService } from '../../../_services/testing/test-summary-details.service';
 import { TestDetails } from '../../../_models/test-details.model';
 import { getTestDetails } from '../../../_services/testing/test-summary-details';
-import { ReplaySubject, of, Subject, AsyncSubject, Observable } from 'rxjs';
-import { ActivatedRoute, ParamMap } from '@angular/router';
-import { flatten } from '@angular/router/src/utils/collection';
-import { ConsoleReporter } from 'jasmine';
 
 let component: SummaryDetailsListComponent;
 let fixture: ComponentFixture<SummaryDetailsListComponent>;
@@ -35,11 +33,8 @@ class MockDetailsComponent {
 class ActivatedRouteStub {
   // expect data to be of the following shape
   data: Observable<{ summaries: DetailSummary[]}>;
-  private _data: { summaries: DetailSummary[]};
-
-  setData(summariesGiven: DetailSummary[]) {
-    this._data = { summaries: summariesGiven };
-    this.data = of(this._data);
+  setBackingData(summariesGiven: DetailSummary[]) {
+    this.data = of({ summaries: summariesGiven });
   }
 }
 let activatedRoute = new ActivatedRouteStub;
@@ -252,7 +247,7 @@ function createComponent() {
   testDetails = getTestDetails();
   activatedRoute = TestBed.get(ActivatedRoute); // get injected
   // calculate DetailSummary from test data
-  activatedRoute.setData(
+  activatedRoute.setBackingData(
     testDetails.map(
       (details: TestDetails) => <DetailSummary>{
         id: details.id,

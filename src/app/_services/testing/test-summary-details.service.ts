@@ -5,7 +5,7 @@ import { asyncData } from '../../../testing/async-observable-helpers';
 import { DetailSummary } from '../../_models/detail-summary';
 import { SummaryDetailsService } from '../summary-details-service';
 import { getTestDetails } from './test-summary-details';
-import { TestDetails } from 'src/app/_models/test-details.model';
+import { TestDetails } from '../../_models/test-details.model';
 
 @Injectable({
   providedIn: 'root'

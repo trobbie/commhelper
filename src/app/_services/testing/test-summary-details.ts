@@ -1,4 +1,4 @@
-import { TestDetails } from 'src/app/_models/test-details.model';
+import { TestDetails } from '../../_models/test-details.model';
 
 /** return fresh array of test details */
 export function getTestDetails(): TestDetails[] {
