@@ -8,7 +8,7 @@ import { Activity } from '../../_models/activity.model';
 import { newEvent, click, advance } from '../../../testing';
 import { ActivitiesService } from '../../_services/activities.service';
 import { SummaryDetailsListComponent } from '../../shared/components/summary-details-list/summary-details-list.component';
-import { AppRoutingModule } from 'src/app/app-routing.module';
+import { AppRoutingModule } from '../../app-routing.module';
 
 
 let component: ActivityDetailsComponent;
@@ -34,25 +34,33 @@ class ActivitiesServiceStub {
   }
 }
 
+describe('ActivityDetailsComponent (pre-init)', () => {
+  beforeEach(async(() => {
+    compileComponents();
+  }));
+  beforeEach(() => {
+    fixture = TestBed.createComponent(ActivityDetailsComponent);
+    component = fixture.componentInstance;
+    dataService = fixture.debugElement.injector.get(ActivitiesService) as any;
+
+    // set those properties that would have been set by parent
+    component.activityId = null;
+    fixture.detectChanges();
+
+    // NOTE: do not call fixture.detectChanges again in these
+    //  tests for initial state
+  });
+
+  it('should have initial text of "Loading..." before initializing data', () => {
+    const el: HTMLElement = fixture.nativeElement.querySelector('.null-activity');
+    expect(el.innerHTML).toContain('Loading...');
+  });
+});
+
 describe('ActivityDetailsComponent', () => {
 
   beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [
-        ActivityDetailsComponent
-      ],
-      imports: [
-        SharedModule,
-        FormsModule,
-        AppRoutingModule, // b/c using list component, which uses route injection
-        ReactiveFormsModule
-      ],
-      providers: [
-        { provide: ActivitiesService, useClass: ActivitiesServiceStub },
-        SummaryDetailsListComponent
-      ]
-    })
-    .compileComponents();
+    compileComponents();
   }));
 
   // the "sync" beforeEach is guaranteed to run after the "async" one
@@ -146,7 +154,24 @@ describe('ActivityDetailsComponent', () => {
 });
 
 /////////// Helpers /////
-
+function compileComponents() {
+  TestBed.configureTestingModule({
+    declarations: [
+      ActivityDetailsComponent
+    ],
+    imports: [
+      SharedModule,
+      FormsModule,
+      AppRoutingModule, // b/c using list component, which uses route injection
+      ReactiveFormsModule
+    ],
+    providers: [
+      { provide: ActivitiesService, useClass: ActivitiesServiceStub },
+      SummaryDetailsListComponent
+    ]
+  })
+  .compileComponents();
+}
 function createComponent() {
   fixture = TestBed.createComponent(ActivityDetailsComponent);
   component = fixture.componentInstance;

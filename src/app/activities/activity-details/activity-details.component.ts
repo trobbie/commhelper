@@ -52,7 +52,7 @@ export class ActivityDetailsComponent implements OnInit {
 
     // while setting the activity, keep the activityId = null until
     //   form changes are made, else will emit a "change" event
-    // this.activityId = null;
+    this.activityId = null;
     this.initializing = true;
     if (id === 0) { // then a "new activity"
       const activity = this.dataService.newActivity();
