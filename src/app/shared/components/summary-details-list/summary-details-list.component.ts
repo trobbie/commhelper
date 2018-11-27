@@ -96,7 +96,7 @@ export class SummaryDetailsListComponent implements OnInit {
       if (!this.selectedId) {
         // add placeholder to array; will get updated below
         // new entries should always be put in panel 1 (after "new element" panel)
-        this._summaries.splice(1, 0, {id: $idChanged, description: '', dateCreated: null});
+        this._summaries.splice(1, 0, {id: $idChanged, description: 'Refreshing...', dateCreated: null});
       }
       // update only this summary (summaries$ should auto-update)
       this.dataService.getSummary($idChanged).forEach(
