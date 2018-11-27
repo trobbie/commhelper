@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   // URL to the web api for users, activities, etc.
-  apiUrl: 'http://localhost:4200'
+  apiUrl: 'http://localhost:3000'
 };
 
 /*
