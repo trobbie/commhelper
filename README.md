@@ -2,6 +2,10 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.2.4.
 
+## Development environment
+
+After git clone, note that you should ignore development updates to the mock data used by json-server (which updates every time the data changes.  To do this, run: git update-index --assume-unchanged src/testing/mocks/dev-data.json
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
