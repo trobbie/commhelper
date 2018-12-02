@@ -34,6 +34,7 @@
             "program": "/usr/local/bin/json-server",
             "args": [
                 "--watch",
+                "-d 500", // delay (ms)
                 "${workspaceFolder}/src/testing/mocks/dev-data.json"]
         }
         

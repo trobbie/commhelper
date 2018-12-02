@@ -52,13 +52,13 @@ export class TestActivitiesService implements SummaryDetailsService {
     return this.lastResult = asyncData(activity);
   }
 
-  updateActivity(activity: Activity): boolean {
+  updateActivity(activity: Activity): Observable<Activity> {
     if (!activity.id || activity.id === 0) {
       throw new Error('Use addActivity() for new activities, not updateActivity()');
     }
     const index = this.activities.findIndex((a) => a.id === activity.id);
     this.activities[index] = activity;
-    return true;
+    return asyncData(activity);
   }
 
 }

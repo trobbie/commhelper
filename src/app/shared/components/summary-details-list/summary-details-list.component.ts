@@ -92,7 +92,10 @@ export class SummaryDetailsListComponent implements OnInit {
 
   // onClosePanel() is initiated by details component
   onClosePanel($idChanged: number | null): void {
-    if ($idChanged !== null) {
+    if ($idChanged === null) { // i.e. cancelling
+      this.otherPanelsDisabled = false; // set this before collapsing
+      this.accordionComponent.collapse(this.panelTitlePrefix + this.selectedId);
+    } else {
       if (!this.selectedId) {
         // add placeholder to array; will get updated below
         // new entries should always be put in panel 1 (after "new element" panel)
@@ -103,12 +106,11 @@ export class SummaryDetailsListComponent implements OnInit {
           (updatedSummary) => {
           const index = this._summaries.findIndex((summary) => summary.id === updatedSummary.id);
           this._summaries[index] = updatedSummary;
+          this.otherPanelsDisabled = false; // set this before collapsing
+          this.accordionComponent.collapse(this.panelTitlePrefix + this.selectedId);
         },
       );
     }
-    this.otherPanelsDisabled = false; // set this before collapsing
-    this.accordionComponent.collapse(this.panelTitlePrefix + this.selectedId);
-
   }
 
   // onValuesChanged() is initiated by details component

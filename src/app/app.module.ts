@@ -12,12 +12,14 @@ import { AuthModule } from './auth/auth.module';
 import { DialogService } from './_services/dialog.service';
 import { AuthService } from './auth/auth.service';
 import { ActivitiesService } from './_services/activities.service';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   imports: [
     AuthModule,
     BrowserModule,
     BrowserAnimationsModule,
+    HttpClientModule, // import HttpClientModule after BrowserModule
     EventsModule,
     ActivitiesModule,
     SharedModule,

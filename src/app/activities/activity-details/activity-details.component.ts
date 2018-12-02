@@ -54,6 +54,8 @@ export class ActivityDetailsComponent implements OnInit {
     //   form changes are made, else will emit a "change" event
     this.activityId = null;
     this.initializing = true;
+    // TODO: why must I reset() so that form isn't dirty even after setValue()?
+    this.activityForm.reset();
     if (id === 0) { // then a "new activity"
       const activity = this.dataService.newActivity();
       // note: activity not added to dataService yet
@@ -76,11 +78,11 @@ export class ActivityDetailsComponent implements OnInit {
   }
 
   isSaveButtonDisabled(): boolean {
-    return !this.activityForm.valid || !this.activityForm.dirty;
+     return !this.activityForm.valid || !this.activityForm.dirty;
   }
 
   isCancelButtonDisabled(): boolean {
-    return !this.activityForm.dirty;
+    return !this.activityForm.dirty && (this.activityId !== 0);
   }
 
   // onSubmit() (called from ngSubmit directive) - when user presses 'enter'
@@ -92,8 +94,10 @@ export class ActivityDetailsComponent implements OnInit {
 
   save() {
     if (this.activityForm.value.id) {
-      this.dataService.updateActivity(this.activityForm.value);
-      this.listComponent.onClosePanel(this.activityForm.value.id);
+      this.dataService.updateActivity(this.activityForm.value).subscribe(
+        (updatedActivity) =>
+          this.listComponent.onClosePanel(this.activityForm.value.id)
+      );
     } else {
       // else was a new activity, now add to the dataService
       this.dataService.addActivity(this.activityForm.value).forEach(

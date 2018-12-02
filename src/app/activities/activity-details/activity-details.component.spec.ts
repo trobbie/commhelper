@@ -27,7 +27,7 @@ class ActivitiesServiceStub {
     return of(testActivity);
   }
   updateActivity() {
-    return; // do nothing
+    return of(testActivity);
   }
   addActivity() {
     return of({id: 99999, description: '' });
