@@ -96,11 +96,8 @@ describe('ActivitiesService', () => {
 
       service.getActivity(idNotFound).subscribe(
         (data) => {
-          console.log('should not call');
           fail('should have failed with the 404 error'); },
         (err: HttpErrorResponse) => {
-          console.log('got error response');
-
           expect(err.status).toEqual(404, 'status');
           expect(err.error).toEqual(errormessage, 'message');
       });
