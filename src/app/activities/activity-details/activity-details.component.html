@@ -1,5 +1,10 @@
 <div *ngIf="activityId === null" class="null-activity">
-  Loading...
+  <div *ngIf="errorMessage === null">
+    Loading...
+  </div>
+  <div *ngIf="errorMessage !== null" class="error-message">
+    ERROR: {{ errorMessage }}
+  </div>
 </div>
 <div *ngIf="activityId != null" class="activity">
   <form [formGroup]="activityForm" (ngSubmit)="onSubmit()">

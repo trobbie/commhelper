@@ -12,6 +12,7 @@ import { SummaryDetailsListComponent } from '../../shared/components/summary-det
 export class ActivityDetailsComponent implements OnInit {
   activityId: number = null;
   initializing = false;
+  errorMessage: string = null; // non-null when there is an error
 
   activityForm: FormGroup = this.fb.group({
     id: [null],
@@ -54,6 +55,8 @@ export class ActivityDetailsComponent implements OnInit {
     //   form changes are made, else will emit a "change" event
     this.activityId = null;
     this.initializing = true;
+    this.errorMessage = null; // reset this before doing the work
+
     // TODO: why must I reset() so that form isn't dirty even after setValue()?
     this.activityForm.reset();
     if (id === 0) { // then a "new activity"
@@ -68,6 +71,11 @@ export class ActivityDetailsComponent implements OnInit {
           this.activityId = id;
           this.activityForm.setValue(activity);
           this.initializing = false;
+        },
+        (error) => {
+          this.activityId = null; // as if nothing was selected
+          this.initializing = false; // we ARE done at this point
+          this.errorMessage = error.message;
         }
       );
     }

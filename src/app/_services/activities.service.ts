@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { map, tap, filter, switchMap } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { map, tap, catchError } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { delay } from 'rxjs/internal/operators';
 
 import { Activity } from '../_models/activity.model';
-import { ACTIVITIES } from '../_mocks/mock-activities';
 import { DetailSummary } from '../_models/detail-summary';
 import { SummaryDetailsService } from './summary-details-service';
 import { environment } from '../../environments/environment.prod';
@@ -40,7 +39,8 @@ export class ActivitiesService implements SummaryDetailsService {
               this.convertActivityToDetailSummary(activity)
           )
       ),
-      delay(this.debugDelay)
+      delay(this.debugDelay),
+      catchError(this.handleError<DetailSummary[]>(`getSummaryList()`))
     );
   }
 
@@ -49,7 +49,8 @@ export class ActivitiesService implements SummaryDetailsService {
       map((activity: Activity) =>
         this.convertActivityToDetailSummary(activity)
       ),
-      delay(this.debugDelay)
+      delay(this.debugDelay),
+      catchError(this.handleError<DetailSummary>(`getSummary()`))
     );
   }
 
@@ -59,13 +60,15 @@ export class ActivitiesService implements SummaryDetailsService {
         tap((activities: Activity[]) => {
           this.activities = activities;  // cache result
         }),
-        delay(this.debugDelay)
+        delay(this.debugDelay),
+        catchError(this.handleError<Activity[]>(`getActivities()`))
       );
   }
 
   getActivity(id: number | string): Observable<Activity> {
-    return this.http.get<Activity>(this.activitiesUrl + '\\' + id).pipe(
-      delay(this.debugDelay)
+     return this.http.get<Activity>(this.activitiesUrl + '/' + id).pipe(
+      delay(this.debugDelay),
+      catchError(this.handleError<Activity>(`getActivity(${id})`))
     );
   }
 
@@ -74,7 +77,7 @@ export class ActivitiesService implements SummaryDetailsService {
       throw new Error('Use addActivity() for new activities, not updateActivity()');
     }
 
-    return this.http.put<Activity>(this.activitiesUrl + '\\' + updatedActivity.id, updatedActivity)
+    return this.http.put<Activity>(this.activitiesUrl + '/' + updatedActivity.id, updatedActivity)
       .pipe(
         tap((activity) => {
           // update cache
@@ -115,6 +118,26 @@ export class ActivitiesService implements SummaryDetailsService {
     activity.name = '';
     activity.dateCreated = null;
     return activity;
+  }
+
+  /**
+   * Handle Http operation that failed.
+   * Let the app continue.
+   * Returns the lambda function used by catchError()
+   * @param operation - name of the operation that failed
+   * @param result - optional value to return as the observable result
+   */
+  private handleError<T> (operation = 'operation', result?: T) {
+    // For testing, the following can be used to force an HTTP error in the _calling_ code (just change generic):
+    // return this.handleError<Activity>('testingError')(new HttpErrorResponse({status: 401, statusText: 'fail response'}));
+
+    return (error: any): Observable<T> => {
+      console.error(`${operation} failed: ` + error.message); // log to console instead
+
+      // Let the app keep running
+      return throwError(result ? result : error as T);
+
+    };
   }
 
 }
