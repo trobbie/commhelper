@@ -25,7 +25,10 @@
             "request": "launch",
             "program": "${workspaceFolder}/node_modules/protractor/bin/protractor",
             "protocol": "inspector",
-            "args": ["${workspaceFolder}/e2e/protractor.conf.js"]
+            "args": [
+                "${workspaceFolder}/e2e/protractor.conf.js",
+                "--port 4201"
+            ]
         },
         {
             "name": "json-server",
