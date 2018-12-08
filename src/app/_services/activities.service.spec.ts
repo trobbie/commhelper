@@ -103,6 +103,7 @@ describe('ActivitiesService', () => {
       });
 
       const req = httpTestingController.expectOne(`${service.activitiesUrl}/${idNotFound}`);
+
       // Respond with mock error
       req.flush(errormessage, { status: 404, statusText: 'Not Found' });
     });
@@ -112,7 +113,7 @@ describe('ActivitiesService', () => {
     it('should return Observable<DetailSummary>', () => {
       service.getSummary(1).subscribe((summary) => {
         expect(summary.id).toEqual(1);
-        expect(summary).toEqual(jasmine.any(DetailSummary));
+        expect(summary).toEqual(service.convertActivityToDetailSummary(dummyActivities[1]));
       });
 
       const req = httpTestingController.expectOne(`${service.activitiesUrl}/1`);

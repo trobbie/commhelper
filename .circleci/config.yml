@@ -1,0 +1,50 @@
+version: 2
+
+defaults: &defaults
+  working_directory: ~/repo
+  docker: 
+    - image: trion/ng-cli-e2e:6.2.5
+
+jobs:
+  build:
+    <<: *defaults
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "60:42:65:e6:01:1e:76:77:9a:60:35:bf:56:0a:8f:d3"
+      - run:
+          name: Avoid bitbucket.org authenticity warning for non-interactive mode
+          command: |
+            # editing ~/.ssh/config did not work, so using this method:
+            mkdir ~/.ssh/ && ssh -oStrictHostKeyChecking=no -T git@bitbucket.org
+
+      - checkout
+
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "package.json" }}
+          # fallback to using the latest cache it no exact match is found
+          - v1-dependencies-
+
+      - run: npm install
+
+      - run: 
+          name: Installing pm2 used for webservice-ci task
+          command: npm install pm2 -g
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+
+      - run: npm run test:prod-ci
+
+      # - run: ng build --prod --no-progress
+
+      - run:
+          name: Startup data webservice for e2e tests
+          command: pm2 start npm -- run webservice-ci
+
+      - run: npm run e2e
+
+

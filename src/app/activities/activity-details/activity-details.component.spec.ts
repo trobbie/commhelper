@@ -169,6 +169,20 @@ describe('ActivityDetailsComponent', () => {
 });
 
 /////////// Helpers /////
+class Page {
+  get idField() { return this.query<HTMLElement>('span.idField'); }
+  get nameField() { return this.query<HTMLInputElement>('input#nameField'); }
+  get buttonSave() { return this.query<HTMLButtonElement>('.buttonSave'); }
+  get buttonCancel() { return this.query<HTMLButtonElement>('.buttonCancel'); }
+
+  constructor() {
+  }
+  //// query helpers ////
+  private query<T>(selector: string): T {
+    return fixture.nativeElement.querySelector(selector);
+  }
+}
+
 function compileComponents() {
   TestBed.configureTestingModule({
     declarations: [
@@ -187,6 +201,7 @@ function compileComponents() {
   })
   .compileComponents();
 }
+
 function createComponent() {
   fixture = TestBed.createComponent(ActivityDetailsComponent);
   component = fixture.componentInstance;
@@ -206,16 +221,4 @@ function createComponent() {
   });
 }
 
-class Page {
-  get idField() { return this.query<HTMLElement>('span.idField'); }
-  get nameField() { return this.query<HTMLInputElement>('input#nameField'); }
-  get buttonSave() { return this.query<HTMLButtonElement>('.buttonSave'); }
-  get buttonCancel() { return this.query<HTMLButtonElement>('.buttonCancel'); }
 
-  constructor() {
-  }
-  //// query helpers ////
-  private query<T>(selector: string): T {
-    return fixture.nativeElement.querySelector(selector);
-  }
-}

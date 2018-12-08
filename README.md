@@ -4,7 +4,9 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## Development environment
 
-After git clone, note that you should ignore development updates to the mock data used by json-server (which updates every time the data changes.  To do this, run: git update-index --assume-unchanged src/testing/mocks/dev-data.json
+After git clone, note that you should ignore development updates to the mock data used by json-server (which updates every time the data changes.  To do this, run: 
+    git update-index --assume-unchanged src/testing/mocks/dev-data.json
+    git update-index --assume-unchanged src/testing/mocks/e2e-data.json
 
 ## Development server
 

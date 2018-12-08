@@ -238,7 +238,25 @@ function getDetailsBackingObject(panelIndex: number): TestDetails {
   return testDetails[getModelIndexFromPanelIndex(panelIndex)];
 }
 
-/** Create the component and set the `page` test variables */
+/////////// Helpers /////
+class Page {
+  de: DebugElement;
+
+  get openDetailsDE(): DebugElement { return this.de.query(By.css('.card-body')); }
+  /** accordion panel elements */
+  // access these elements without caching since elements often refresh
+  get accPanelHeaders(): DebugElement[] {
+    const panelHeaderNodes = this.de.queryAll(By.css('.card-header'));
+    return Array.from(panelHeaderNodes);
+  }
+
+  constructor() {
+    this.de = fixture.debugElement;
+  }
+  panelDE(panelIndex: number): DebugElement { return this.accPanelHeaders[panelIndex].query(By.css('.btn-link')); }
+  panelSummary(panelIndex: number): DetailSummary { return component._summaries[panelIndex]; }
+}
+
 function createComponent() {
   fixture = TestBed.createComponent(SummaryDetailsListComponent);
   component = fixture.componentInstance;
@@ -267,20 +285,3 @@ function createComponent() {
   });
 }
 
-class Page {
-  de: DebugElement;
-
-  get openDetailsDE(): DebugElement { return this.de.query(By.css('.card-body')); }
-  /** accordion panel elements */
-  // access these elements without caching since elements often refresh
-  get accPanelHeaders(): DebugElement[] {
-    const panelHeaderNodes = this.de.queryAll(By.css('.card-header'));
-    return Array.from(panelHeaderNodes);
-  }
-
-  constructor() {
-    this.de = fixture.debugElement;
-  }
-  panelDE(panelIndex: number): DebugElement { return this.accPanelHeaders[panelIndex].query(By.css('.btn-link')); }
-  panelSummary(panelIndex: number): DetailSummary { return component._summaries[panelIndex]; }
-}

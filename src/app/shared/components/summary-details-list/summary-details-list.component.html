@@ -10,7 +10,7 @@
     {{ summary.description }}
 </ng-template>
 <ng-template ngbPanelTitle *ngIf="summary.id === 0">
-    <button type="button" class="btn btn-primary" (click)="onCreateNewEntry()">
+    <button type="button" class="btn btn-primary" (click)="onCreateNewEntry()" id="button-add-activity">
         <i class="material-icons" title="Add New Details">add</i>
         <div class='button-text'>{{ nameOfCreateButton }}</div>
     </button>
