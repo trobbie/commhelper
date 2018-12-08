@@ -133,6 +133,7 @@ export class SummaryDetailsListComponent implements OnInit, OnDestroy {
     // TODO: need code for this?
     if (this.routeDataSub) {
       console.error('route data already subscribed to');
+      this.routeDataSub.unsubscribe();
     }
 
     // depend on route resolvers for the data
@@ -149,6 +150,9 @@ export class SummaryDetailsListComponent implements OnInit, OnDestroy {
             .unshift({id: 0, description: '<IGNORED SUMMARY>', dateCreated: null})
           )
         );
+      },
+      (error) => {
+        throw Error('Summaries observable is throwing error');
       });
 
   }

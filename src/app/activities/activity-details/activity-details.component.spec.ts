@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed, fakeAsync } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { of } from 'rxjs';
+import { of, throwError, Observable } from 'rxjs';
 
 import { ActivityDetailsComponent } from './activity-details.component';
 import { SharedModule } from '../../shared/shared.module';
@@ -9,12 +9,14 @@ import { newEvent, click, advance } from '../../../testing';
 import { ActivitiesService } from '../../_services/activities.service';
 import { SummaryDetailsListComponent } from '../../shared/components/summary-details-list/summary-details-list.component';
 import { AppRoutingModule } from '../../app-routing.module';
+import { HttpErrorResponse } from '@angular/common/http';
 
 
 let component: ActivityDetailsComponent;
 let fixture: ComponentFixture<ActivityDetailsComponent>;
 let page: Page;
 let dataService: ActivitiesServiceStub;
+const idNotFound = 9999;
 
 const testActivity: Activity = {
   id: 42,
@@ -23,8 +25,12 @@ const testActivity: Activity = {
 };
 
 class ActivitiesServiceStub {
-  getActivity() {
-    return of(testActivity);
+  getActivity(id: number): Observable<Activity>  {
+    if (id === idNotFound) {
+      return throwError(new HttpErrorResponse({status: 401, statusText: 'fail response'}));
+    } else {
+      return of(testActivity);
+    }
   }
   updateActivity() {
     return of(testActivity);
@@ -34,7 +40,7 @@ class ActivitiesServiceStub {
   }
 }
 
-describe('ActivityDetailsComponent (pre-init)', () => {
+describe('ActivityDetailsComponent (when data not loaded)', () => {
   beforeEach(async(() => {
     compileComponents();
   }));
@@ -42,19 +48,28 @@ describe('ActivityDetailsComponent (pre-init)', () => {
     fixture = TestBed.createComponent(ActivityDetailsComponent);
     component = fixture.componentInstance;
     dataService = fixture.debugElement.injector.get(ActivitiesService) as any;
+  });
 
+  it('should have initial text of "Loading..." before initializing data', fakeAsync(() => {
     // set those properties that would have been set by parent
     component.activityId = null;
     fixture.detectChanges();
-
     // NOTE: do not call fixture.detectChanges again in these
     //  tests for initial state
-  });
 
-  it('should have initial text of "Loading..." before initializing data', () => {
     const el: HTMLElement = fixture.nativeElement.querySelector('.null-activity');
     expect(el.innerHTML).toContain('Loading...');
-  });
+  }));
+
+  it('should have text of "ERROR: <error>" after encountering error with data service', fakeAsync(() => {
+    // set those properties that would have been set by parent
+    component.activityId = idNotFound;
+    fixture.detectChanges();
+    fixture.detectChanges();
+
+    const el: HTMLElement = fixture.nativeElement.querySelector('.error-message');
+    expect(el.innerHTML).toContain('ERROR:');
+  }));
 });
 
 describe('ActivityDetailsComponent', () => {
