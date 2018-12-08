@@ -1,5 +1,6 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 import { ActivitiesService } from '../../_services/activities.service';
 import { SummaryDetailsListComponent } from '../../shared/components/summary-details-list/summary-details-list.component';
@@ -9,10 +10,13 @@ import { SummaryDetailsListComponent } from '../../shared/components/summary-det
   templateUrl: './activity-details.component.html',
   styleUrls: ['./activity-details.component.scss']
 })
-export class ActivityDetailsComponent implements OnInit {
+export class ActivityDetailsComponent implements OnInit, OnDestroy {
   activityId: number = null;
   initializing = false;
   errorMessage: string = null; // non-null when there is an error
+  formChangesSub: Subscription = null;
+  getActivitySub: Subscription = null;
+  updateActivitySub: Subscription = null;
 
   activityForm: FormGroup = this.fb.group({
     id: [null],
@@ -24,7 +28,11 @@ export class ActivityDetailsComponent implements OnInit {
     private fb: FormBuilder,
     private dataService: ActivitiesService,
     public listComponent: SummaryDetailsListComponent
-  ) {}
+  ) {
+    this.formChangesSub = null;
+    this.getActivitySub = null;
+    this.updateActivitySub = null;
+  }
 
   // the details component is only initialized once
   //   since using content projection
@@ -33,12 +41,24 @@ export class ActivityDetailsComponent implements OnInit {
     // register this details component with the host listComponent
     this.listComponent.detailsComponent = this;
 
-    this.activityForm.valueChanges.subscribe(val => {
+    this.formChangesSub = this.activityForm.valueChanges.subscribe(val => {
       // do not emit changes while initializing form
       if (!this.initializing) {
         this.informHostOfDataChanges();
       }
     });
+  }
+
+  ngOnDestroy() {
+    if (this.formChangesSub) {
+      this.formChangesSub.unsubscribe();
+    }
+    if (this.getActivitySub) {
+      this.getActivitySub.unsubscribe();
+    }
+    if (this.updateActivitySub) {
+      this.updateActivitySub.unsubscribe();
+    }
   }
 
   informHostOfDataChanges() {
@@ -66,7 +86,11 @@ export class ActivityDetailsComponent implements OnInit {
       this.activityForm.setValue(activity);
       this.initializing = false;
     } else {
-      this.dataService.getActivity(id).subscribe(
+      if (this.getActivitySub) {
+        // TODO: handle this?
+        console.error('this.getActivitySub already set');
+      }
+      this.getActivitySub = this.dataService.getActivity(id).subscribe(
         (activity) => {
           this.activityId = id;
           this.activityForm.setValue(activity);
@@ -102,7 +126,11 @@ export class ActivityDetailsComponent implements OnInit {
 
   save() {
     if (this.activityForm.value.id) {
-      this.dataService.updateActivity(this.activityForm.value).subscribe(
+      if (this.updateActivitySub) {
+        // TODO: handle this?
+        console.error('this.updateActivitySub already set');
+      }
+      this.updateActivitySub = this.dataService.updateActivity(this.activityForm.value).subscribe(
         (updatedActivity) =>
           this.listComponent.onClosePanel(this.activityForm.value.id)
       );

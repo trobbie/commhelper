@@ -1,19 +1,19 @@
-import { Component, OnInit, ViewChild, ContentChild, Input } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { switchMap, tap } from 'rxjs/operators';
+import { Component, OnInit, ViewChild, Input, OnDestroy } from '@angular/core';
+import { Observable, of, Subscription } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { NgbPanelChangeEvent } from '@ng-bootstrap/ng-bootstrap';
+import { ActivatedRoute } from '@angular/router';
 
 import { DetailSummary } from '../../../_models/detail-summary';
 import { DialogService } from '../../../_services/dialog.service';
 import { SummaryDetailsService } from '../../../_services/summary-details-service';
-import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-summary-details-list',
   templateUrl: './summary-details-list.component.html',
   styleUrls: ['./summary-details-list.component.scss']
 })
-export class SummaryDetailsListComponent implements OnInit {
+export class SummaryDetailsListComponent implements OnInit, OnDestroy {
   @Input() dataService: SummaryDetailsService;
   @Input() entityName = 'Entity';
 
@@ -23,6 +23,7 @@ export class SummaryDetailsListComponent implements OnInit {
   summaries$: Observable<DetailSummary[]>;
   selectedId: number = null;
   otherPanelsDisabled = false;
+  routeDataSub: Subscription = null;  // used to unsubscribe to data from route
 
   @ViewChild('acc') accordionComponent;
   // detailsComponent is assigned by child details component
@@ -36,6 +37,12 @@ export class SummaryDetailsListComponent implements OnInit {
 
   ngOnInit() {
     this.getSummaryList();
+  }
+
+  ngOnDestroy() {
+    if (this.routeDataSub) {
+      this.routeDataSub.unsubscribe();
+    }
   }
 
   getPanelTitlePrefix(): string {
@@ -122,8 +129,14 @@ export class SummaryDetailsListComponent implements OnInit {
     if (this.dataService === null) {
       throw Error('dataService not assigned');
     }
+
+    // TODO: need code for this?
+    if (this.routeDataSub) {
+      console.error('route data already subscribed to');
+    }
+
     // depend on route resolvers for the data
-    this.route.data
+    this.routeDataSub = this.route.data
       .subscribe((data: { summaries: DetailSummary[]}) => {
         if (!data.summaries) {
           throw Error('resolver not attached that retrieves the data');
