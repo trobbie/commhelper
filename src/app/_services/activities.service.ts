@@ -17,8 +17,6 @@ export class ActivitiesService implements SummaryDetailsService {
   // TODO: determine how and when to use the cache (and add refresh button?)
   activities: Activity[];  // cache
 
-  private debugDelay = 0;  // adds delay to async calls, use 0 for none
-
   constructor(private http: HttpClient) {
     // this.activities = null; // ACTIVITIES;
   }
@@ -39,7 +37,6 @@ export class ActivitiesService implements SummaryDetailsService {
               this.convertActivityToDetailSummary(activity)
           )
       ),
-      delay(this.debugDelay),
       catchError(this.handleError<DetailSummary[]>(`getSummaryList()`))
     );
   }
@@ -49,7 +46,6 @@ export class ActivitiesService implements SummaryDetailsService {
       map((activity: Activity) =>
         this.convertActivityToDetailSummary(activity)
       ),
-      delay(this.debugDelay),
       catchError(this.handleError<DetailSummary>(`getSummary()`))
     );
   }
@@ -60,14 +56,12 @@ export class ActivitiesService implements SummaryDetailsService {
         tap((activities: Activity[]) => {
           this.activities = activities;  // cache result
         }),
-        delay(this.debugDelay),
         catchError(this.handleError<Activity[]>(`getActivities()`))
       );
   }
 
   getActivity(id: number | string): Observable<Activity> {
      return this.http.get<Activity>(this.activitiesUrl + '/' + id).pipe(
-      delay(this.debugDelay),
       catchError(this.handleError<Activity>(`getActivity(${id})`))
     );
   }
@@ -83,8 +77,7 @@ export class ActivitiesService implements SummaryDetailsService {
           // update cache
           const index = this.activities.findIndex((a) => a.id === activity.id);
           this.activities[index] = activity;
-        }),
-        delay(this.debugDelay)
+        })
       );
 
   }
@@ -105,8 +98,7 @@ export class ActivitiesService implements SummaryDetailsService {
       .pipe(
         tap((activity) => {
           this.activities.push(newActivity);
-        }),
-        delay(this.debugDelay)
+        })
       );
   }
 
