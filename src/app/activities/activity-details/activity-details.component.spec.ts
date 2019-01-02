@@ -42,8 +42,11 @@ class ActivitiesServiceStub {
 
 describe('ActivityDetailsComponent (when data not loaded)', () => {
   beforeEach(async(() => {
-    compileComponents();
+    compileComponents()
+    .then();
   }));
+
+  // the "sync" beforeEach is guaranteed to run after the "async" one
   beforeEach(() => {
     fixture = TestBed.createComponent(ActivityDetailsComponent);
     component = fixture.componentInstance;
@@ -75,15 +78,11 @@ describe('ActivityDetailsComponent (when data not loaded)', () => {
 describe('ActivityDetailsComponent', () => {
 
   beforeEach(async(() => {
-    compileComponents();
+    compileComponents()
+    .then(createComponent);
   }));
 
-  // the "sync" beforeEach is guaranteed to run after the "async" one
-  beforeEach(() => {
-    createComponent();
-  });
-
-  it('should create', () => {
+it('should create', () => {
     expect(component).toBeTruthy();
   });
 
@@ -184,7 +183,7 @@ class Page {
 }
 
 function compileComponents() {
-  TestBed.configureTestingModule({
+  return TestBed.configureTestingModule({
     declarations: [
       ActivityDetailsComponent
     ],

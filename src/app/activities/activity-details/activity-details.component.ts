@@ -87,7 +87,7 @@ export class ActivityDetailsComponent implements OnInit, OnDestroy {
       this.initializing = false;
     } else {
       if (this.getActivitySub) {
-        // TODO: handle this?
+        this.getActivitySub.unsubscribe();
         console.error('this.getActivitySub already set');
       }
       this.getActivitySub = this.dataService.getActivity(id).subscribe(
@@ -127,7 +127,7 @@ export class ActivityDetailsComponent implements OnInit, OnDestroy {
   save() {
     if (this.activityForm.value.id) {
       if (this.updateActivitySub) {
-        // TODO: handle this?
+        this.updateActivitySub.unsubscribe();
         console.error('this.updateActivitySub already set');
       }
       this.updateActivitySub = this.dataService.updateActivity(this.activityForm.value).subscribe(

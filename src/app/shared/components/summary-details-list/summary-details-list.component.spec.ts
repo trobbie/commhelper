@@ -42,20 +42,7 @@ let activatedRoute = new ActivatedRouteStub;
 describe('SummaryDetailsListComponent', () => {
 
   beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        SharedModule,
-        ReactiveFormsModule,
-        AppRoutingModule
-      ],
-      declarations: [
-        MockDetailsComponent
-      ],
-      providers: [
-        { provide: ActivatedRoute, useValue: activatedRoute }
-      ]
-    })
-    .compileComponents()
+    compileComponents()
     .then(createComponent);
   }));
 
@@ -255,6 +242,23 @@ class Page {
   }
   panelDE(panelIndex: number): DebugElement { return this.accPanelHeaders[panelIndex].query(By.css('.btn-link')); }
   panelSummary(panelIndex: number): DetailSummary { return component._summaries[panelIndex]; }
+}
+
+function compileComponents() {
+  return TestBed.configureTestingModule({
+    imports: [
+      SharedModule,
+      ReactiveFormsModule,
+      AppRoutingModule
+    ],
+    declarations: [
+      MockDetailsComponent
+    ],
+    providers: [
+      { provide: ActivatedRoute, useValue: activatedRoute }
+    ]
+  })
+  .compileComponents();
 }
 
 function createComponent() {

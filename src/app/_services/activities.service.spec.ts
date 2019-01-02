@@ -7,11 +7,13 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { ActivitiesService } from './activities.service';
 import { DetailSummary } from '../_models/detail-summary';
 import { Activity } from '../_models/activity.model';
+import { Subscription } from 'rxjs';
 
 describe('ActivitiesService', () => {
   // let httpClient: HttpClient;
   let httpTestingController: HttpTestingController;
   let service: ActivitiesService;
+  let sub: Subscription = null;
 
   const dummyActivities = [
     { id: 0, name: 'MockActivity0', dateCreated: new Date('2018-12-03T00:00:00') },
@@ -35,10 +37,15 @@ describe('ActivitiesService', () => {
     // httpClient = TestBed.get(HttpClient);
     httpTestingController = TestBed.get(HttpTestingController);
     service = TestBed.get(ActivitiesService);
+    expect(sub).toBeNull();
   });
 
   afterEach(() => {
     httpTestingController.verify();
+    if (sub) {
+      sub.unsubscribe();
+      sub = null;
+    }
   });
 
   it('should be created', () => {
@@ -46,8 +53,9 @@ describe('ActivitiesService', () => {
   });
 
   describe('#getActivities()', () => {
+
     it('should return Observable<Activity[]>', () => {
-      service.getActivities().subscribe((activities) => {
+      sub = service.getActivities().subscribe((activities) => {
         expect(activities.length).toBe(4);
         expect(activities).toEqual(dummyActivities);
       });
@@ -59,7 +67,7 @@ describe('ActivitiesService', () => {
 
     xit('should throw if network error', () => {
       const emsg = 'simulated network error';
-      service.getActivities().subscribe(
+      sub = service.getActivities().subscribe(
         (data) => { fail('should have failed with the 404 error'); },
         (err: HttpErrorResponse) => {
           expect(err.status).toEqual(404, 'status');
@@ -79,8 +87,9 @@ describe('ActivitiesService', () => {
   });
 
   describe('#getActivity()', () => {
+
     it('should return Observable<Activity>', () => {
-      service.getActivity(1).subscribe((activity) => {
+      sub = service.getActivity(1).subscribe((activity) => {
         expect(activity.id).toEqual(1);
         expect(activity).toEqual(dummyActivities[1]);
       });
@@ -94,7 +103,7 @@ describe('ActivitiesService', () => {
       const idNotFound = 9999;
       const errormessage = 'Activity not found: id=' + idNotFound;
 
-      service.getActivity(idNotFound).subscribe(
+      sub = service.getActivity(idNotFound).subscribe(
         (data) => {
           fail('should have failed with the 404 error'); },
         (err: HttpErrorResponse) => {
@@ -110,8 +119,9 @@ describe('ActivitiesService', () => {
   });
 
   describe('#getSummary()', () => {
+
     it('should return Observable<DetailSummary>', () => {
-      service.getSummary(1).subscribe((summary) => {
+      sub = service.getSummary(1).subscribe((summary) => {
         expect(summary.id).toEqual(1);
         expect(summary).toEqual(service.convertActivityToDetailSummary(dummyActivities[1]));
       });
@@ -122,7 +132,7 @@ describe('ActivitiesService', () => {
     });
 
     it('should return description containing the activity name', () => {
-      service.getSummary(1).subscribe((summary) => {
+      sub = service.getSummary(1).subscribe((summary) => {
         expect(summary.id).toEqual(1);
         expect(summary.description).toContain(dummyActivities[1].name);
       });
@@ -136,7 +146,7 @@ describe('ActivitiesService', () => {
     xit('should throw an error if id not found', () => {
       const idNotFound = 9999;
       const errormessage = 'Activity not found: id=' + idNotFound;
-      service.getSummary(idNotFound).subscribe(
+      sub = service.getSummary(idNotFound).subscribe(
         (data) => { fail('should have failed with the 404 error'); },
         (err: HttpErrorResponse) => {
           expect(err.status).toEqual(404, 'status');

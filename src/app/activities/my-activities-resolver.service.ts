@@ -16,11 +16,7 @@ export class MyActivitiesResolverService implements Resolve<DetailSummary[]> {
   ) { }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<DetailSummary[]> | Observable<never> {
-    return this._dataService.getSummaryList().pipe(
-      switchMap((summaries) => {
-        return of(summaries);
-      })
-    );
+    return this._dataService.getSummaryList();
   }
 }
 
