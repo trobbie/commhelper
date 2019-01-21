@@ -139,10 +139,7 @@ export class SummaryDetailsListComponent implements OnInit, OnDestroy {
     // depend on route resolvers for the data
     this.routeDataSub = this.route.data
       .subscribe((data: { summaries: DetailSummary[]}) => {
-        if (!data.summaries) {
-          throw Error('resolver not attached that retrieves the data');
-        }
-        this._summaries = data.summaries;
+        this._summaries = data.summaries ? data.summaries : [];
         this.summaries$ = of(this._summaries).pipe(
           // sort by dateCreated descending
           tap(results => results.sort((a, b) => (a < b) ? 1 : (a === b) ? 0 : -1)
