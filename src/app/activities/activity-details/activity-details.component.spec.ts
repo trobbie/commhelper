@@ -11,7 +11,6 @@ import { SummaryDetailsListComponent } from '../../shared/components/summary-det
 import { AppRoutingModule } from '../../app-routing.module';
 import { HttpErrorResponse } from '@angular/common/http';
 
-
 let component: ActivityDetailsComponent;
 let fixture: ComponentFixture<ActivityDetailsComponent>;
 let page: Page;
@@ -37,6 +36,13 @@ class ActivitiesServiceStub {
   }
   addActivity() {
     return of({id: 99999, description: '' });
+  }
+  newActivity() {
+    const activity: Activity = new Activity();
+    activity.id = 0;
+    activity.name = '';
+    activity.dateCreated = null;
+    return activity;
   }
 }
 
@@ -82,7 +88,7 @@ describe('ActivityDetailsComponent', () => {
     .then(createComponent);
   }));
 
-it('should create', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
@@ -121,7 +127,7 @@ it('should create', () => {
     let emitted = false;
     spyOn(component.listComponent, 'onClosePanel').and.callFake(() => emitted = true);
 
-    // change a value so that the cancel button is enabled for clicking
+    // change a value so that the save button is enabled for clicking
     page.nameField.value = page.nameField.value + 's';
     page.nameField.dispatchEvent(newEvent('input'));
     advance(fixture);
@@ -133,6 +139,22 @@ it('should create', () => {
     advance(fixture);
     expect(emitted).toBe(true, 'event did not emit upon clicking save');
 
+  }));
+
+  it('should print an error message if error during adding new activity', fakeAsync(() => {
+    // fill in form fields:
+    component.setEntityId(0); // id=0 means new entry
+    page.nameField.value = 'test';
+    page.nameField.dispatchEvent(newEvent('input'));
+    advance(fixture); // update the display binding
+
+    spyOn(dataService, 'addActivity').and.callFake( ( x ) => {
+      return throwError({ message: 'addActivity(): TEST ERROR:' + JSON.stringify(x) });
+    });
+    click(page.buttonSave);
+    advance(fixture);
+
+    expect(page.errorMessage.innerHTML).toContain('addActivity()');
   }));
 
   it('should enable save/cancel button and call list component onValuesChanged(), when data changes and is valid', fakeAsync(() => {
@@ -173,6 +195,7 @@ class Page {
   get nameField() { return this.query<HTMLInputElement>('input#nameField'); }
   get buttonSave() { return this.query<HTMLButtonElement>('.buttonSave'); }
   get buttonCancel() { return this.query<HTMLButtonElement>('.buttonCancel'); }
+  get errorMessage() { return this.query<HTMLElement>('.error-message'); }
 
   constructor() {
   }

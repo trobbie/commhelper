@@ -1,9 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { Subscription, throwError } from 'rxjs';
 
 import { ActivitiesService } from '../../_services/activities.service';
 import { SummaryDetailsListComponent } from '../../shared/components/summary-details-list/summary-details-list.component';
+import { catchError, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-activity-details',
@@ -131,8 +132,9 @@ export class ActivityDetailsComponent implements OnInit, OnDestroy {
         console.error('this.updateActivitySub already set');
       }
       this.updateActivitySub = this.dataService.updateActivity(this.activityForm.value).subscribe(
-        (updatedActivity) =>
-          this.listComponent.onClosePanel(this.activityForm.value.id)
+        (updatedActivity) => {
+          this.listComponent.onClosePanel(this.activityForm.value.id);
+        }
       );
     } else {
       // else was a new activity, now add to the dataService
@@ -140,7 +142,10 @@ export class ActivityDetailsComponent implements OnInit, OnDestroy {
         (newActivity) => {
           this.listComponent.onClosePanel(newActivity.id);
         }
-      );
+      ).catch( (error) => {
+        this.errorMessage = error.message;
+      });
+
     }
   }
 

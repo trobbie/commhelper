@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { map, tap, catchError } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
-import { delay } from 'rxjs/internal/operators';
 
 import { Activity } from '../_models/activity.model';
 import { DetailSummary } from '../_models/detail-summary';
@@ -18,7 +17,7 @@ export class ActivitiesService implements SummaryDetailsService {
   activities: Activity[];  // cache
 
   constructor(private http: HttpClient) {
-    // this.activities = null; // ACTIVITIES;
+    this.activities = null;
   }
 
   convertActivityToDetailSummary(activity: Activity): DetailSummary {
@@ -87,18 +86,33 @@ export class ActivitiesService implements SummaryDetailsService {
   addActivity(newActivity: Activity): Observable<Activity> {
     // for now, add to our Activities array
 
-    // TODO: the database backing the web service should assign the id
-    newActivity.id =
+    // TODO: the database backing the web service should assign the id, not done here
+    newActivity.id = (this.activities === null) ? 1 :
       this.activities.reduce((max, p) => p.id > max ? p.id : max,
-        this.activities[0].id)
-      + 1; // id is max id + 1
+      this.activities[0].id)
+        + 1; // id is max id + 1
+
     newActivity.dateCreated = new Date();
 
     return this.http.post<Activity>(this.activitiesUrl, newActivity)
       .pipe(
         tap((activity) => {
+          if (newActivity.id === null) {
+            // returned id should not be null
+            throw new Error('Error: Server returned id = null');
+          }
+          if (newActivity.dateCreated === null) {
+            // returned dateCreated should not be null
+            throw new Error('Error: Server returned dateCreated = null');
+          }
+          if (this.activities === null) {
+            this.activities = [];
+          }
           this.activities.push(newActivity);
-        })
+        }),
+        catchError(
+          this.handleError<Activity>('addActivity()')
+        )
       );
   }
 
@@ -115,7 +129,7 @@ export class ActivitiesService implements SummaryDetailsService {
   /**
    * Handle Http operation that failed.
    * Let the app continue.
-   * Returns the lambda function used by catchError()
+   * Returns the lambda function used as parameter to catchError()
    * @param operation - name of the operation that failed
    * @param result - optional value to return as the observable result
    */

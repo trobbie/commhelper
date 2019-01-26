@@ -1,11 +1,8 @@
-import { TestBed, inject } from '@angular/core/testing';
-import { HttpModule, XHRBackend, Response, ResponseOptions } from '@angular/http';
-import { MockBackend } from '@angular/http/testing';
+import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 
 import { ActivitiesService } from './activities.service';
-import { DetailSummary } from '../_models/detail-summary';
 import { Activity } from '../_models/activity.model';
 import { Subscription } from 'rxjs';
 
@@ -25,16 +22,13 @@ describe('ActivitiesService', () => {
   beforeEach(async() => {
     TestBed.configureTestingModule({
       imports: [
-        // HttpModule
         HttpClientTestingModule
       ],
       providers: [
-        ActivitiesService,
-        // { provide: XHRBackend, useClass: MockBackend }
+        ActivitiesService
       ]
     }).compileComponents();
 
-    // httpClient = TestBed.get(HttpClient);
     httpTestingController = TestBed.get(HttpTestingController);
     service = TestBed.get(ActivitiesService);
     expect(sub).toBeNull();
@@ -143,7 +137,7 @@ describe('ActivitiesService', () => {
       req.flush(dummyActivities[1]);
     });
 
-    xit('should throw an error if id not found', () => {
+    xit('should return 404 if id not found', () => {
       const idNotFound = 9999;
       const errormessage = 'Activity not found: id=' + idNotFound;
       sub = service.getSummary(idNotFound).subscribe(
@@ -157,5 +151,87 @@ describe('ActivitiesService', () => {
       // Respond with mock error
       req.flush(errormessage, { status: 404, statusText: 'Not Found' });
     });
+  });
+
+  describe('#addActivity()', () => {
+    it('should return Observable<Activity>, with same activity passed', () => {
+      const new_activity = new Activity();
+      // new_activity's id and date_created may be null before server's response
+      new_activity.id = null;
+      new_activity.dateCreated = null;
+      new_activity.name = 'New Activity1';
+
+      sub = service.addActivity(new_activity).subscribe((added_activity) => {
+        expect(added_activity.name).toBe(new_activity.name);
+      });
+
+      const req = httpTestingController.expectOne(`${service.activitiesUrl}`);
+      expect(req.request.method).toBe('POST');
+      req.flush(new_activity); // POST request mocked to return new_activity
+    });
+
+    it('should throw error notification when server responds with status 400', () => {
+      const max_variable_length = 255;
+      const new_activity = new Activity();
+      new_activity.id = null;
+      new_activity.dateCreated = null;
+      new_activity.name = '!'.repeat(max_variable_length + 1);
+
+      const errormessage = 'Name too long: ' + new_activity.name;
+
+      sub = service.addActivity(new_activity).subscribe(
+        (data) => { fail('should have failed with the 400 error'); },
+        (err: HttpErrorResponse) => {
+          expect(err.status).toEqual(400, 'status');
+          expect(err.error).toEqual(errormessage, 'message');
+      });
+
+      const req = httpTestingController.expectOne(`${service.activitiesUrl}`);
+      expect(req.request.method).toBe('POST');
+      // Respond with mock error
+      req.flush(errormessage, { status: 400, statusText: 'Bad Request' });
+    });
+
+    it('should throw error notification if server returns object with id = null', () => {
+      const new_activity = new Activity();
+      // new_activity's id and date_created ignored
+      new_activity.id = null;
+      new_activity.dateCreated = null;
+      new_activity.name = 'New Activity1';
+
+      sub = service.addActivity(new_activity).subscribe(
+        (data) => { fail('should have thrown error instead of returning Observable: ' + JSON.stringify(data)); },
+        (err) => {
+          expect(err.message).toContain('Server returned id = null');
+      });
+
+      const req = httpTestingController.expectOne(`${service.activitiesUrl}`);
+      expect(req.request.method).toBe('POST');
+      // ensure mock response returns id of null
+      new_activity.id = null;
+      req.flush(new_activity); // POST request mocked to return new_activity
+
+    });
+
+    it('should throw error notification if server returns object with dateCreated = null', () => {
+      const new_activity = new Activity();
+      // new_activity's id and date_created ignored
+      new_activity.id = null;
+      new_activity.dateCreated = null;
+      new_activity.name = 'New Activity1';
+
+      sub = service.addActivity(new_activity).subscribe(
+        (data) => { fail('should have thrown error instead of returning Observable: ' + JSON.stringify(data)); },
+        (err) => {
+          expect(err.message).toContain('Server returned dateCreated = null');
+      });
+
+      const req = httpTestingController.expectOne(`${service.activitiesUrl}`);
+      expect(req.request.method).toBe('POST');
+      // ensure mock response returns dateCreated of null
+      new_activity.dateCreated = null;
+      req.flush(new_activity); // POST request mocked to return new_activity
+    });
+
   });
 });

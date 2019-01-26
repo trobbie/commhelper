@@ -1,31 +1,33 @@
-<div *ngIf="activityId === null" class="null-activity">
-  <div *ngIf="errorMessage === null">
-    Loading...
-  </div>
-  <div *ngIf="errorMessage !== null" class="error-message">
-    ERROR: {{ errorMessage }}
-  </div>
+<div *ngIf="errorMessage !== null" class="error-message">
+  ERROR: {{ errorMessage }}
 </div>
-<div *ngIf="activityId != null" class="activity">
-  <form [formGroup]="activityForm" (ngSubmit)="onSubmit()">
-    <div>
-      <span>ID: </span>
-        <span class="idField">{{ activityForm.get('id').value }}</span>
+<div *ngIf="errorMessage === null">
+  <div *ngIf="activityId === null" class="null-activity">
+    <div *ngIf="errorMessage === null">
+      Loading...
     </div>
-    <div>
-      <label>Name:
-        <input type="text" formControlName="name" id="nameField" required>
-      </label>
-    </div>
-    <div class="dateCreated">
-      <span class="dateCreatedField">Date Created: </span>{{ activityForm.get('dateCreated').value }}
-    </div>
-  </form>
-  <p>
-    <button type="submit" class="buttonSave" [disabled]="isSaveButtonDisabled()" (click)="save()">Save</button>
-    <button type="reset" class="buttonCancel" [disabled]="isCancelButtonDisabled()" (click)="cancel()">Cancel</button>
-    
-    <!-- <button class="buttonSave" (click)="save()" disabled="isDataChanged()">Save</button> -->
-    <!-- <button class="buttonCancel" (click)="cancel()" disabled="!activityForm.valid">Cancel</button> -->
-  </p>
+  </div>
+  <div *ngIf="activityId != null" class="activity">
+    <form [formGroup]="activityForm" (ngSubmit)="onSubmit()">
+      <div>
+        <span>ID: </span>
+          <span class="idField">{{ activityForm.get('id').value }}</span>
+      </div>
+      <div>
+        <label>Name:
+          <input type="text" formControlName="name" id="nameField" required>
+        </label>
+      </div>
+      <div class="dateCreated">
+        <span class="dateCreatedField">Date Created: </span>{{ activityForm.get('dateCreated').value }}
+      </div>
+    </form>
+    <p>
+      <button type="submit" class="buttonSave" [disabled]="isSaveButtonDisabled()" (click)="save()">Save</button>
+      <button type="reset" class="buttonCancel" [disabled]="isCancelButtonDisabled()" (click)="cancel()">Cancel</button>
+      
+      <!-- <button class="buttonSave" (click)="save()" disabled="isDataChanged()">Save</button> -->
+      <!-- <button class="buttonCancel" (click)="cancel()" disabled="!activityForm.valid">Cancel</button> -->
+    </p>
+  </div>
 </div>
