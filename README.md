@@ -1,38 +1,37 @@
 # Commhelper
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.1.4.
+| Name             | Service | Container | Tech                 |
+|------------------|---------|-----------|----------------------|
+| Web              | Web     | web       | Angular |
+
+
+The web component  was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.
 
 ## Development environment
 
-After git clone, note that you should ignore development updates to the mock data used by json-server (which updates every time the data changes. To do this, run:
+The data service is currently be provided by a temporary json-server setup.  As such, once you get the initial mock data used by json-server, you want git to ignore file updates to the mock data (which updates every time the data changes).
 
-* git update-index --assume-unchanged src/testing/mocks/dev-data.json
-* git update-index --assume-unchanged src/testing/mocks/e2e-data.json
+Thus, after cloning the repository:
+* git update-index --assume-unchanged services/web/src/testing/mocks/dev-data.json
+* git update-index --assume-unchanged services/web/src/testing/mocks/e2e-data.json
 
-## Development server
+## Development web component server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Changing working directory to services/web.  Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
 ## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+Changing working directory to services/web.  Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
 
 ## Running unit tests
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Changing working directory to services/web.  Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-This is also automatically run in CircleCI after commit.
+This is also automatically run in CircleCI after remote GIT pushes.
 
 ## Running end-to-end tests
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+Changing working directory to services/web.  Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
 
-This is also automatically run in CircleCI after commit.
+This is also automatically run in CircleCI after remote GIT pushes.
 
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).

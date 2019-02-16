@@ -26,6 +26,10 @@ jobs:
           # fallback to using the latest cache it no exact match is found
           - v1-dependencies-
 
+      - run: 
+          name: Change working directory to web services
+          command: cd services/web
+
       - run: npm install
 
       - run: 
