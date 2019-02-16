@@ -3,7 +3,7 @@ version: 2
 defaults: &defaults
   working_directory: ~/repo
   docker: 
-    - image: trion/ng-cli-e2e:7.2.1
+    - image: trion/ng-cli-e2e:7.3.1
 
 jobs:
   build:
