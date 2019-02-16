@@ -18,6 +18,7 @@ export class ActivityDetailsComponent implements OnInit, OnDestroy {
   formChangesSub: Subscription = null;
   getActivitySub: Subscription = null;
   updateActivitySub: Subscription = null;
+  addActivitySub: Subscription = null;
 
   activityForm: FormGroup = this.fb.group({
     id: [null],
@@ -33,6 +34,7 @@ export class ActivityDetailsComponent implements OnInit, OnDestroy {
     this.formChangesSub = null;
     this.getActivitySub = null;
     this.updateActivitySub = null;
+    this.addActivitySub = null;
   }
 
   // the details component is only initialized once
@@ -59,6 +61,9 @@ export class ActivityDetailsComponent implements OnInit, OnDestroy {
     }
     if (this.updateActivitySub) {
       this.updateActivitySub.unsubscribe();
+    }
+    if (this.addActivitySub) {
+      this.addActivitySub.unsubscribe();
     }
   }
 
@@ -134,18 +139,19 @@ export class ActivityDetailsComponent implements OnInit, OnDestroy {
       this.updateActivitySub = this.dataService.updateActivity(this.activityForm.value).subscribe(
         (updatedActivity) => {
           this.listComponent.onClosePanel(this.activityForm.value.id);
-        }
+        },
+        (err) => {}
       );
     } else {
       // else was a new activity, now add to the dataService
-      this.dataService.addActivity(this.activityForm.value).forEach(
+      this.addActivitySub = this.dataService.addActivity(this.activityForm.value).subscribe(
         (newActivity) => {
           this.listComponent.onClosePanel(newActivity.id);
+        },
+        (error) => {
+          this.errorMessage = error.message;
         }
-      ).catch( (error) => {
-        this.errorMessage = error.message;
-      });
-
+      );
     }
   }
 

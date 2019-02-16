@@ -141,7 +141,7 @@ describe('ActivityDetailsComponent', () => {
 
   }));
 
-  it('should print an error message if error during adding new activity', fakeAsync(() => {
+  it('should print an error message if service returns error during adding new activity', fakeAsync(() => {
     // fill in form fields:
     component.setEntityId(0); // id=0 means new entry
     page.nameField.value = 'test';
