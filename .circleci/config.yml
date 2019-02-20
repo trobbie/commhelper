@@ -1,4 +1,4 @@
-version: 2  # using CircleCI 2.0
+version: 2
 
 defaults: &defaults
   # each command runs in separate shell with this working_directory
@@ -7,7 +7,7 @@ defaults: &defaults
     - image: trion/ng-cli-e2e:7.2.1
 
 jobs:
-  build:
+  buildweb:
     <<: *defaults
     steps:
       - add_ssh_keys:
@@ -45,14 +45,20 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "services/web/package.json" }}
 
-      - run: cd $WEB_COMPONENT_FOLDER && npm run test:prod-ci
-
       # - run: ng build --prod --no-progress
+
+      - run: cd $WEB_COMPONENT_FOLDER && npm run test:prod-ci
 
       - run:
           name: Startup data webservice for e2e tests
           command: cd $WEB_COMPONENT_FOLDER && pm2 start npm -- run webservice-ci
 
       - run: cd $WEB_COMPONENT_FOLDER && npm run e2e
+
+workflows:
+  version: 2
+  buildweb_and_test:
+    jobs:
+      - buildweb
 
 
