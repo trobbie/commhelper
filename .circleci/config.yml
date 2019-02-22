@@ -9,6 +9,7 @@ defaults: &defaults
 jobs:
   buildweb:
     <<: *defaults
+    
     steps:
       - add_ssh_keys:
           fingerprints:
@@ -27,23 +28,45 @@ jobs:
             echo 'export WEB_COMPONENT_FOLDER="services/web"' >> $BASH_ENV # Redirect MY_ENV_VAR into $BASH_ENV
 
       - restore_cache:
+          name: Restoring cache (node dependencies)
           keys:
-          # NOTE: once start installing multiple services in this app, we will have
-          #   to update the checksum to include the other services as well
-          - v1-dependencies-{{ checksum "services/web/package.json" }}
+          # v1 => package manager is node 6 (update cache version if npm version changes)
+          - v1-npm-dep-{{ checksum "services/web/package.json" }}
           # fallback to using the latest cache it no exact match is found
-          - v1-dependencies-
+          - v1-npm-dep-
 
-      - run: cd $WEB_COMPONENT_FOLDER && npm install
+      # NOTE: we wish to run "npm install" even if node_modules exist, so that
+      #   security audit checks are always done (and errors correctly breaking our pipeline)
+      - run: 
+          name: Installing node modules
+          command: cd $WEB_COMPONENT_FOLDER && npm install
+
+      - save_cache:
+          name: Saving cache (node dependencies)
+          paths:
+            - node_modules
+          key: v1-npm-dep-{{ checksum "services/web/package.json" }}
+
+      - restore_cache:
+          name: Restoring cache (global node packages)
+          keys:
+          - v2-npm-global-pm2-3.3.1
 
       - run: 
           name: Installing pm2 used for webservice-ci task
-          command: cd $WEB_COMPONENT_FOLDER && npm install pm2 -g
+          command:  |
+            cd $WEB_COMPONENT_FOLDER
+            npm install pm2@3.3.1 -g
 
       - save_cache:
+          name: Saving cache (global node packages)
           paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "services/web/package.json" }}
+            - /usr/local/lib/node_modules/pm2/bin
+            - /usr/local/bin/pm2
+            - /usr/local/bin/pm2-dev
+            - /usr/local/bin/pm2-runtime
+            - /usr/local/bin/pm2-docker
+          key: v2-npm-global-pm2-3.3.1
 
       # - run: ng build --prod --no-progress
 
