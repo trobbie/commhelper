@@ -25,13 +25,13 @@ jobs:
       - run: 
           name: "Setup custom environment variables"
           command: |
-            echo 'export WEB_COMPONENT_FOLDER="services/web"' >> $BASH_ENV # Redirect MY_ENV_VAR into $BASH_ENV
+            echo 'export WEB_COMPONENT_FOLDER="frontend/web"' >> $BASH_ENV # Redirect MY_ENV_VAR into $BASH_ENV
 
       - restore_cache:
           name: Restoring cache (node dependencies)
           keys:
           # v1 => package manager is node 6 (update cache version if npm version changes)
-          - v1-npm-dep-{{ checksum "services/web/package.json" }}
+          - v1-npm-dep-{{ checksum "frontend/web/package.json" }}
           # fallback to using the latest cache it no exact match is found
           - v1-npm-dep-
 
@@ -45,43 +45,122 @@ jobs:
           name: Saving cache (node dependencies)
           paths:
             - node_modules
-          key: v1-npm-dep-{{ checksum "services/web/package.json" }}
-
-      - restore_cache:
-          name: Restoring cache (global node packages)
-          keys:
-          - v2-npm-global-pm2-3.3.1
-
-      - run: 
-          name: Installing pm2 used for webservice-ci task
-          command:  |
-            cd $WEB_COMPONENT_FOLDER
-            npm install pm2@3.3.1 -g
-
-      - save_cache:
-          name: Saving cache (global node packages)
-          paths:
-            - /usr/local/lib/node_modules/pm2/bin
-            - /usr/local/bin/pm2
-            - /usr/local/bin/pm2-dev
-            - /usr/local/bin/pm2-runtime
-            - /usr/local/bin/pm2-docker
-          key: v2-npm-global-pm2-3.3.1
-
-      # - run: ng build --prod --no-progress
-
-      - run: cd $WEB_COMPONENT_FOLDER && npm run test:prod-ci
+          key: v1-npm-dep-{{ checksum "frontend/web/package.json" }}
 
       - run:
-          name: Startup data webservice for e2e tests
-          command: cd $WEB_COMPONENT_FOLDER && pm2 start npm -- run webservice-ci
+          name: Linting
+          command: cd $WEB_COMPONENT_FOLDER && npm run lint
 
-      - run: cd $WEB_COMPONENT_FOLDER && npm run e2e
+      - run:
+          name: Unit testing
+          command: cd $WEB_COMPONENT_FOLDER && npm run test:prod-ci
+
+      - run: cd $WEB_COMPONENT_FOLDER && ng build --prod --no-progress
+
+      # end result of this job is the "dist" build
+      - persist_to_workspace:
+          root: ~/repo
+          paths:
+            - frontend/web/dist/*
+
+  # e2e_tests:
+  #   <<: *defaults
+
+  #   steps:
+  #     - attach_workspace:
+  #         at: ~/repo
+
+  #     - restore_cache:
+  #         name: Restoring cache (global node packages)
+  #         keys:
+  #         - v2-npm-global-pm2-3.3.1
+
+  #     - run: 
+  #         name: Installing pm2 used for webservice-ci task
+  #         command:  |
+  #           cd $WEB_COMPONENT_FOLDER
+  #           npm install pm2@3.3.1 -g
+
+  #     - save_cache:
+  #         name: Saving cache (global node packages)
+  #         paths:
+  #           - /usr/local/lib/node_modules/pm2/bin
+  #           - /usr/local/bin/pm2
+  #           - /usr/local/bin/pm2-dev
+  #           - /usr/local/bin/pm2-runtime
+  #           - /usr/local/bin/pm2-docker
+  #         key: v2-npm-global-pm2-3.3.1
+
+  #     - run:
+  #         name: Startup data webservice for e2e tests
+  #         command: cd $WEB_COMPONENT_FOLDER && pm2 start npm -- run webservice-ci
+
+  #     - run: cd $WEB_COMPONENT_FOLDER && npm run e2e
+ 
+  # deploy_to_staging:
+  #   <<: *defaults
+  #   # DESCRIPTION: deploy in permanent staging environment
+  #   steps:
+  #     # DECISION TODO (thinking outloud here):
+  #     #   I wish to test db update scripts on a commit, i.e. that more closely
+  #     #   tests production deployment, but that also complicates
+  #     #   the test migration data (migration data contains the changes or not?)
+  #     #   
+  #     # ##overwrite staging database with archived test migration data
+  #     # ## note: no need to run archived database code scripts, as changes assumed
+  #     # ##  to already have been applied to migrate data
+      
+  #     # build and deploy API service
+  #     # build and deploy web front-end
+  #     # perform minimal liveness tests
+
+  # buildweb_preprod_and_test:
+  #   <<: *defaults
+  #   # DESCRIPTION: build and test in temporary pre-production environment
+  #   steps:
+  #     # overwrite preprod database with prod data (full migration)
+  #     # run data scripts to update database
+  #     # build and unit test API service code
+  #     # build and unit test web front-end code
+  #     # perform minimal liveness tests (b/c test done in production deploy)
+  #     # run integration/e2e tests
+    
+  # deploy_to_prod:
+  #   <<: *defaults
+  #   # DESCRIPTION: build and deploy in permanent production environment
+  #   steps:
+  #     # DECISION TODO: either take production service containers down, 
+  #     #   or build in alternate containers and "flip switch" to point production to new containers
+  #     # run data scripts to update database
+  #     # build and deploy API service
+  #     # bulid and deploy web front-end
+  #     # perform minimal liveness tests
 
 workflows:
   version: 2
-  buildweb_and_test:
+  build_test_deploy_staging:
     jobs:
       - buildweb
+      # - e2e_tests:
+      #     requires:
+      #       - buildweb
+      # - deploy_to_staging:
+      #     requires:
+      #       - unit_tests
+      #       - e2e_tests
+  # build_test_deploy_prod:
+  #   jobs:
+  #     - buildweb_preprod_and_test:
+  #         filters:
+  #           branches:
+  #             only: prod
+  #     - approve_production: # HOLD for manually approval for promotion
+  #       type: approval
+  #       requires:
+  #         - buildweb_preprod_and_test
+  #     - deploy_to_prod:
+  #       requires:
+  #         - approve_production 
+
 
 
