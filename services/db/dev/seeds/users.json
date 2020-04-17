@@ -1,0 +1,24 @@
+{
+  "Users": [
+    {
+      "PutRequest": {
+        "Item": {
+          "id" : {"N": "1" },
+          "name" : { "S": "User1" },
+          "email" : { "S": "user1@example.com" },
+          "permissionLevel" : { "N": "0" }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id" : {"N": "2" },
+          "name" : { "S": "User2" },
+          "email" : { "S": "user2@example.com" },
+          "permissionLevel" : { "N": "0" }
+        }
+      }
+    }
+  ]
+}

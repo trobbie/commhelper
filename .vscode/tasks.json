@@ -2,24 +2,52 @@
     "version": "2.0.0",
     "tasks": [
       {
-        "label": "serve",
-        "type": "shell",
-        "command": "ng serve",
-        "problemMatcher": [
-          "$tsc"
-        ],
+        "label": "start dev_db",
+        "type": "npm",
+        "script": "start:dev_db",
+        "presentation": {
+          "reveal": "always",
+          "panel": "shared"
+        }
+      },
+      {
+        "label": "start dev_api",
+        "type": "npm",
+        "script": "start:dev_api",
+        "presentation": {
+          "reveal": "always",
+          "panel": "shared"
+        }
+      },
+      {
+        "label": "start dev_web",
+        "type": "npm",
+        "script": "start:dev_web",
+        "presentation": {
+          "reveal": "always",
+          "panel": "shared"
+        }
+      },
+      {
+        "label": "Build",
+        "dependsOn": [ "start dev_db", "start dev_api", "start dev_web" ],
         "group": {
           "kind": "build",
           "isDefault": true
         }
       },
       {
-        "label": "ng test",
+        "label": "test dev_api",
         "type": "npm",
-        "script": "test",
+        "script": "test:dev_api",
         "presentation": {
-          "reveal": "always"
+          "reveal": "always",
+          "panel": "dedicated"
         },
+      },
+      {
+        "label": "Test",
+        "dependsOn": [ "test dev_api" ],
         "group": {
           "kind": "test",
           "isDefault": true

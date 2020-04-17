@@ -6,7 +6,8 @@ import { HttpClient } from '@angular/common/http';
 import { Activity } from '../_models/activity.model';
 import { DetailSummary } from '../_models/detail-summary';
 import { SummaryDetailsService } from './summary-details-service';
-import { environment } from '../../environments/environment.prod';
+import { environment } from '../../environments/environment';
+import { jsonpCallbackContext } from '@angular/common/http/src/module';
 
 @Injectable({
   providedIn: 'root'
@@ -60,7 +61,14 @@ export class ActivitiesService implements SummaryDetailsService {
   }
 
   getActivity(id: number | string): Observable<Activity> {
-     return this.http.get<Activity>(this.activitiesUrl + '/' + id).pipe(
+    return this.http.get<Activity>(this.activitiesUrl + '/' + id).pipe(
+      map( resp => {
+        const x = new Activity;
+        x.id = resp[0].id;
+        x.name = resp[0].name;
+        x.dateCreated = new Date(resp[0].dateCreated);
+        return x;
+      }),
       catchError(this.handleError<Activity>(`getActivity(${id})`))
     );
   }
@@ -69,7 +77,6 @@ export class ActivitiesService implements SummaryDetailsService {
     if (!updatedActivity.id || updatedActivity.id === 0) {
       throw new Error('Use addActivity() for new activities, not updateActivity()');
     }
-
     return this.http.put<Activity>(this.activitiesUrl + '/' + updatedActivity.id, updatedActivity)
       .pipe(
         tap((activity) => {

@@ -94,7 +94,6 @@ export class ActivityDetailsComponent implements OnInit, OnDestroy {
     } else {
       if (this.getActivitySub) {
         this.getActivitySub.unsubscribe();
-        console.error('this.getActivitySub already set');
       }
       this.getActivitySub = this.dataService.getActivity(id).subscribe(
         (activity) => {

@@ -4,7 +4,7 @@ defaults: &defaults
   # each command runs in separate shell with this working_directory
   working_directory: ~/repo
   docker: 
-    - image: trion/ng-cli-e2e:7.2.1
+    - image: trion/ng-cli-e2e:7.2.3
 
 jobs:
   buildweb:
@@ -22,42 +22,94 @@ jobs:
 
       - checkout
 
+      # add custom environment variables into our bash environment
       - run: 
           name: "Setup custom environment variables"
           command: |
-            echo 'export WEB_COMPONENT_FOLDER="frontend/web"' >> $BASH_ENV # Redirect MY_ENV_VAR into $BASH_ENV
+            echo 'export WEB_COMPONENT_FOLDER="frontend/web"' >> $BASH_ENV
 
       - restore_cache:
           name: Restoring cache (node dependencies)
           keys:
           # v1 => package manager is node 6 (update cache version if npm version changes)
-          - v1-npm-dep-{{ checksum "frontend/web/package.json" }}
+          - v1-npm-dep-{{ checksum "package.json" }}-{{ checksum "frontend/web/package.json" }}-{{ checksum "services/api/package.json" }}
           # fallback to using the latest cache it no exact match is found
           - v1-npm-dep-
 
       # NOTE: we wish to run "npm install" even if node_modules exist, so that
-      #   security audit checks are always done (and errors correctly breaking our pipeline)
+      #   security audit checks are always done (and errors correctly break our pipeline)
       - run: 
-          name: Installing node modules
-          command: cd $WEB_COMPONENT_FOLDER && npm install
+          name: Installing node modules for root
+          command: npm install
+
+      - run: 
+          name: Installing node modules for individual services
+          command: npm run postinstall
 
       - save_cache:
           name: Saving cache (node dependencies)
           paths:
             - node_modules
-          key: v1-npm-dep-{{ checksum "frontend/web/package.json" }}
+            - frontend/web/node_modules
+            - services/api/node_modules
+          key: v1-npm-dep-{{ checksum "package.json" }}-{{ checksum "frontend/web/package.json" }}-{{ checksum "services/api/package.json" }}
 
       - run:
-          name: Linting
+          name: Linting Frontend code
           command: cd $WEB_COMPONENT_FOLDER && npm run lint
 
       - run:
-          name: Unit testing
+          name: Install AWS-CLI (for seed data scripts)
+          command:  |
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            ./aws/install
+            echo -e "fakeMyKeyId\nfakeSecretAccessKey\nus-east-1\njson\n" | aws configure
+            echo -e "cli_pager=" >> ~/.aws/config
+            aws --version
+
+      - run:
+          name: Start database service in background
+          command: |
+            aws configure get region
+            npm run start:dev_db
+          background: true
+
+      # wait for the server to start responding. We expect Bad Request 400 once it starts listening.
+      # so override the shell and have the last command be the : { null } command to force exit code 0.
+      - run:
+          name: Waiting for database service to load
+          shell: /bin/sh
+          command: |
+            wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 http://localhost:4002
+            :
+
+      - run:
+          name: Setup seed data
+          command: npm run resetDatabase:dev
+          environment:
+            NODE_ENV: test
+
+      - run:
+          name: Start REST service in background
+          command: npm run start:dev_api
+          background: true
+
+      - run:
+          name: Waiting for REST service to load
+          shell: /bin/sh
+          command: |
+            wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 http://localhost:3000
+            :
+      - run:
+          name: Unit test the frontend
           command: cd $WEB_COMPONENT_FOLDER && npm run test:prod-ci
 
-      - run: cd $WEB_COMPONENT_FOLDER && ng build --prod --no-progress
+      - run:
+          name: build the release
+          command: cd $WEB_COMPONENT_FOLDER && ng build --prod --no-progress
 
-      # end result of this job is the "dist" build
+      # end result of this job is the "dist" build (from build)
       - persist_to_workspace:
           root: ~/repo
           paths:
@@ -138,16 +190,26 @@ jobs:
 
 workflows:
   version: 2
-  build_test_deploy_staging:
+  build_test_deploy_testing:
     jobs:
       - buildweb
       # - e2e_tests:
       #     requires:
       #       - buildweb
-      # - deploy_to_staging:
+      # - deploy_to_testing:
       #     requires:
       #       - unit_tests
       #       - e2e_tests
+  #build_test_deploy_staging:
+  #  jobs:
+  #     - buildweb
+  #     - e2e_tests:
+  #         requires:
+  #           - buildweb
+  #     - deploy_to_staging:
+  #         requires:
+  #           - unit_tests
+  #           - e2e_tests
   # build_test_deploy_prod:
   #   jobs:
   #     - buildweb_preprod_and_test:

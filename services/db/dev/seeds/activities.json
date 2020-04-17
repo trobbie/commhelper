@@ -1,0 +1,22 @@
+{
+  "Activities": [
+    {
+      "PutRequest": {
+        "Item": {
+          "id" : {"N": "1" },
+          "name" : { "S": "MockActivity1" },
+          "dateCreated" : { "S": "2010-01-01T00:00:00Z" }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id" : {"N": "2" },
+          "name" : { "S": "MockActivity2" },
+          "dateCreated" : { "S": "2010-01-01T00:00:00Z" }
+        }
+      }
+    }
+  ]
+}

@@ -4,16 +4,15 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-        
         {
+            "name": "Launch Chrome against localhost",
             "type": "chrome",
             "request": "launch",
-            "name": "Launch Chrome against localhost",
             "url": "http://localhost:4200",
-            "webRoot": "${workspaceFolder}"
+            "webRoot": "${workspaceFolder}/frontend/web"
         },
         {
-            "name": "ng test",
+            "name": "npm run test:dev",
             "type": "chrome",
             "request": "launch",
             "url": "http://localhost:9876/debug.html",
@@ -37,8 +36,18 @@
             "args": [
                 "--watch",
                 "-d 500", // delay (ms)
-                "${workspaceFolder}/src/testing/mocks/dev-data.json"]
+                "${workspaceFolder}/frontend/web/src/testing/mocks/dev-data.json"]
+        },
+        { 
+            "name": "Launch API service",
+            "type": "node",
+            "request": "launch",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": [
+                "run-script",
+                "start:dev_api"
+            ],
+            "port": 9229
         }
-        
     ]
 }

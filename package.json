@@ -1,0 +1,23 @@
+{
+  "name": "commhelper",
+  "version": "0.0.0",
+  "scripts": {
+    "//": "run `npm run postinstall` after `npm install`",
+    "postinstall": "run-p install:api install:web",
+    "install:api": "cd services/api && npm install",
+    "install:web": "cd frontend/web && npm install",
+    "start:dev": "run-p start:dev_db start:dev_api start:dev_web",
+    "start:dev_db": "NODE_ENV=dev cd services/db/dev && ./start_dynamodb_local.sh",
+    "start:dev_api": "NODE_ENV=dev cd services/api && npm run start",
+    "start:dev_web": "NODE_ENV=dev npm run start --prefix frontend/web",
+    "test:dev": "run-p test:dev_db test:dev_api",
+    "test:dev_db": "NODE_ENV=dev cd services/db/dev && ./test_dynamodb_local.sh",
+    "test:dev_api": "NODE_ENV=dev cd services/api && npm run test",
+    "test:dev_web": "NODE_ENV=dev cd frontend/web && npm run test",
+    "resetDatabase:dev": "NODE_ENV=dev cd services/db/dev && ./reset_data_dev.sh",
+    "e2e": "NODE_ENV=dev cd frontend/web && npm run e2e"
+  },
+  "devDependencies": {
+    "npm-run-all": "^4.0.2"
+  }
+}

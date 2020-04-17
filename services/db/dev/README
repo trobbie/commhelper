@@ -1,0 +1,10 @@
+This folder is for the development environment only.  Requries JAVA and AWS-CLI.
+
+start_dynamodb_local.sh - to run the local instance of DynamoDB. This will download the executable JAR if not already done.
+test_dynamodb_local.sh - to test if dynamodb_local is running and tables are correct
+reset_data_dev.sh - deletes, creates, loads new data, and tests
+
+migrations/_create_all_tables.sh - to recreate a new database
+seeds/_load_all.sh - to load new test data in newly-created database for dev purposes
+
+
