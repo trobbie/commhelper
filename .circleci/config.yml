@@ -7,7 +7,7 @@ defaults: &defaults
     - image: trion/ng-cli-e2e:7.2.3
 
 jobs:
-  buildweb:
+  buildweb_ci_test:
     <<: *defaults
     
     steps:
@@ -27,6 +27,7 @@ jobs:
           name: "Setup custom environment variables"
           command: |
             echo 'export WEB_COMPONENT_FOLDER="frontend/web"' >> $BASH_ENV
+            echo 'export NODE_ENV="ci_test"' >> $BASH_ENV
 
       - restore_cache:
           name: Restoring cache (node dependencies)
@@ -59,16 +60,6 @@ jobs:
           command: cd $WEB_COMPONENT_FOLDER && npm run lint
 
       - run:
-          name: Install AWS-CLI (for seed data scripts)
-          command:  |
-            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-            unzip awscliv2.zip
-            ./aws/install
-            echo -e "fakeMyKeyId\nfakeSecretAccessKey\nus-east-1\njson\n" | aws configure
-            echo -e "cli_pager=" >> ~/.aws/config
-            aws --version
-
-      - run:
           name: Start database service in background
           command: |
             aws configure get region
@@ -87,8 +78,6 @@ jobs:
       - run:
           name: Setup seed data
           command: npm run resetDatabase:dev
-          environment:
-            NODE_ENV: test
 
       - run:
           name: Start REST service in background
@@ -192,7 +181,7 @@ workflows:
   version: 2
   build_test_deploy_testing:
     jobs:
-      - buildweb
+      - buildweb_ci_test
       # - e2e_tests:
       #     requires:
       #       - buildweb

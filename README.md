@@ -11,9 +11,12 @@ It is currently under construction in early stages of development.
 | WEB API      | REST, AWS DynamoDB SDK | Localhost | AWS Lambda?
 | DB           | NoSQL, AWS DynamoDB Local | Localhost | AWS DynamoDB?
 
-IDE: VS Code
+CI/CD: CircleCI (webhook on GIT commits)
 
-CI/CD: CircleCI
+Requirements:
+    a) Node 6+ (our package manager)
+		b) JRE6+ (Java is used to run the local data service)
+		c) VS Code (as IDE)
 
 ## Development Environment Setup
 1) Given your name for <project-dir>, navigate to the parent directory and clone:
@@ -28,29 +31,19 @@ CI/CD: CircleCI
 	npm install
 ```
 
-3) Setup node modules for individual services:
+3) Setup node modules for individual services (note: NODE_ENV is used in scripts to designate our environment)
 ```
+	NODE_ENV=dev
 	npm run postinstall
 ```
 
-4) Create database tables and test data.
-
-		a) Ensure Java (JRE 6+) is installed.  This is used to load the database server. 
-		b) Ensure AWS CLI (version 1+) is installed.  This is used by the scripts to load/reset data.
-		c) Configure AWS credentials (`aws configure`).  Can use fake credentials since only accessible locally.
-		d) Create tables and seed data.
+4) Run database service.  Then create database tables and test data.
 ```
 		npm run start:dev_db &
 		npm run resetDatabase:dev
 ```
 
-5) Optional: if json-server will be used as alternate to DynamoDB Local, you will want git to ignore file updates to the mock data (which updates every time the data changes).
-```
-	git update-index --assume-unchanged frontend/web/src/testing/mocks/dev-data.json
-	git update-index --assume-unchanged frontend/web/src/testing/mocks/e2e-data.json
-```
-
-6) For quick load of all services, run:
+5) For quick load of all services, now or in the future, run:
 ```
 	npm run start:dev
 ```
@@ -79,20 +72,20 @@ Run individual commands in individual terminal windows to watch independent log 
 ## Front-end Development
 
 ### Starting service
-Change working directory to frontend/web.  Run `ng serve` for a dev web server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
-
-### Building project
-Change working directory to frontend/web.  Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+Ensure dependent services are running.  Then change working directory to frontend/web.  Run `ng serve` for a dev web server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
 ### Running unit tests
-Change working directory to frontend/web.  Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Ensure dependent services are running.  Then change working directory to frontend/web.  Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
 This is also automatically run in CircleCI after remote GIT pushes.
 
 ### Running end-to-end tests
-Change working directory to frontend/web.  Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+Ensure dependent services are running.  Then change working directory to frontend/web.  Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
 
 This is also automatically run in CircleCI after remote GIT pushes.
+
+### Building project
+Change working directory to frontend/web.  Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
 
 ## Authors
 
