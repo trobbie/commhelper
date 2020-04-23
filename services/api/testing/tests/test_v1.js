@@ -33,7 +33,7 @@ describe("Activities", () => {
         })
     })
 
-    describe("GET /api/v1/activities/1", () => {
+    xdescribe("GET /api/v1/activities/1", () => {
         let res;
         beforeEach((done) => {
             // sandbox = sinon.sandbox.create(); // createSandbox();
