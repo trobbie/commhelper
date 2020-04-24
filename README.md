@@ -14,9 +14,10 @@ It is currently under construction in early stages of development.
 CI/CD: CircleCI (webhook on GIT commits)
 
 Requirements:
+
     a) Node 6+ (our package manager)
-		b) JRE6+ (Java is used to run the local data service)
-		c) VS Code (as IDE)
+	b) JRE6+ (Java is used to run the local data service)
+	c) VS Code (as IDE)
 
 ## Development Environment Setup
 1) Given your name for <project-dir>, navigate to the parent directory and clone:
@@ -39,8 +40,8 @@ Requirements:
 
 4) Run database service.  Then create database tables and test data.
 ```
-		npm run start:dev_db &
-		npm run resetDatabase:dev
+	npm run start:dev_db &
+	npm run resetDatabase:dev
 ```
 
 5) For quick load of all services, now or in the future, run:
