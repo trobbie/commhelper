@@ -15,9 +15,9 @@ CI/CD: CircleCI (webhook on GIT commits)
 
 Requirements:
 
-    a) Node 6+ (our package manager)
-    b) JRE6+ (Java is used to run the local data service)
-    c) VS Code (as IDE)
+		a) Node 6+ (our package manager)
+    	b) JRE6+ (Java is used to run the local data service)
+    	c) VS Code (as IDE)
 
 ## Development Environment Setup
 1) Given your name for <project-dir>, navigate to the parent directory and clone:
@@ -72,21 +72,50 @@ Run individual commands in individual terminal windows to watch independent log 
 
 ## Front-end Development
 
-### Starting service
-Ensure dependent services are running.  Then change working directory to frontend/web.  Run `ng serve` for a dev web server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+### Starting frontend web service
+
+		1) Ensure dependent services are running (see above).
+
+		2) Create separate terminal window (or use VS Code IDE) to track stdout/errors during navigation.
+
+		3) Run `npm run start:dev_web`.
+
+		4) To interact, navigate to `http://localhost:4200/`.
+
+Note: The app will automatically reload if you change any of the source files.
 
 ### Running unit tests
-Dependent services are not needed (since unit tests).  Change working directory to frontend/web.  Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+		(Note: appropriate to unit tests, dependent services are not needed) 
 
-This is also automatically run in CircleCI after remote GIT pushes.
+		1) Create separate terminal window (or use VS Code IDE).  Root directory should be <project-dir>.
 
-### Running end-to-end tests
-Ensure dependent services are running.  Then change working directory to frontend/web.  Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+		2) Run `npm run test:dev_web` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-This is also automatically run in CircleCI after remote GIT pushes.
+		3) A browser window will display with the test results.  To cancel, Ctrl-C the terminal command.
+
+Note: if not cancelled, the test will reload when changing source files.  If the original browser tab is still up (not disconnected), it will also automatically reload the browser's page.
+
+Unit tests are also automatically run in CircleCI after remote GIT pushes, using a headless Chrome browser.
+
+### Running end-to-end (integration) tests
+
+		1) Ensure dependent services are running (see above).  These tests are testing integration.
+
+		2) Create separate terminal window (or use VS Code IDE) to track stdout/errors during testing.
+
+		3) Change working directory to <project-dir>/frontend/web.
+
+		4) Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+
+This is also automatically run in CircleCI after remote GIT pushes. (***IN THE WORKS***)
 
 ### Building project
-Change working directory to frontend/web.  Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+
+		1) Change working directory to <project-dir>/frontend/web.
+
+		2) Run `ng build` to build the project. 
+
+The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
 
 ## Authors
 
