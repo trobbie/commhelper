@@ -16,8 +16,8 @@ CI/CD: CircleCI (webhook on GIT commits)
 Requirements:
 
     a) Node 6+ (our package manager)
-	b) JRE6+ (Java is used to run the local data service)
-	c) VS Code (as IDE)
+    b) JRE6+ (Java is used to run the local data service)
+    c) VS Code (as IDE)
 
 ## Development Environment Setup
 1) Given your name for <project-dir>, navigate to the parent directory and clone:
@@ -76,7 +76,7 @@ Run individual commands in individual terminal windows to watch independent log 
 Ensure dependent services are running.  Then change working directory to frontend/web.  Run `ng serve` for a dev web server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
 ### Running unit tests
-Ensure dependent services are running.  Then change working directory to frontend/web.  Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Dependent services are not needed (since unit tests).  Change working directory to frontend/web.  Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
 This is also automatically run in CircleCI after remote GIT pushes.
 

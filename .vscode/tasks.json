@@ -46,8 +46,10 @@
         },
       },
       {
-        "label": "Test",
+        "label": "test dev_web",
+        "type": "npm",
         "dependsOn": [ "test dev_api" ],
+        "script": "test:dev_web",
         "group": {
           "kind": "test",
           "isDefault": true

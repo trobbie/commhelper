@@ -85,12 +85,12 @@ describe('ActivitiesService', () => {
     it('should return Observable<Activity>', () => {
       sub = service.getActivity(1).subscribe((activity) => {
         expect(activity.id).toEqual(1);
-        expect(activity).toEqual(dummyActivities[1]);
+        expect(JSON.stringify(activity)).toEqual(JSON.stringify(dummyActivities[1]));
       });
 
       const req = httpTestingController.expectOne(`${service.activitiesUrl}/1`);
       expect(req.request.method).toBe('GET');
-      req.flush(dummyActivities[1]);
+      req.flush([ dummyActivities[1] ]);
     });
 
     it('should throw an error if id not found', () => {
@@ -122,7 +122,7 @@ describe('ActivitiesService', () => {
 
       const req = httpTestingController.expectOne(`${service.activitiesUrl}/1`);
       expect(req.request.method).toBe('GET');
-      req.flush(dummyActivities[1]);
+      req.flush([ dummyActivities[1] ]);
     });
 
     it('should return description containing the activity name', () => {
@@ -134,7 +134,7 @@ describe('ActivitiesService', () => {
       // note: getSummary() calls getActivity(), thus an activity GET request
       const req = httpTestingController.expectOne(`${service.activitiesUrl}/1`);
       expect(req.request.method).toBe('GET');
-      req.flush(dummyActivities[1]);
+      req.flush([ dummyActivities[1] ]);
     });
 
     xit('should return 404 if id not found', () => {
@@ -155,31 +155,35 @@ describe('ActivitiesService', () => {
 
   describe('#addActivity()', () => {
     it('should return Observable<Activity>, with same activity passed', () => {
-      const new_activity = new Activity();
-      // new_activity's id and date_created may be null before server's response
-      new_activity.id = null;
-      new_activity.dateCreated = null;
-      new_activity.name = 'New Activity1';
+      const sent_activity = new Activity();
+      // sent_activity's id and date_created may be null before server's response
+      sent_activity.id = null;
+      sent_activity.dateCreated = null;
+      sent_activity.name = 'New Activity1';
 
-      sub = service.addActivity(new_activity).subscribe((added_activity) => {
-        expect(added_activity.name).toBe(new_activity.name);
+      sub = service.addActivity(sent_activity).subscribe((received_activity) => {
+        expect(received_activity.name).toBe(sent_activity.name);
       });
 
       const req = httpTestingController.expectOne(`${service.activitiesUrl}`);
       expect(req.request.method).toBe('POST');
-      req.flush(new_activity); // POST request mocked to return new_activity
+      const created_activity = new Activity();
+      created_activity.id = 1; // arbitrary
+      created_activity.dateCreated = new Date();
+      created_activity.name = sent_activity.name;
+      req.flush(created_activity);
     });
 
     it('should throw error notification when server responds with status 400', () => {
       const max_variable_length = 255;
-      const new_activity = new Activity();
-      new_activity.id = null;
-      new_activity.dateCreated = null;
-      new_activity.name = '!'.repeat(max_variable_length + 1);
+      const sent_activity = new Activity();
+      sent_activity.id = null;
+      sent_activity.dateCreated = null;
+      sent_activity.name = '!'.repeat(max_variable_length + 1);
 
-      const errormessage = 'Name too long: ' + new_activity.name;
+      const errormessage = 'Name too long: ' + sent_activity.name;
 
-      sub = service.addActivity(new_activity).subscribe(
+      sub = service.addActivity(sent_activity).subscribe(
         (data) => { fail('should have failed with the 400 error'); },
         (err: HttpErrorResponse) => {
           expect(err.status).toEqual(400, 'status');
@@ -193,13 +197,13 @@ describe('ActivitiesService', () => {
     });
 
     it('should throw error notification if server returns object with id = null', () => {
-      const new_activity = new Activity();
-      // new_activity's id and date_created ignored
-      new_activity.id = null;
-      new_activity.dateCreated = null;
-      new_activity.name = 'New Activity1';
+      const sent_activity = new Activity();
+      // sent_activity's id and date_created ignored
+      sent_activity.id = null;
+      sent_activity.dateCreated = null;
+      sent_activity.name = 'New Activity1';
 
-      sub = service.addActivity(new_activity).subscribe(
+      sub = service.addActivity(sent_activity).subscribe(
         (data) => { fail('should have thrown error instead of returning Observable: ' + JSON.stringify(data)); },
         (err) => {
           expect(err.message).toContain('Server returned id = null');
@@ -208,19 +212,19 @@ describe('ActivitiesService', () => {
       const req = httpTestingController.expectOne(`${service.activitiesUrl}`);
       expect(req.request.method).toBe('POST');
       // ensure mock response returns id of null
-      new_activity.id = null;
-      req.flush(new_activity); // POST request mocked to return new_activity
+      sent_activity.id = null;
+      req.flush(sent_activity); // POST request mocked to return sent_activity
 
     });
 
     it('should throw error notification if server returns object with dateCreated = null', () => {
-      const new_activity = new Activity();
-      // new_activity's id and date_created ignored
-      new_activity.id = null;
-      new_activity.dateCreated = null;
-      new_activity.name = 'New Activity1';
+      const sent_activity = new Activity();
+      // sent_activity's id and date_created ignored
+      sent_activity.id = null;
+      sent_activity.dateCreated = null;
+      sent_activity.name = 'New Activity1';
 
-      sub = service.addActivity(new_activity).subscribe(
+      sub = service.addActivity(sent_activity).subscribe(
         (data) => { fail('should have thrown error instead of returning Observable: ' + JSON.stringify(data)); },
         (err) => {
           expect(err.message).toContain('Server returned dateCreated = null');
@@ -229,8 +233,8 @@ describe('ActivitiesService', () => {
       const req = httpTestingController.expectOne(`${service.activitiesUrl}`);
       expect(req.request.method).toBe('POST');
       // ensure mock response returns dateCreated of null
-      new_activity.dateCreated = null;
-      req.flush(new_activity); // POST request mocked to return new_activity
+      sent_activity.dateCreated = null;
+      req.flush(sent_activity); // POST request mocked to return sent_activity
     });
 
   });
