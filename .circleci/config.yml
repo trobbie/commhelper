@@ -92,7 +92,7 @@ jobs:
             :
       - run:
           name: Unit test the frontend
-          command: cd $WEB_COMPONENT_FOLDER && npm run test:prod-ci
+          command: cd $WEB_COMPONENT_FOLDER && npm run test:headless-browser
 
       - run:
           name: build the release
@@ -134,6 +134,7 @@ jobs:
 
   #     - run:
   #         name: Startup data webservice for e2e tests
+  #TOOD: change to new web service (DynamoDB Local)
   #         command: cd $WEB_COMPONENT_FOLDER && pm2 start npm -- run webservice-ci
 
   #     - run: cd $WEB_COMPONENT_FOLDER && npm run e2e

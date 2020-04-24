@@ -28,16 +28,6 @@
                 "${workspaceFolder}/e2e/protractor.conf.js"
             ]
         },
-        {
-            "name": "json-server",
-            "type": "node",
-            "request": "launch",
-            "program": "/usr/local/bin/json-server",
-            "args": [
-                "--watch",
-                "-d 500", // delay (ms)
-                "${workspaceFolder}/frontend/web/src/testing/mocks/dev-data.json"]
-        },
         { 
             "name": "Launch API service",
             "type": "node",
