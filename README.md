@@ -23,7 +23,7 @@ Requirements:
 1) Given your name for <project-dir>, navigate to the parent directory and clone:
 ```
 	cd <parent-dir>
-	git clone git@bitbucket.org:trobbie/commhelper.git <project-dir>
+	git clone git@github.com:trobbie/commhelper.git <project-dir>
 ```
 
 2) Setup node modules for root directory:
@@ -119,7 +119,7 @@ The build artifacts will be stored in the `dist/` directory. Use the `--prod` fl
 
 ## Authors
 
-* **Trevor Robbie** - *Initial work* - [Bitbucket account](https://bitbucket.org/trobbie)
+* **Trevor Robbie** - *Initial work* - [Github account](https://github.com/trobbie)
 
 ## License
 

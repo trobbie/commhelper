@@ -11,15 +11,6 @@ jobs:
     <<: *defaults
     
     steps:
-      - add_ssh_keys:
-          fingerprints:
-            - "60:42:65:e6:01:1e:76:77:9a:60:35:bf:56:0a:8f:d3"
-      - run:
-          name: Avoid bitbucket.org authenticity warning for non-interactive mode
-          command: |
-            # editing ~/.ssh/config did not work, so using this method:
-            mkdir ~/.ssh/ && ssh -oStrictHostKeyChecking=no -T git@bitbucket.org
-
       - checkout
 
       # add custom environment variables into our bash environment
