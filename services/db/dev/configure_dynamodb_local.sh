@@ -14,8 +14,8 @@ AWS_DEFAULT_CREDS="fakeMyKeyId2\nfakeSecretAccessKey2\n"
 AWS_DEFAULT_CONF="us-east-1\njson\n"
 
 # run this in dev/test environments before running the db service (start_dynamodb_local.sh)
-echo "ENV: $NODE_ENV"
-if [ "$NODE_ENV" != "dev" ] && [ "$NODE_ENV" != "ci_test" ]; then
+echo "ENV: $COMMHELPER_ENV"
+if [ "$COMMHELPER_ENV" != "dev" ] && [ "$COMMHELPER_ENV" != "ci_test" ]; then
   echo "ERROR: Cannot configure DynamoDB Local for unknown environment..."
   echo "Exiting..."
   exit 1
@@ -54,7 +54,7 @@ else
   CONF_TO_INPUT="$AWS_DEFAULT_CONF" # defaults
 fi
 echo -e "$CREDS_TO_INPUT$CONF_TO_INPUT" | aws configure
-if [ "$NODE_ENV" == "ci_test" ]; then
+if [ "$COMMHELPER_ENV" == "ci_test" ]; then
   # disable the client-side paging during ci tests
   echo -e "cli_pager=" >> ~/.aws/config
 fi

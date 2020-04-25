@@ -6,8 +6,8 @@
 # This script resets all data models and supplies seed data.
 # Execution environments (dev, ci_test, prod) are considered.
 
-echo "ENV: $NODE_ENV"
-if [ "$NODE_ENV" == "dev" ] || [ "$NODE_ENV" == "ci_test" ]; then
+echo "ENV: $COMMHELPER_ENV"
+if [ "$COMMHELPER_ENV" == "dev" ] || [ "$COMMHELPER_ENV" == "ci_test" ]; then
   echo "This environment is approved for a data reset."
 else
   echo "Can only reset the data from approved environments."

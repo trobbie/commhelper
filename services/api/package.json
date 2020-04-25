@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "start": "./start_service_safe.sh",
-    "test": "NODE_ENV=unit-test mocha --require babel-register testing/tests/*.js --exit"
+    "test": "COMMHELPER_ENV=unit-test mocha --require babel-register testing/tests/*.js --exit"
   },
   "author": "Trevor Robbie",
   "license": "ISC",

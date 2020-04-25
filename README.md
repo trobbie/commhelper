@@ -32,9 +32,9 @@ Requirements:
 	npm install
 ```
 
-3) Setup node modules for individual services (note: NODE_ENV is used in scripts to designate our environment)
+3) Setup node modules for individual services (note: COMMHELPER_ENV is used in scripts to designate our environment)
 ```
-	NODE_ENV=dev
+	COMMHELPER_ENV=dev
 	npm run postinstall
 ```
 

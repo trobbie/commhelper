@@ -7,8 +7,8 @@
 
 source config.db.service
 
-echo "ENV: $NODE_ENV"
-if [ "$NODE_ENV" == "dev" ] || [ "$NODE_ENV" == "ci_test" ]; then
+echo "ENV: $COMMHELPER_ENV"
+if [ "$COMMHELPER_ENV" == "dev" ] || [ "$COMMHELPER_ENV" == "ci_test" ]; then
   echo "This environment is approved for running DynamoDB Local."
 else
   echo "ERROR: Can only run DynamoDB Local for known environments."

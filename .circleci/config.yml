@@ -27,7 +27,7 @@ jobs:
           name: "Setup custom environment variables"
           command: |
             echo 'export WEB_COMPONENT_FOLDER="frontend/web"' >> $BASH_ENV
-            echo 'export NODE_ENV="ci_test"' >> $BASH_ENV
+            echo 'export COMMHELPER_ENV="ci_test"' >> $BASH_ENV
 
       - restore_cache:
           name: Restoring cache (node dependencies)
