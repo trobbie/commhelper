@@ -1,6 +1,3 @@
-// During the test the env variable is set to test
-process.env.COMMHELPER_ENV = 'unit-test';
-
 import chai  from 'chai';
 import chaiHttp from 'chai-http';
 import AWS from 'aws-sdk-mock';

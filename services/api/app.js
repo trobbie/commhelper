@@ -14,9 +14,10 @@ const docClient = require('./db-service.js').docClient;
 
 const app = express();
 
-console.log('COMMHELPER_ENV:' + process.env.COMMHELPER_ENV);
+console.log('COMMHELPER_TEST_ENV:' + process.env.COMMHELPER_ENV);
 let service_port;
-if (process.env.COMMHELPER_ENV == 'unit-test') {
+if (process.env.COMMHELPER_TEST_ENV == 'unit-test') {
+  // use different port so as to not interfere with any currently running service
   service_port = 3001;
 } else {
   service_port = 3000;
