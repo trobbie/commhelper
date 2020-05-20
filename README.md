@@ -16,9 +16,10 @@ See below for unit and integration testing.  CircleCI is used for CI/CD, trigger
 ## Development Environment Setup
 
 1. Software requirements:
+   1. Linux/MacOS-X
    1. Node 6+ (our package manager)
    1. JRE6+ (Java is used to run the local data service)
-   1. VS Code (as IDE)
+   1. VS Code (instructions here assume this IDE)
 1. Given your name for `<project-dir>,` navigate to the parent directory and clone:
     ```
     cd <parent-dir>
