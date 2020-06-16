@@ -1,6 +1,6 @@
 # Commhelper
 
-Community helper is intended to aid community coordinators in organizing their helper participation.  Further details are explained in the Project's Wiki.
+Community helper is intended to aid community coordinators in organizing their helper participation.  Further details are explained in the Project's [Wiki](https://github.com/trobbie/commhelper/wiki).
 
 It is currently under construction in early stages of development.
 
